@@ -1,0 +1,531 @@
+{
+ "title": "Depthfield",
+ "namespace": "Depthfield",
+ "fonts": [
+  "https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Hanken+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..700;1,6..96,400..700&family=Alegreya:ital,wght@0,400;0,500;0,700;1,400;1,500&display=swap"
+ ],
+ "artifact": "https://claude.ai/code/artifact/93303f79-895a-44d2-b5a8-7a4012464911",
+ "repo": "https://github.com/stevoblevo/depthfield",
+ "sibling": {
+  "name": "Storeybrook",
+  "url": "https://stevoblevo.github.io/storeybrook/"
+ },
+ "themes": [
+  {
+   "id": "night",
+   "name": "Night \u00b7 mint"
+  },
+  {
+   "id": "day",
+   "name": "Day \u00b7 mint"
+  },
+  {
+   "id": "peach-night",
+   "name": "Night \u00b7 peach"
+  },
+  {
+   "id": "peach-day",
+   "name": "Day \u00b7 peach"
+  },
+  {
+   "id": "thread-night",
+   "name": "Night \u00b7 thread"
+  },
+  {
+   "id": "thread-day",
+   "name": "Day \u00b7 thread"
+  },
+  {
+   "id": "contrast",
+   "name": "High contrast"
+  }
+ ],
+ "readme": "project/README.md",
+ "sections": [
+  {
+   "path": "project/01-depth.md",
+   "title": "Depth"
+  },
+  {
+   "path": "project/02-motion.md",
+   "title": "Motion"
+  },
+  {
+   "path": "project/03-layout.md",
+   "title": "Layout"
+  },
+  {
+   "path": "project/04-color.md",
+   "title": "Color and theming"
+  },
+  {
+   "path": "project/05-type.md",
+   "title": "Typography"
+  },
+  {
+   "path": "project/06-iconography.md",
+   "title": "Iconography and the mark"
+  },
+  {
+   "path": "project/07-world.md",
+   "title": "The world"
+  },
+  {
+   "path": "project/08-input.md",
+   "title": "Interaction and input"
+  },
+  {
+   "path": "project/09-sound.md",
+   "title": "Sound and haptics"
+  },
+  {
+   "path": "project/10-accessibility.md",
+   "title": "Accessibility"
+  },
+  {
+   "path": "project/11-writing.md",
+   "title": "Writing"
+  },
+  {
+   "path": "project/12-patterns.md",
+   "title": "Patterns"
+  },
+  {
+   "path": "project/13-code.md",
+   "title": "Code"
+  },
+  {
+   "path": "project/14-governance.md",
+   "title": "Governance"
+  }
+ ],
+ "cover": {
+  "name": "Cover",
+  "group": "Other",
+  "height": 300,
+  "preview": "project/components/Cover/preview.html"
+ },
+ "groups": [
+  "Actions",
+  "Narrative",
+  "Content",
+  "Inputs",
+  "Overlays",
+  "HUD",
+  "World"
+ ],
+ "components": [
+  {
+   "name": "Button",
+   "group": "Actions",
+   "height": 200,
+   "preview": "project/components/Button/preview.html",
+   "readme": "project/components/Button/README.md",
+   "summary": "Pill-shaped actions; one primary per screen, in `accent`."
+  },
+  {
+   "name": "Tool",
+   "group": "Actions",
+   "height": 150,
+   "preview": "project/components/Tool/preview.html",
+   "readme": "project/components/Tool/README.md",
+   "summary": "Small outlined pills for chrome: the ribbon's Lens, Day and Archive, the HUD's sound toggle, close buttons."
+  },
+  {
+   "name": "ChapterMarker",
+   "group": "Narrative",
+   "height": 260,
+   "preview": "project/components/ChapterMarker/preview.html",
+   "readme": "project/components/ChapterMarker/README.md",
+   "summary": "The numbered eyebrow and display title that open every chapter."
+  },
+  {
+   "name": "Door",
+   "group": "Narrative",
+   "height": 260,
+   "preview": "project/components/Door/preview.html",
+   "readme": "project/components/Door/README.md",
+   "summary": "A portal drawn into the world: an arch that glows its destination's color and swings ajar on hover."
+  },
+  {
+   "name": "Eye",
+   "group": "Narrative",
+   "height": 230,
+   "preview": "project/components/Eye/preview.html",
+   "readme": "project/components/Eye/README.md",
+   "summary": "The wink: one eye shared across the worlds."
+  },
+  {
+   "name": "Hotspot",
+   "group": "Narrative",
+   "height": 320,
+   "preview": "project/components/Hotspot/preview.html",
+   "readme": "project/components/Hotspot/README.md",
+   "summary": "A real button laid over something drawn in the art, so the picture itself is the interface (spores in the haze, an eye on a ridge, doors at the end)."
+  },
+  {
+   "name": "Scene",
+   "group": "Narrative",
+   "height": 380,
+   "preview": "project/components/Scene/preview.html",
+   "readme": "project/components/Scene/README.md",
+   "summary": "A beat: one screen of the story, at least `scene-beat` (100svh) tall, its words riding over the world."
+  },
+  {
+   "name": "SceneCaption",
+   "group": "Narrative",
+   "height": 300,
+   "preview": "project/components/SceneCaption/preview.html",
+   "readme": "project/components/SceneCaption/README.md",
+   "summary": "A blurred `scrim` card that carries words over live media, the world canvas or video."
+  },
+  {
+   "name": "Chip",
+   "group": "Content",
+   "height": 150,
+   "preview": "project/components/Chip/preview.html",
+   "readme": "project/components/Chip/README.md",
+   "summary": "Reality status, told by shape first and color never alone."
+  },
+  {
+   "name": "Footer",
+   "group": "Content",
+   "height": 260,
+   "preview": "project/components/Footer/preview.html",
+   "readme": "project/components/Footer/README.md",
+   "summary": "The closing band: the mark, one statement that closes the loop, a short colophon and jump links back into the story."
+  },
+  {
+   "name": "Readout",
+   "group": "Content",
+   "height": 140,
+   "preview": "project/components/Readout/preview.html",
+   "readme": "project/components/Readout/README.md",
+   "summary": "Labelled values in mono: a ledger strip for facts a reader may want to copy."
+  },
+  {
+   "name": "Station",
+   "group": "Content",
+   "height": 300,
+   "preview": "project/components/Station/preview.html",
+   "readme": "project/components/Station/README.md",
+   "summary": "A numbered step in a long explanation: the numeral, the step (eyebrow + display title + paragraphs) and an aside of owners and notes."
+  },
+  {
+   "name": "Tag",
+   "group": "Content",
+   "height": 120,
+   "preview": "project/components/Tag/preview.html",
+   "readme": "project/components/Tag/README.md",
+   "summary": "Categorical labels: owners, worlds, kinds."
+  },
+  {
+   "name": "VersionCard",
+   "group": "Content",
+   "height": 330,
+   "preview": "project/components/VersionCard/preview.html",
+   "readme": "project/components/VersionCard/README.md",
+   "summary": "A version in the archive: its art with the numeral over it, the name and date, one line, and how to open it."
+  },
+  {
+   "name": "WorldCard",
+   "group": "Content",
+   "height": 270,
+   "preview": "project/components/WorldCard/preview.html",
+   "readme": "project/components/WorldCard/README.md",
+   "summary": "A list row that opens a world: a 64px tile (art or an icon on `surface`), the world's name in italic display, one line under it."
+  },
+  {
+   "name": "CursorRing",
+   "group": "Inputs",
+   "height": 130,
+   "preview": "project/components/CursorRing/preview.html",
+   "readme": "project/components/CursorRing/README.md",
+   "summary": "A ring that follows a mouse pointer and grows over things you can press: a quiet cue that the art is interactive."
+  },
+  {
+   "name": "Slider",
+   "group": "Inputs",
+   "height": 170,
+   "preview": "project/components/Slider/preview.html",
+   "readme": "project/components/Slider/README.md",
+   "summary": "A continuous setting: tilt sensitivity, warmth, volume."
+  },
+  {
+   "name": "Toggle",
+   "group": "Inputs",
+   "height": 170,
+   "preview": "project/components/Toggle/preview.html",
+   "readme": "project/components/Toggle/README.md",
+   "summary": "An on/off switch for settings panels: motion, sound, captions, the reality lens."
+  },
+  {
+   "name": "Dialog",
+   "group": "Overlays",
+   "height": 280,
+   "preview": "project/components/Dialog/preview.html",
+   "readme": "project/components/Dialog/README.md",
+   "summary": "A centred modal for one decision: permission to use motion or the microphone, leaving a guided tour, resetting progress."
+  },
+  {
+   "name": "Drawer",
+   "group": "Overlays",
+   "height": 380,
+   "preview": "project/components/Drawer/preview.html",
+   "readme": "project/components/Drawer/README.md",
+   "summary": "A side panel over a veil: the archive of versions, a chapter index, settings."
+  },
+  {
+   "name": "FoundCard",
+   "group": "Overlays",
+   "height": 230,
+   "preview": "project/components/FoundCard/preview.html",
+   "readme": "project/components/FoundCard/README.md",
+   "summary": "The discovery toast: a kicker with the running count, the find's name, a one-line definition and one true fact."
+  },
+  {
+   "name": "Loader",
+   "group": "Overlays",
+   "height": 230,
+   "preview": "project/components/Loader/preview.html",
+   "readme": "project/components/Loader/README.md",
+   "summary": "The entry veil while the world warms up: the site's name, a thin progress line, a percentage, and a way past it."
+  },
+  {
+   "name": "HudChip",
+   "group": "HUD",
+   "height": 110,
+   "preview": "project/components/HudChip/preview.html",
+   "readme": "project/components/HudChip/README.md",
+   "summary": "A small HUD readout opposite the progress pill: a count of finds, the weather's name, a mode."
+  },
+  {
+   "name": "LensBanner",
+   "group": "HUD",
+   "height": 200,
+   "preview": "project/components/LensBanner/preview.html",
+   "readme": "project/components/LensBanner/README.md",
+   "summary": "The reality lens: a mode that lets the machinery show through."
+  },
+  {
+   "name": "ReelHud",
+   "group": "HUD",
+   "height": 230,
+   "preview": "project/components/ReelHud/preview.html",
+   "readme": "project/components/ReelHud/README.md",
+   "summary": "The guided tour's bar: shot number, shot name, a tuning or caption line, overall progress and a stop button, with letterbox bars sliding in."
+  },
+  {
+   "name": "Ribbon",
+   "group": "HUD",
+   "height": 120,
+   "preview": "project/components/Ribbon/preview.html",
+   "readme": "project/components/Ribbon/README.md",
+   "summary": "The version thread across the top: the mark, one knot per version on a hairline thread, and the page's tools."
+  },
+  {
+   "name": "ScrollProgress",
+   "group": "HUD",
+   "height": 110,
+   "preview": "project/components/ScrollProgress/preview.html",
+   "readme": "project/components/ScrollProgress/README.md",
+   "summary": "The floating HUD pill that tells the reader where they are in the story."
+  },
+  {
+   "name": "TiltChip",
+   "group": "HUD",
+   "height": 120,
+   "preview": "project/components/TiltChip/preview.html",
+   "readme": "project/components/TiltChip/README.md",
+   "summary": "The bubble level in the top bar: the phone's tilt, live."
+  },
+  {
+   "name": "Weather",
+   "group": "World",
+   "height": 200,
+   "preview": "project/components/Weather/preview.html",
+   "readme": "project/components/Weather/README.md",
+   "summary": "Four weathers that follow the music, or the scroll: peach fall, red rain, mint clearing, night garden."
+  },
+  {
+   "name": "WorldCanvas",
+   "group": "World",
+   "height": 360,
+   "preview": "project/components/WorldCanvas/preview.html",
+   "readme": "project/components/WorldCanvas/README.md",
+   "summary": "The world behind the words: one full-bleed canvas of sky, a pointer-led sun, light shafts, three ridges with haze, particles that part around you, ripples where you press, and a vignette."
+  }
+ ],
+ "assets": [
+  {
+   "name": "Mark",
+   "tile": "l",
+   "readme": "project/assets/Mark/README.md",
+   "files": [
+    {
+     "name": "depthfield-mark.svg",
+     "path": "project/assets/Mark/depthfield-mark.svg"
+    },
+    {
+     "name": "depthfield-mark-day.svg",
+     "path": "project/assets/Mark/depthfield-mark-day.svg"
+    }
+   ]
+  },
+  {
+   "name": "Icons",
+   "tile": "xs",
+   "readme": "project/assets/Icons/README.md",
+   "files": [
+    {
+     "name": "arrow-right.svg",
+     "path": "project/assets/Icons/arrow-right.svg"
+    },
+    {
+     "name": "arrow-up.svg",
+     "path": "project/assets/Icons/arrow-up.svg"
+    },
+    {
+     "name": "arrow-down.svg",
+     "path": "project/assets/Icons/arrow-down.svg"
+    },
+    {
+     "name": "arrow-up-right.svg",
+     "path": "project/assets/Icons/arrow-up-right.svg"
+    },
+    {
+     "name": "chevron-left.svg",
+     "path": "project/assets/Icons/chevron-left.svg"
+    },
+    {
+     "name": "chevron-right.svg",
+     "path": "project/assets/Icons/chevron-right.svg"
+    },
+    {
+     "name": "top.svg",
+     "path": "project/assets/Icons/top.svg"
+    },
+    {
+     "name": "chapters.svg",
+     "path": "project/assets/Icons/chapters.svg"
+    },
+    {
+     "name": "menu.svg",
+     "path": "project/assets/Icons/menu.svg"
+    },
+    {
+     "name": "close.svg",
+     "path": "project/assets/Icons/close.svg"
+    },
+    {
+     "name": "expand.svg",
+     "path": "project/assets/Icons/expand.svg"
+    },
+    {
+     "name": "play.svg",
+     "path": "project/assets/Icons/play.svg"
+    },
+    {
+     "name": "pause.svg",
+     "path": "project/assets/Icons/pause.svg"
+    },
+    {
+     "name": "skip.svg",
+     "path": "project/assets/Icons/skip.svg"
+    },
+    {
+     "name": "reel.svg",
+     "path": "project/assets/Icons/reel.svg"
+    },
+    {
+     "name": "sound-on.svg",
+     "path": "project/assets/Icons/sound-on.svg"
+    },
+    {
+     "name": "sound-off.svg",
+     "path": "project/assets/Icons/sound-off.svg"
+    },
+    {
+     "name": "mic.svg",
+     "path": "project/assets/Icons/mic.svg"
+    },
+    {
+     "name": "sun.svg",
+     "path": "project/assets/Icons/sun.svg"
+    },
+    {
+     "name": "moon.svg",
+     "path": "project/assets/Icons/moon.svg"
+    },
+    {
+     "name": "lens.svg",
+     "path": "project/assets/Icons/lens.svg"
+    },
+    {
+     "name": "weather.svg",
+     "path": "project/assets/Icons/weather.svg"
+    },
+    {
+     "name": "archive.svg",
+     "path": "project/assets/Icons/archive.svg"
+    },
+    {
+     "name": "knot.svg",
+     "path": "project/assets/Icons/knot.svg"
+    },
+    {
+     "name": "drag.svg",
+     "path": "project/assets/Icons/drag.svg"
+    },
+    {
+     "name": "press.svg",
+     "path": "project/assets/Icons/press.svg"
+    },
+    {
+     "name": "orbit.svg",
+     "path": "project/assets/Icons/orbit.svg"
+    },
+    {
+     "name": "tilt.svg",
+     "path": "project/assets/Icons/tilt.svg"
+    },
+    {
+     "name": "level.svg",
+     "path": "project/assets/Icons/level.svg"
+    },
+    {
+     "name": "ripple.svg",
+     "path": "project/assets/Icons/ripple.svg"
+    },
+    {
+     "name": "spore.svg",
+     "path": "project/assets/Icons/spore.svg"
+    },
+    {
+     "name": "eye.svg",
+     "path": "project/assets/Icons/eye.svg"
+    },
+    {
+     "name": "door.svg",
+     "path": "project/assets/Icons/door.svg"
+    },
+    {
+     "name": "check.svg",
+     "path": "project/assets/Icons/check.svg"
+    },
+    {
+     "name": "info.svg",
+     "path": "project/assets/Icons/info.svg"
+    },
+    {
+     "name": "alert.svg",
+     "path": "project/assets/Icons/alert.svg"
+    },
+    {
+     "name": "gamepad.svg",
+     "path": "project/assets/Icons/gamepad.svg"
+    }
+   ]
+  }
+ ]
+}

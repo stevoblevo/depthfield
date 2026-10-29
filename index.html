@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Design system</title>
+<link rel="stylesheet" href="project/tokens.css">
+<link rel="stylesheet" href="site/app.css">
+<script src="site/vendor/marked.min.js"></script>
+<script src="site/vendor/purify.min.js"></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="bar">
+  <a class="brand" href="#/" id="brand">…</a>
+  <nav class="tabs" aria-label="Sections">
+    <a href="#/" data-tab="overview">Overview</a>
+    <a href="#/book" data-tab="book">Brand book</a>
+    <a href="#/tokens" data-tab="tokens">Tokens</a>
+    <a href="#/components" data-tab="components">Components</a>
+    <a href="#/assets" data-tab="assets">Assets</a>
+  </nav>
+  <div class="tools">
+    <label class="theme"><span class="sr">Theme</span><select id="theme"></select></label>
+    <a class="ext" id="repo" href="#" rel="noopener">GitHub</a>
+  </div>
+</header>
+<main id="main" tabindex="-1"><p class="loading">Loading…</p></main>
+<footer class="foot" id="foot"></footer>
+<script src="site/app.js"></script>
+</body>
+</html>

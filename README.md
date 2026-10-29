@@ -7,6 +7,8 @@ This repo is a read-only export of the Depthfield design system (index format v3
 
 The artifact is the source of truth. Opening that link requires access on claude.ai; everything needed to read the system is in this repo.
 
+**Live site:** <https://stevoblevo.github.io/depthfield/> — the brand book, every token per theme, all components running live, and the assets, styled by the system itself.
+
 ## Start here
 
 Read [`project/README.md`](project/README.md) first. It is the brand book and explains how the other files fit together.
@@ -40,9 +42,16 @@ project/
 
 ## What is not here
 
-- **Generated files.** `tokens.css`, `api/` and `manifest.json` are built by the artifact page from `tokens.json` and the bundle, so they are left out.
+- **The artifact's other generated files.** `api/` and `manifest.json` are built by the artifact page and are not needed here.
 - **Artifact runtime.** `artifact-type/` (the viewer's `app.js`, `app.css` and references) belongs to the hosting type, not to this system.
 
-## Previews outside the artifact
+## The site
 
-Each `preview.html` expects the host to inject `tokens.css`, the fonts, `bundle.css` and `bundle.js` first. Opened directly (including on GitHub Pages), a preview loads unstyled. For styled output, see the artifact.
+`index.html` and `site/` make up the GitHub Pages site. It loads each preview the way the artifact does: `project/tokens.css`, `components/bundle.css` and `components/bundle.js` come first, and `<html data-theme>` is set to the theme picked in the header.
+
+- `project/tokens.css` is compiled from `project/tokens.json` by `site/build.py`, following the artifact's tokens.css rules: one `[data-theme]` block per theme, `--font-*` families, a class per type style.
+- `site/site.json` is the site's index (sections, components, assets), written by the same script.
+- `site/vendor/` holds pinned copies of marked 12.0.2 and DOMPurify 3.1.6 for rendering the Markdown.
+- `.nojekyll` makes Pages serve the raw files.
+
+After changing anything under `project/`, run `python3 site/build.py` and commit the output.
