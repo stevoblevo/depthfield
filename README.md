@@ -30,14 +30,17 @@ project/
     <Component>/README.md    Usage guidelines (first sentence = summary)
     <Component>/preview.html Live preview card
   assets/
-    Icons/README.md          About the 37-icon set
-    Mark/README.md           About the proposed mark
+    Icons/                   37 icons (24px grid, 1.5px strokes) + README
+    Mark/                    The proposed mark, night and day versions + README
 ```
+
+## Notes on the export
+
+- **Icon and mark SVGs** came from the artifact's asset store and sit under `project/assets/<Group>/` by the names in `design-system.json` → `assetGroups`. The asset files are drawn in a fixed #5c766e; in pages, use `Depthfield.icon(name)` from `bundle.js`, which draws in `currentColor`.
 
 ## What is not here
 
 - **Generated files.** `tokens.css`, `api/` and `manifest.json` are built by the artifact page from `tokens.json` and the bundle, so they are left out.
-- **Icon and mark SVGs.** These are stored in the artifact's asset store, not as published files. `design-system.json` records them under `assetGroups`. The same 37 icons are also in `bundle.js` as `Depthfield.icons` / `Depthfield.icon(name)`.
 - **Artifact runtime.** `artifact-type/` (the viewer's `app.js`, `app.css` and references) belongs to the hosting type, not to this system.
 
 ## Previews outside the artifact
