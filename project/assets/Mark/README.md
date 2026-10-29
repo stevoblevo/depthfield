@@ -1,0 +1,1 @@
+The proposed Depthfield mark, the lens: a slab with the depth rings cut from its corner (64 grid). `depthfield-mark.svg` is mint (#5ef2b8) for night grounds; `depthfield-mark-day.svg` is the day mint (#0b7255) for day grounds. Clear space a quarter of its width; 16px minimum (see Iconography).

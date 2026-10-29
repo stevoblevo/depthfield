@@ -1,0 +1,8 @@
+<!-- @dsCard group="Inputs" height=170 -->
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Slider</title>
+<style>body{margin:0;background:var(--void);color:var(--ink);font-family:var(--font-sans);}.wrap{padding:20px 32px;display:grid;gap:14px;max-width:420px}</style></head>
+<body>
+<div class="wrap"><div class="df-slider"><div class="df-slider__row"><label for="s1">Tilt sensitivity</label><output for="s1">50</output></div><input type="range" id="s1" min="0" max="100" value="50"></div>
+<div class="df-slider"><div class="df-slider__row"><label for="s2">Warmth</label><output for="s2">72</output></div><input type="range" id="s2" min="0" max="100" value="72"></div></div>
+<script>if(window.Depthfield)document.querySelectorAll('.df-slider input').forEach(function(i){Depthfield.slider(i)});</script></body></html>

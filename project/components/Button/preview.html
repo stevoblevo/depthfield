@@ -1,0 +1,17 @@
+<!-- @dsCard group="Actions" height=200 -->
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Button</title>
+<style>body{margin:0;background:var(--void);color:var(--ink);font-family:var(--font-sans);}.grid{display:grid;gap:16px;padding:24px 32px}.row{display:flex;flex-wrap:wrap;gap:16px;align-items:center}</style></head>
+<body>
+<div class="grid">
+<div class="row"><button class="df-btn df-btn--primary">Begin <span class="df-arrow" aria-hidden="true">→</span></button>
+<button class="df-btn df-btn--ghost">Watch the film</button>
+<button class="df-btn df-btn--text">Skip intro</button>
+<button class="df-btn df-btn--ghost df-btn--icon" aria-label="Back to the top"><span data-df-icon="arrow-up" data-size="20"></span></button></div>
+<div class="row"><a class="df-btn df-btn--mono df-btn--primary" href="#">Open the ledger</a>
+<a class="df-btn df-btn--mono" href="#">The archive</a>
+<button class="df-btn df-btn--primary df-btn--sm">Enter</button>
+<button class="df-btn df-btn--primary" disabled>Sold out</button>
+<button class="df-btn df-btn--ghost" aria-busy="true">Saving</button></div>
+</div>
+<script>if(window.Depthfield){Depthfield.mountIcons();}</script></body></html>

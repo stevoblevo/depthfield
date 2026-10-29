@@ -1,0 +1,8 @@
+<!-- @dsCard group="World" height=360 -->
+<!doctype html>
+<html><head><meta charset="utf-8"><title>WorldCanvas</title>
+<style>body{margin:0;background:var(--void);color:var(--ink);font-family:var(--font-sans);}.box{position:relative;height:360px;overflow:hidden}.df-scene{position:absolute;inset:0;min-height:0;padding:24px 32px}.df-chapter__title{font-size:52px}</style></head>
+<body>
+<div class="box"><canvas class="df-world df-world--contained" aria-hidden="true"></canvas>
+<div class="df-scene df-over-art"><div class="df-scene__block"><header class="df-chapter"><span class="df-chapter__eyebrow">Chapter 02 — Canopy</span><h2 class="df-chapter__title">Light bends <em>green</em></h2></header></div></div></div>
+<script>if(window.Depthfield){var w=Depthfield.world(document.querySelector('canvas'),{mode:'glasshouse',contained:true,scroll:false});w&&w.setScroll(.25);}</script></body></html>

@@ -1,0 +1,318 @@
+{
+  "v": 3,
+  "assetGroups": {
+    "Mark": {
+      "name": "Mark",
+      "tile": "l",
+      "order": [
+        "depthfield-mark.svg",
+        "depthfield-mark-day.svg"
+      ],
+      "files": {
+        "depthfield-mark.svg": {
+          "name": "depthfield-mark.svg",
+          "blob": "d3fa2961b65d204ce16fb71984af0ee3",
+          "size": 230,
+          "type": "image/svg+xml"
+        },
+        "depthfield-mark-day.svg": {
+          "name": "depthfield-mark-day.svg",
+          "blob": "2bb5ab493a4c9391a9b3ae23010e3da0",
+          "size": 230,
+          "type": "image/svg+xml"
+        }
+      }
+    },
+    "Icons": {
+      "name": "Icons",
+      "tile": "xs",
+      "order": [
+        "arrow-right.svg",
+        "arrow-up.svg",
+        "arrow-down.svg",
+        "arrow-up-right.svg",
+        "chevron-left.svg",
+        "chevron-right.svg",
+        "top.svg",
+        "chapters.svg",
+        "menu.svg",
+        "close.svg",
+        "expand.svg",
+        "play.svg",
+        "pause.svg",
+        "skip.svg",
+        "reel.svg",
+        "sound-on.svg",
+        "sound-off.svg",
+        "mic.svg",
+        "sun.svg",
+        "moon.svg",
+        "lens.svg",
+        "weather.svg",
+        "archive.svg",
+        "knot.svg",
+        "drag.svg",
+        "press.svg",
+        "orbit.svg",
+        "tilt.svg",
+        "level.svg",
+        "ripple.svg",
+        "spore.svg",
+        "eye.svg",
+        "door.svg",
+        "check.svg",
+        "info.svg",
+        "alert.svg",
+        "gamepad.svg"
+      ],
+      "files": {
+        "arrow-right.svg": {
+          "name": "arrow-right.svg",
+          "blob": "ff43be2fd1338a87d52ae85b9048d854",
+          "size": 254,
+          "type": "image/svg+xml"
+        },
+        "arrow-up.svg": {
+          "name": "arrow-up.svg",
+          "blob": "af4cc32558d0495e1ce16c07040e4dda",
+          "size": 251,
+          "type": "image/svg+xml"
+        },
+        "arrow-down.svg": {
+          "name": "arrow-down.svg",
+          "blob": "ec4e58509c30cdfa923228abfde10201",
+          "size": 253,
+          "type": "image/svg+xml"
+        },
+        "arrow-up-right.svg": {
+          "name": "arrow-up-right.svg",
+          "blob": "9e57762e74c8c2111ef6dd69c1c5bc8f",
+          "size": 254,
+          "type": "image/svg+xml"
+        },
+        "chevron-left.svg": {
+          "name": "chevron-left.svg",
+          "blob": "c709f9fbe008bd59d9ffceede62d2ac8",
+          "size": 248,
+          "type": "image/svg+xml"
+        },
+        "chevron-right.svg": {
+          "name": "chevron-right.svg",
+          "blob": "1c4dedb91ecb2e7b7a44f447c1f59f1c",
+          "size": 247,
+          "type": "image/svg+xml"
+        },
+        "top.svg": {
+          "name": "top.svg",
+          "blob": "1490ce5065b2654795051876429d624c",
+          "size": 253,
+          "type": "image/svg+xml"
+        },
+        "chapters.svg": {
+          "name": "chapters.svg",
+          "blob": "9a294db820ce76aa08956b7fe9c74768",
+          "size": 285,
+          "type": "image/svg+xml"
+        },
+        "menu.svg": {
+          "name": "menu.svg",
+          "blob": "b94cceefdba37be01a416b79f656afde",
+          "size": 249,
+          "type": "image/svg+xml"
+        },
+        "close.svg": {
+          "name": "close.svg",
+          "blob": "d75ef4b322db9b4c6cf84a64d07354fb",
+          "size": 247,
+          "type": "image/svg+xml"
+        },
+        "expand.svg": {
+          "name": "expand.svg",
+          "blob": "6d16cd7c4313beac9ef6b290537821c7",
+          "size": 266,
+          "type": "image/svg+xml"
+        },
+        "play.svg": {
+          "name": "play.svg",
+          "blob": "9ac96a04b17c37d7fe48c2f38605e692",
+          "size": 245,
+          "type": "image/svg+xml"
+        },
+        "pause.svg": {
+          "name": "pause.svg",
+          "blob": "d5578df197fe93d6ac46706d6ad8ed31",
+          "size": 250,
+          "type": "image/svg+xml"
+        },
+        "skip.svg": {
+          "name": "skip.svg",
+          "blob": "6dadb4ed489f565ae641149b46ee1f98",
+          "size": 275,
+          "type": "image/svg+xml"
+        },
+        "reel.svg": {
+          "name": "reel.svg",
+          "blob": "8a560ae0617b3effc5d1b4d088cefcd8",
+          "size": 300,
+          "type": "image/svg+xml"
+        },
+        "sound-on.svg": {
+          "name": "sound-on.svg",
+          "blob": "7b64a99e075228df32fd46450ae76506",
+          "size": 307,
+          "type": "image/svg+xml"
+        },
+        "sound-off.svg": {
+          "name": "sound-off.svg",
+          "blob": "ec906c2ebd15e8a426429d9421edf821",
+          "size": 284,
+          "type": "image/svg+xml"
+        },
+        "mic.svg": {
+          "name": "mic.svg",
+          "blob": "4a65aee8a1b198f564de3633701cc4fd",
+          "size": 314,
+          "type": "image/svg+xml"
+        },
+        "sun.svg": {
+          "name": "sun.svg",
+          "blob": "21402d3abe4ba145dd1a0426f32d9cd2",
+          "size": 365,
+          "type": "image/svg+xml"
+        },
+        "moon.svg": {
+          "name": "moon.svg",
+          "blob": "ffebe150c36b8de0d4a1f64b6872a058",
+          "size": 279,
+          "type": "image/svg+xml"
+        },
+        "lens.svg": {
+          "name": "lens.svg",
+          "blob": "7989dcb96e9373c89e732552bffed8ca",
+          "size": 277,
+          "type": "image/svg+xml"
+        },
+        "weather.svg": {
+          "name": "weather.svg",
+          "blob": "181eecd162c04adf587f60c13c8cbbe4",
+          "size": 336,
+          "type": "image/svg+xml"
+        },
+        "archive.svg": {
+          "name": "archive.svg",
+          "blob": "7b9061b65a0aa6fb1b4d2348236a24cb",
+          "size": 301,
+          "type": "image/svg+xml"
+        },
+        "knot.svg": {
+          "name": "knot.svg",
+          "blob": "a5c2533cf8bbab1106d0282f477c967a",
+          "size": 1597,
+          "type": "image/svg+xml"
+        },
+        "drag.svg": {
+          "name": "drag.svg",
+          "blob": "5042ac6ae613f55d52a585c8da98a397",
+          "size": 353,
+          "type": "image/svg+xml"
+        },
+        "press.svg": {
+          "name": "press.svg",
+          "blob": "27a7a5e4169a92205b3ed1460dfb6f97",
+          "size": 346,
+          "type": "image/svg+xml"
+        },
+        "orbit.svg": {
+          "name": "orbit.svg",
+          "blob": "5d7456b00fc86f2fc3fb47efed1164e0",
+          "size": 323,
+          "type": "image/svg+xml"
+        },
+        "tilt.svg": {
+          "name": "tilt.svg",
+          "blob": "2b3fe75091d2931d2dca905f176d9985",
+          "size": 339,
+          "type": "image/svg+xml"
+        },
+        "level.svg": {
+          "name": "level.svg",
+          "blob": "a9e5f51db15d579c7f4fca9e7cc64ab3",
+          "size": 339,
+          "type": "image/svg+xml"
+        },
+        "ripple.svg": {
+          "name": "ripple.svg",
+          "blob": "65d804f2935cba57eebf4707abaf7fc0",
+          "size": 350,
+          "type": "image/svg+xml"
+        },
+        "spore.svg": {
+          "name": "spore.svg",
+          "blob": "215338ff74331e43c646c1d21a89446f",
+          "size": 349,
+          "type": "image/svg+xml"
+        },
+        "eye.svg": {
+          "name": "eye.svg",
+          "blob": "cbae38ac55e36ee2237877c9c52da280",
+          "size": 351,
+          "type": "image/svg+xml"
+        },
+        "door.svg": {
+          "name": "door.svg",
+          "blob": "8fcd1a12724fd66c618e57aed000bd5c",
+          "size": 280,
+          "type": "image/svg+xml"
+        },
+        "check.svg": {
+          "name": "check.svg",
+          "blob": "d3c4a1bdf72222c23eb272c16f8d2306",
+          "size": 249,
+          "type": "image/svg+xml"
+        },
+        "info.svg": {
+          "name": "info.svg",
+          "blob": "250d637163a8eacfc956d87cdebd06e0",
+          "size": 283,
+          "type": "image/svg+xml"
+        },
+        "alert.svg": {
+          "name": "alert.svg",
+          "blob": "84350eb96d8b8121c0ac7a1e4a11cf97",
+          "size": 272,
+          "type": "image/svg+xml"
+        },
+        "gamepad.svg": {
+          "name": "gamepad.svg",
+          "blob": "7bd3494d7f743a1f70f0ccadf2749138",
+          "size": 391,
+          "type": "image/svg+xml"
+        }
+      }
+    }
+  },
+  "blobs": {},
+  "createdOnFiles": {
+    "at": "2026-10-03T18:25:39Z",
+    "v": 1
+  },
+  "docs": {
+    "readme": "project/README.md",
+    "sections": []
+  },
+  "groups": [
+    "Mark",
+    "Icons"
+  ],
+  "lastChange": {
+    "by": "Bleve",
+    "at": "2026-10-24T09:26:10Z",
+    "via": "Claude",
+    "note": "Depthfield 2: three skins in two faces plus high contrast, depth/motion/layout token families, 30 components, the behavior bundle and types, 37 icons, a proposed mark, 14 chapters."
+  },
+  "layout": "files",
+  "libraries": [],
+  "namespace": "Depthfield",
+  "sections": {},
+  "title": "Depthfield"
+}

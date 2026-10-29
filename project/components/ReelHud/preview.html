@@ -1,0 +1,12 @@
+<!-- @dsCard group="HUD" height=230 -->
+<!doctype html>
+<html><head><meta charset="utf-8"><title>ReelHud</title>
+<style>body{margin:0;background:var(--void);color:var(--ink);font-family:var(--font-sans);}.screen{position:relative;height:230px;overflow:hidden;background:linear-gradient(180deg,var(--gh-sky-top) 0%,var(--gh-sky-low) 62%,var(--gh-ridge-2) 62.2%,var(--gh-ridge-3) 80%,var(--art-void) 100%);}.df-letterbox{position:absolute;height:26px;transform:none}.df-reel{position:absolute;top:40px}.cap{position:absolute;left:0;right:0;top:118px;margin:0;text-align:center;font:italic 300 22px/1.2 var(--df-display);color:var(--ink);text-shadow:var(--shadow-type-lede)}</style></head>
+<body>
+<div class="screen df-over-art"><div class="df-letterbox df-letterbox--top"></div>
+<div class="df-reel"><span class="df-reel__id">S07 / 14</span><span class="df-reel__line"><span class="df-reel__name">Crack</span>obsidian · a held dissonance</span>
+<button class="df-tool df-tool--round df-reel__stop" type="button" aria-label="Stop the reel"><span data-df-icon="close" data-size="16"></span></button>
+<span class="df-reel__bar"><i style="width:48%"></i></span></div>
+<p class="cap df-over-art__text">hold a dissonance and the obsidian cracks.</p>
+<div class="df-letterbox df-letterbox--bottom"></div></div>
+<script>if(window.Depthfield){Depthfield.mountIcons();}</script></body></html>

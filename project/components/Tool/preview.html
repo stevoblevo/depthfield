@@ -1,0 +1,13 @@
+<!-- @dsCard group="Actions" height=150 -->
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Tool</title>
+<style>body{margin:0;background:var(--void);color:var(--ink);font-family:var(--font-sans);}.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center;padding:28px 32px}</style></head>
+<body>
+<div class="row">
+<button class="df-tool" type="button" aria-pressed="true"><span data-df-icon="lens" data-size="16"></span><b class="df-tool__label">Lens</b></button>
+<button class="df-tool" type="button" data-df-tool="face"><span data-df-icon="moon" data-size="16"></span><b class="df-tool__label">Day</b></button>
+<button class="df-tool" type="button"><span data-df-icon="menu" data-size="16"></span><b class="df-tool__label">Archive</b></button>
+<button class="df-tool df-tool--solid" type="button" data-df-tool="sound"><span data-df-icon="sound-off" data-size="16"></span><b class="df-tool__label">Sound off</b></button>
+<button class="df-tool df-tool--round df-tool--solid" type="button" aria-label="Close"><span data-df-icon="close" data-size="16"></span></button>
+</div>
+<script>if(window.Depthfield){Depthfield.mountIcons();}Depthfield.sound&&document.querySelector('[data-df-tool=sound]')&&Depthfield.sound(document.querySelector('[data-df-tool=sound]'));</script></body></html>

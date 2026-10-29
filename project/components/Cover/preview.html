@@ -1,0 +1,56 @@
+<!-- @dsCard height=300 -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Depthfield</title>
+<style>
+  html, body { margin:0; height:100%; }
+  body { background:var(--void); color:var(--ink); font-family:var(--font-sans); overflow:hidden; }
+  .cover { position:relative; height:300px; overflow:hidden; }
+  .art { position:absolute; top:0; left:480px; width:480px; height:300px; overflow:hidden; }
+  .art svg { display:block; width:480px; height:300px; }
+  .mint { fill:var(--mint); }
+  .hole { fill:var(--void); }
+  .peach { fill:var(--peach); }
+  .thread { fill:var(--thread); }
+  .live { fill:var(--frost); }
+  .panel { rx:var(--radius-lg); }
+  .pill { fill:var(--void); }
+  .words { position:absolute; left:var(--space-6); bottom:var(--space-6); max-width:440px; }
+  .name { margin:0; font-family:var(--font-display); font-size:80px; line-height:.92; font-weight:300; letter-spacing:-.03em; font-variation-settings:"opsz" 144; color:var(--ink); }
+  .tag { margin:var(--space-3) 0 0 2px; font-size:14px; line-height:20px; color:var(--ink-muted); }
+</style>
+</head>
+<body>
+<div class="cover">
+<div class="art" aria-hidden="true">
+<svg viewBox="0 0 480 300" width="480" height="300">
+<!--
+  blocks      mint 176×284 slab bled off the top (the system's hue, largest, radius-none like full-bleed scenes) · peach 112×208 and thread 112×144 panels at radius-lg (the two other skins) · frost 48×256 bleeding off the right (the cue) — ≈38% of 960×300
+  arrangement one tall mint slab with skin satellites stepping down to the left and up to the right, bottoms flush space-6 above the edge, space-4 gutters
+  pattern     concentric quarter-discs ("depth", the lens motif and the mark) cut from the mint slab in void, radii stepping by space-7 from its bottom-right corner — the descent the system is named for
+  scales      gutters space-4 (16); ring step space-7 (48); panel heights in 16px steps; panels radius-lg; slab radius-none; one radius-pill on the frost cue
+-->
+<defs><clipPath id="slab"><rect x="128" y="-16" width="176" height="284"/></clipPath></defs>
+<rect class="thread panel" x="0" y="124" width="112" height="144" rx="16"/>
+<rect class="mint" x="128" y="-16" width="176" height="284"/>
+<g clip-path="url(#slab)">
+  <circle class="hole" cx="304" cy="268" r="192"/>
+  <circle class="mint" cx="304" cy="268" r="144"/>
+  <circle class="hole" cx="304" cy="268" r="96"/>
+  <circle class="mint" cx="304" cy="268" r="48"/>
+</g>
+<rect class="peach panel" x="320" y="60" width="112" height="208" rx="16"/>
+<rect class="live" x="448" y="12" width="48" height="256"/>
+<rect class="pill" x="456" y="236" width="32" height="16" rx="8"/>
+</svg>
+</div>
+<div class="words">
+<h1 class="name">Depthfield</h1>
+<p class="tag">A dark-first kit for scroll-driven, immersive sites.</p>
+</div>
+</div>
+<script></script>
+</body>
+</html>

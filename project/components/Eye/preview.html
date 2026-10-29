@@ -1,0 +1,15 @@
+<!-- @dsCard group="Narrative" height=230 -->
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Eye</title>
+<style>body{margin:0;background:var(--void);color:var(--ink);font-family:var(--font-sans);}.wrap{height:230px;display:grid;place-items:center;background:linear-gradient(180deg,var(--wx-mint-sky-top),var(--wx-mint-sky-low))}.df-eye{width:200px}</style></head>
+<body>
+<div class="wrap"><button class="df-eye" type="button" data-df-wink="auto" aria-label="An eye: press and it winks back">
+<svg viewBox="-80 -60 160 120" aria-hidden="true"><defs>
+<radialGradient id="h"><stop offset="0" style="stop-color:var(--eye-iris);stop-opacity:.3"/><stop offset="1" style="stop-color:var(--eye-iris);stop-opacity:0"/></radialGradient>
+<clipPath id="ec"><ellipse rx="62" ry="37"/></clipPath></defs>
+<circle r="80" fill="url(#h)"/>
+<g class="df-eye__lid"><ellipse class="df-eye__white" rx="62" ry="37"/>
+<g clip-path="url(#ec)"><g class="df-eye__look"><circle class="df-eye__iris" r="24"/><circle class="df-eye__pupil" r="11"/><circle class="df-eye__glint" cx="-6" cy="-6" r="3.5"/></g></g>
+<ellipse class="df-eye__rim" rx="62" ry="37"/>
+<path class="df-eye__lash" d="M-32.8 -36.8L-40.3 -51.5M-17.3 -36.8L-21.3 -51.5M0 -36.8L0 -51.5M17.3 -36.8L21.3 -51.5M32.8 -36.8L40.3 -51.5"/></g></svg></button></div>
+<script>if(window.Depthfield)Depthfield.eye(document.querySelector('.df-eye'));</script></body></html>

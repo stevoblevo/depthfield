@@ -1,0 +1,12 @@
+<!-- @dsCard group="HUD" height=120 -->
+<!doctype html>
+<html><head><meta charset="utf-8"><title>TiltChip</title>
+<style>body{margin:0;background:var(--void);color:var(--ink);font-family:var(--font-sans);}.wrap{display:flex;gap:28px;padding:24px 32px}figure{margin:0;display:grid;justify-items:center;gap:8px}figcaption{font:400 12px/16px var(--font-mono);color:var(--ink-muted)}</style></head>
+<body>
+<div class="wrap">
+<figure><button class="df-tilt" type="button" aria-label="Tilt idle"><span class="df-tilt__dot"></span></button><figcaption>idle</figcaption></figure>
+<figure><button class="df-tilt is-on" type="button" aria-label="Tilt live"><span class="df-tilt__dot" style="transform:translate(4px,-2px)"></span></button><figcaption>live</figcaption></figure>
+<figure><button class="df-tilt is-on is-rolling" type="button" aria-label="Rolling"><span class="df-tilt__dot" style="transform:translate(9px,1px)"></span></button><figcaption>rolling</figcaption></figure>
+<figure><button class="df-tilt is-ask" type="button" aria-label="Allow motion"><span class="df-tilt__dot"></span></button><figcaption>ask</figcaption></figure>
+<figure><button class="df-tilt is-off" type="button" aria-label="Tilt off"><span class="df-tilt__dot"></span></button><figcaption>off</figcaption></figure></div>
+<script></script></body></html>

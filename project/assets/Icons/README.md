@@ -1,0 +1,1 @@
+The Depthfield icon set: 37 icons on a 24px grid, 1.5px round strokes, no fills. These files are drawn in #5c766e so they read on night and day grounds here; in pages, use `Depthfield.icon(name)` or `data-df-icon`, which draw in `currentColor` (see Iconography).
