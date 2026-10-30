@@ -296,7 +296,7 @@
     ]));
     if (S.themes.length > 1) {
       out.appendChild(h('h2', { class: 'sec', text: S.themes.length + ' ' + plural(S.style.label) }));
-      out.appendChild(h('p', { class: 'styles-intro', text: (S.style.intro ? S.style.intro + ' ' : '') + 'Pick one: the site, the cover and every live preview follow.' }));
+      out.appendChild(h('p', { class: 'styles-intro' }, [(S.style.intro ? S.style.intro + ' ' : '') + 'Pick one: the site, the cover and every live preview follow. Or ', h('a', { href: './', text: 'walk through all of them in the showcase' }), ', where each one gets a scene of its own.']));
       out.appendChild(lookGrid('lg'));
       out.appendChild(h('h2', { class: 'sec', text: 'The brand book' }));
     }

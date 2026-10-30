@@ -7,7 +7,7 @@ This repo is a read-only export of the Depthfield design system (index format v3
 
 The artifact is the source of truth. Opening that link requires access on claude.ai; everything needed to read the system is in this repo.
 
-**Live site:** <https://stevoblevo.github.io/depthfield/> — the brand book, every token per theme, all components running live, and the assets, styled by the system itself.
+**Live site:** <https://stevoblevo.github.io/depthfield/> is the showcase, a scroll story through all seven themes, one chapter each: the glasshouse with three spores to find, day chrome over a night sky, a weather world that turns to red rain, a hub at the mint clearing, a ledger with the reality lens, this repo's own archive, and a high-contrast ending with doors out. The docs (brand book, tokens per theme, every component running live, assets) are at <https://stevoblevo.github.io/depthfield/docs.html>. Both are built from the system's own files.
 
 ## Start here
 
@@ -47,7 +47,7 @@ project/
 
 ## The site
 
-`index.html` and `site/` make up the GitHub Pages site. The **Theme** menu in the header switches the whole site, the cover and every live preview between the system's styles. Depthfield's three skins each have a night and a day face, so a sun/moon button flips between them. The choice is kept in the address (`?theme=…`), so a link opens in the same style, and picking a look inside a preview, such as Storeybrook's own Looks component, restyles the site too. It loads each preview the way the artifact does: `project/tokens.css`, `components/bundle.css` and `components/bundle.js` come first, and `<html data-theme>` is set to the theme picked in the header.
+`index.html` is the showcase (with `site/showcase.css` and `site/showcase.js`). `docs.html` and the rest of `site/` make up the docs. The **Theme** menu in the header switches the whole site, the cover and every live preview between the system's styles. Depthfield's three skins each have a night and a day face, so a sun/moon button flips between them. The choice is kept in the address (`?theme=…`), so a link opens in the same style, and picking a look inside a preview, such as Storeybrook's own Looks component, restyles the site too. It loads each preview the way the artifact does: `project/tokens.css`, `components/bundle.css` and `components/bundle.js` come first, and `<html data-theme>` is set to the theme picked in the header.
 
 - `project/tokens.css` is compiled from `project/tokens.json` by `site/build.py`, following the artifact's tokens.css rules: one `[data-theme]` block per theme, `--font-*` families, a class per type style.
 - `site/site.json` is the site's index (sections, components, assets, style groups), and `site/hooks.css` repeats the bundle's per-look defaults so a look can sit inside another (the style cards). Both are written by the same script from `site/config.json`.

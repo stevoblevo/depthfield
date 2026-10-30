@@ -1,41 +1,175 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="night">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Design system</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Depthfield — seven themes, one world</title>
+<meta name="description" content="Depthfield, a dark-first design system for scroll-driven, immersive sites, told as a scroll story through all seven of its themes.">
+<script>/* old docs links (#/…) live at docs.html now */ if (/^#\//.test(location.hash)) location.replace('docs.html' + location.search + location.hash);</script>
 <link rel="stylesheet" href="project/tokens.css">
 <link rel="stylesheet" href="site/hooks.css">
 <link rel="stylesheet" href="project/components/bundle.css">
-<link rel="stylesheet" href="site/app.css">
-<script src="site/vendor/marked.min.js"></script>
-<script src="site/vendor/purify.min.js"></script>
+<link rel="stylesheet" href="site/showcase.css">
 </head>
-<body class="shell">
-<a class="skip" href="#main">Skip to content</a>
-<header class="bar">
-  <a class="brand" href="#/" id="brand">…</a>
-  <nav class="tabs" aria-label="Sections">
-    <a href="#/" data-tab="overview">Overview</a>
-    <a href="#/book" data-tab="book">Brand book</a>
-    <a href="#/tokens" data-tab="tokens">Tokens</a>
-    <a href="#/components" data-tab="components">Components</a>
-    <a href="#/assets" data-tab="assets">Assets</a>
-  </nav>
-  <div class="tools">
-    <button type="button" class="style-btn" id="style-btn" aria-haspopup="dialog" aria-expanded="false" aria-controls="style-panel">
-      <span class="style-dots" aria-hidden="true"><i></i><i></i><i></i></span>
-      <span class="style-k" id="style-k">Style</span>
-      <span class="style-name" id="style-name">…</span>
-      <svg class="caret" viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </button>
-    <button type="button" class="face" id="face" hidden></button>
-    <a class="ext" id="repo" href="#" rel="noopener">GitHub</a>
+<body class="df-page df-no-js sc-page">
+<a class="df-skiplink" href="#ch-night">Skip to the story</a>
+<canvas class="df-world" id="world" aria-hidden="true"></canvas>
+
+<header class="df-ribbon">
+  <div class="df-ribbon__in">
+    <a class="df-ribbon__mark" href="#ch-night"><span data-df-icon="knot" data-size="22"></span><b>Depthfield</b></a>
+    <nav class="df-knots" aria-label="Themes">
+      <a class="df-knot" href="#ch-night" data-scene-link="night"><i>I</i><span>Night · mint</span></a>
+      <a class="df-knot" href="#ch-day" data-scene-link="day"><i>II</i><span>Day · mint</span></a>
+      <a class="df-knot" href="#ch-peach-night" data-scene-link="peach-night"><i>III</i><span>Night · peach</span></a>
+      <a class="df-knot" href="#ch-peach-day" data-scene-link="peach-day"><i>IV</i><span>Day · peach</span></a>
+      <a class="df-knot" href="#ch-thread-night" data-scene-link="thread-night"><i>V</i><span>Night · thread</span></a>
+      <a class="df-knot" href="#ch-thread-day" data-scene-link="thread-day"><i>VI</i><span>Day · thread</span></a>
+      <a class="df-knot" href="#ch-contrast" data-scene-link="contrast"><i>VII</i><span>Contrast</span></a>
+    </nav>
+    <div class="df-ribbon__tools">
+      <button class="df-tool" type="button" id="lens-tool" aria-pressed="false"><span data-df-icon="lens" data-size="16"></span><b class="df-tool__label">Lens</b></button>
+      <a class="df-tool" href="docs.html"><span data-df-icon="chapters" data-size="16"></span><b class="df-tool__label">Docs</b></a>
+    </div>
   </div>
 </header>
-<div class="style-panel" id="style-panel" role="dialog" aria-labelledby="style-panel-h" hidden></div>
-<main id="main" tabindex="-1"><p class="loading">Loading…</p></main>
-<footer class="foot" id="foot"></footer>
-<script src="site/app.js"></script>
+
+<main>
+
+<!-- I · Night · mint — the entry: the glasshouse, and three spores to find -->
+<section class="df-scene df-over-art sc-ch" data-df-chapter data-theme="night" data-scene="night" id="ch-night" data-world="glasshouse">
+  <div class="df-scene__block">
+    <header class="df-chapter" data-df-reveal><span class="df-chapter__eyebrow">Chapter 01 — Night · mint</span><h1 class="df-h-xl">Depth<em>field</em></h1></header>
+    <p class="df-lede" data-df-reveal>The picture is the page. Seven themes share one world: keep scrolling and the skin changes around the art, while the art keeps its own night.</p>
+    <p class="df-hint" data-df-reveal id="spore-hint">Three spores are hiding in the glasshouse. Press anything that looks like decoration.</p>
+    <p class="sc-actions" data-df-reveal><a class="df-btn df-btn--primary" href="#ch-day">Begin <span class="df-arrow" aria-hidden="true">→</span></a><a class="df-btn df-btn--text" href="docs.html">Skip to the docs</a></p>
+  </div>
+</section>
+
+<!-- II · Day · mint — same sky, day chrome -->
+<section class="df-scene df-scene--top df-over-art sc-ch" data-df-chapter data-theme="day" data-scene="day" id="ch-day" data-world="glasshouse">
+  <div class="sc-split">
+    <div class="df-scene__block">
+      <header class="df-chapter" data-df-reveal><span class="df-chapter__eyebrow">Chapter 02 — Day · mint</span><h2 class="df-chapter__title">Same sky, <em>day</em> chrome</h2></header>
+      <p class="df-lede" data-df-reveal>The day face changes the chrome, not the sky. The world keeps its night art and the words over it keep the art’s inks; everything that floats turns to day.</p>
+    </div>
+    <aside class="sc-sheet" data-df-reveal aria-label="Settings for the glasshouse">
+      <p class="eyebrow sc-eyebrow">Settings · the glasshouse</p>
+      <label class="df-toggle"><input type="checkbox" role="switch" id="set-shafts" checked> Light shafts follow the pointer</label>
+      <div class="df-slider"><div class="df-slider__row"><label for="set-parts">Motes in the air</label><output for="set-parts" id="set-parts-out">240</output></div><input type="range" id="set-parts" min="0" max="240" step="20" value="240"></div>
+      <p class="eyebrow sc-eyebrow">Live</p>
+      <dl class="df-readout"><div><dt>Pointer</dt><dd id="ro-pointer">0.60 · 0.45</dd></div><div><dt>Scroll</dt><dd id="ro-scroll">000%</dd></div><div><dt>Theme</dt><dd id="ro-theme">day</dd></div></dl>
+      <p class="sc-note">Live now: the world redraws when a setting changes, and the readout follows your pointer.</p>
+    </aside>
+  </div>
+</section>
+
+<!-- III · Night · peach — a weather story: the turn -->
+<section class="df-pin df-over-art sc-ch sc-tall" data-df-chapter data-theme="peach-night" data-scene="peach-night" id="ch-peach-night" data-world="weather" data-wx="0 1.75">
+  <div class="df-pin__stage"><div class="df-scene">
+    <div class="df-scene__block">
+      <header class="df-chapter" data-df-reveal><span class="df-chapter__eyebrow">Chapter 03 — Night · peach</span><h2 class="df-chapter__title">Then red <em>rain</em></h2></header>
+      <p class="df-lede" data-df-reveal>Peach is for weather worlds and game hubs. Keep scrolling and the weather turns: peach fall, then red rain. The accent follows the sky, and the HUD names it, so the change is in words too.</p>
+      <div class="df-weather sc-weather" data-df-reveal aria-hidden="true">
+        <div class="df-weather__state df-weather__state--peach" data-wx-i="0"><b>peach fall</b></div><div class="df-weather__state df-weather__state--rain" data-wx-i="1"><b>red rain</b></div>
+        <div class="df-weather__state df-weather__state--mint" data-wx-i="2"><b>mint clearing</b></div><div class="df-weather__state df-weather__state--night" data-wx-i="3"><b>night garden</b></div>
+      </div>
+    </div>
+  </div></div>
+</section>
+
+<!-- IV · Day · peach — the mint clearing, the eye, a hub of worlds -->
+<section class="df-scene df-scene--top df-over-art sc-ch" data-df-chapter data-theme="peach-day" data-scene="peach-day" id="ch-peach-day" data-world="weather" data-wx="1.75 2.6">
+  <div class="sc-split sc-split--hub">
+    <div class="df-scene__block">
+      <header class="df-chapter" data-df-reveal><span class="df-chapter__eyebrow">Chapter 04 — Day · peach</span><h2 class="df-chapter__title">The mint <em>clearing</em></h2></header>
+      <p class="df-lede" data-df-reveal>The eye on the far ridge opens. Weather worlds open onto hubs: the cards float on day chrome while the sky keeps its own light.</p>
+    </div>
+    <div class="sc-hub" data-df-reveal>
+      <nav class="sc-hub__cards" aria-label="Worlds">
+        <a class="df-world-card" href="https://stevoblevo.github.io/storeybrook/"><span class="df-tile"><span data-df-icon="door"></span></span><span><b>Storeybrook</b><small>The daylight counterpart: six looks, one storybook.</small></span></a>
+        <a class="df-world-card" href="docs.html"><span class="df-tile"><span data-df-icon="chapters"></span></span><span><b>The docs</b><small>Every token, component and rule, styled by itself.</small></span></a>
+        <a class="df-world-card" href="https://github.com/stevoblevo/depthfield"><span class="df-tile"><span data-df-icon="archive"></span></span><span><b>Source</b><small>The system on GitHub, exported from Claude.</small></span></a>
+      </nav>
+      <div class="sc-eye">
+        <button class="df-eye" type="button" id="eye" aria-label="An eye: press it and it winks back">
+          <svg viewBox="-80 -60 160 120" aria-hidden="true"><defs><radialGradient id="eye-h"><stop offset="0" style="stop-color:var(--eye-iris);stop-opacity:.3"/><stop offset="1" style="stop-color:var(--eye-iris);stop-opacity:0"/></radialGradient><clipPath id="eye-c"><ellipse rx="62" ry="37"/></clipPath></defs>
+            <circle r="80" fill="url(#eye-h)"/><g class="df-eye__lid"><ellipse class="df-eye__white" rx="62" ry="37"/><g clip-path="url(#eye-c)"><g class="df-eye__look"><circle class="df-eye__iris" r="24"/><circle class="df-eye__pupil" r="11"/><circle class="df-eye__glint" cx="-6" cy="-6" r="3.5"/></g></g><ellipse class="df-eye__rim" rx="62" ry="37"/><path class="df-eye__lash" d="M-32.8 -36.8L-40.3 -51.5M-17.3 -36.8L-21.3 -51.5M0 -36.8L0 -51.5M17.3 -36.8L21.3 -51.5M32.8 -36.8L40.3 -51.5"/></g></svg>
+        </button>
+        <p class="hint sc-hint">It follows you. Press it and it winks back.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- V · Night · thread — the ledger; the world steps back -->
+<section class="df-section sc-ch sc-flat" data-df-chapter data-theme="thread-night" data-scene="thread-night" id="ch-thread-night" data-world="none">
+  <div class="df-wrap">
+    <header class="df-chapter" data-df-reveal><span class="df-chapter__eyebrow">Chapter 05 — Night · thread</span><h2 class="df-chapter__title">The <em>ledger</em></h2></header>
+    <p class="df-lede sc-lede" data-df-reveal>Thread is for ledgers, architecture and version archives: Bodoni for the display, Alegreya to read, mono for every label. The world steps back; flat is fine. Turn on the lens and every claim shows what it rests on.</p>
+    <p class="sc-actions" data-df-reveal><button class="df-btn df-btn--mono" type="button" data-sc-lens>Turn on the lens</button></p>
+    <div class="sc-stations">
+      <article class="df-station" data-df-reveal><span class="df-station__num">I</span><div><h3 class="df-station__title"><small>Step one · the world</small>The picture is the <em>page</em></h3><div class="df-station__text"><p>A generated canvas of three ridges, haze and light runs behind every chapter of this page. It pauses when the tab is hidden and draws one still frame under reduced motion.</p></div></div><aside class="df-station__aside"><div class="sc-tags"><span class="df-tag">Worlds</span></div><span class="df-chip df-chip--observed">Observed</span><span>Running behind this page.</span></aside></article>
+      <article class="df-station" data-df-reveal><span class="df-station__num">II</span><div><h3 class="df-station__title"><small>Step two · the scroll</small>Text <em>never</em> parallaxes</h3><div class="df-station__text"><p>The planes sink with the scroll, the nearest fastest. Words scroll one to one and rise once as they enter.</p></div></div><aside class="df-station__aside"><div class="sc-tags"><span class="df-tag df-tag--sea">Motion</span></div><span class="df-chip df-chip--observed">Observed</span><span>Every line here reveals with data-df-reveal.</span></aside></article>
+      <article class="df-station" data-df-reveal><span class="df-station__num">III</span><div><h3 class="df-station__title"><small>Step three · the weather</small>The accent <em>follows</em></h3><div class="df-station__text"><p>Four weathers are keyed to the peach chapters. The HUD names each one, so the change never rests on colour alone.</p></div></div><aside class="df-station__aside"><div class="sc-tags"><span class="df-tag df-tag--peach">Weather</span></div><span class="df-chip df-chip--observed">Observed</span><span>Scroll back to chapter 03 to watch it turn.</span></aside></article>
+      <article class="df-station" data-df-reveal><span class="df-station__num">IV</span><div><h3 class="df-station__title"><small>Step four · the doors</small>Every chapter ends at a <em>door</em></h3><div class="df-station__text"><p>Three portals close the story, each a real link with a kind and a destination.</p></div></div><aside class="df-station__aside"><div class="sc-tags"><span class="df-tag df-tag--violet">Portals</span></div><span class="df-chip df-chip--partial">Partial</span><span>The doors are links laid over the art; they are not yet drawn into the world itself.</span></aside></article>
+    </div>
+    <dl class="df-readout sc-counts" data-df-reveal><div><dt>Themes</dt><dd>7</dd></div><div><dt>Components</dt><dd>30</dd></div><div><dt>Colour tokens</dt><dd>86</dd></div><div><dt>Icons</dt><dd>37</dd></div></dl>
+  </div>
+</section>
+
+<!-- VI · Day · thread — the archive of this very repository -->
+<section class="df-section sc-ch sc-flat" data-df-chapter data-theme="thread-day" data-scene="thread-day" id="ch-thread-day" data-world="none">
+  <div class="df-wrap">
+    <header class="df-chapter" data-df-reveal><span class="df-chapter__eyebrow">Chapter 06 — Day · thread</span><h2 class="df-chapter__title">The <em>archive</em></h2></header>
+    <p class="df-lede sc-lede" data-df-reveal>Every version of this repository, oldest first. The current one is here, never a link to itself.</p>
+    <div class="sc-versions">
+      <a class="df-version" data-df-reveal href="https://github.com/stevoblevo/depthfield/commit/fd009c8"><figure><div class="df-version__art sc-art sc-art--1"></div><b>I</b></figure><h3>Import <small>2026-10-29</small></h3><p>Eighty-four files exported from the Claude artifact.</p><span class="df-open">Open ↗</span></a>
+      <a class="df-version" data-df-reveal href="https://github.com/stevoblevo/depthfield/commit/be3a5d7"><figure><div class="df-version__art sc-art sc-art--2"></div><b>II</b></figure><h3>Assets <small>2026-10-29</small></h3><p>The icon set and the mark, from the asset store.</p><span class="df-open">Open ↗</span></a>
+      <a class="df-version" data-df-reveal href="https://github.com/stevoblevo/depthfield/commit/d54e87a"><figure><div class="df-version__art sc-art sc-art--3"></div><b>III</b></figure><h3>Styled <small>2026-10-29</small></h3><p>tokens.css compiled; the docs wear the system.</p><span class="df-open">Open ↗</span></a>
+      <a class="df-version" data-df-reveal href="https://github.com/stevoblevo/depthfield/commit/9d43128"><figure><div class="df-version__art sc-art sc-art--4"></div><b>IV</b></figure><h3>Themes <small>2026-10-29</small></h3><p>A switcher for all seven themes.</p><span class="df-open">Open ↗</span></a>
+      <a class="df-version" data-df-reveal href="#ch-night" aria-current="page"><figure><div class="df-version__art sc-art sc-art--5"></div><b>V</b></figure><h3>Showcase <small>2026-10-29</small></h3><p>You are here.</p><span class="df-open">Here</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- VII · High contrast — the ending: the night garden, and three doors -->
+<section class="df-scene df-over-art sc-ch sc-end" data-df-chapter data-theme="contrast" data-scene="contrast" id="ch-contrast" data-world="weather" data-wx="3 3">
+  <div class="df-scene__block">
+    <header class="df-chapter" data-df-reveal><span class="df-chapter__eyebrow">Chapter 07 — High contrast</span><h2 class="df-chapter__title">Every chapter ends at a <em>door</em></h2></header>
+    <p class="df-lede" data-df-reveal>Contrast is for anyone who asks for more: text at 7:1 or better, borders at 3:1, shadows turned to outlines. The night garden comes back, and three doors open.</p>
+    <nav class="sc-doors" aria-label="Doors" data-df-reveal>
+      <a class="sc-door" href="https://stevoblevo.github.io/storeybrook/"><span class="df-door" style="--door-c:var(--wx-peach-rim)"><span class="df-door__arch"></span></span><span class="df-over-art__text sc-door__cap"><b>Storeybrook</b><small>a storybook world</small></span></a>
+      <a class="sc-door" href="docs.html"><span class="df-door" style="--door-c:var(--wx-mint-rim)"><span class="df-door__arch"></span></span><span class="df-over-art__text sc-door__cap"><b>The docs</b><small>every rule, styled</small></span></a>
+      <a class="sc-door" href="https://github.com/stevoblevo/depthfield"><span class="df-door" style="--door-c:var(--wx-rain-rim)"><span class="df-door__arch"></span></span><span class="df-over-art__text sc-door__cap"><b>Source</b><small>on GitHub</small></span></a>
+    </nav>
+    <p class="df-hint" data-df-reveal>Everything has a second way in: Tab reaches every door and spore, Enter opens it, Escape turns the lens off.</p>
+  </div>
+</section>
+
+</main>
+
+<footer class="df-foot sc-flat" data-theme="contrast">
+  <div class="df-wrap"><div class="df-foot__in">
+    <svg class="df-foot__mark" viewBox="0 0 64 64" aria-hidden="true"><path fill="currentColor" d="M0 0H64V16A48 48 0 0 0 16 64H0Z M64 32A32 32 0 0 0 32 64H48A16 16 0 0 1 64 48Z"/></svg>
+    <div><h2>Every chapter ends at a door.</h2><p>Built with Depthfield itself: its tokens, its stylesheet and its behaviour bundle, nothing else. The art is generated; the words are the content.</p>
+      <nav aria-label="Jump"><a class="df-jump" href="#ch-night">Back to the top</a><a class="df-jump" href="docs.html">The docs</a><a class="df-jump" href="https://github.com/stevoblevo/depthfield">GitHub</a><a class="df-jump" href="https://stevoblevo.github.io/storeybrook/">Storeybrook</a></nav></div>
+  </div></div>
+</footer>
+
+<div class="df-hud">
+  <div class="df-progress" data-df-progress role="progressbar" aria-label="Story progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span data-df-ch>01 / 07</span><span class="df-progress__track"><span class="df-progress__fill"></span></span><span data-df-pct>000%</span></div>
+  <div class="sc-hud-chips">
+    <span class="df-hudchip" id="chip-spores">spores <b id="spore-n">0</b> / 3</span>
+    <span class="df-hudchip" id="chip-weather" hidden>weather <b id="wx-name">peach fall</b></span>
+    <span class="df-hudchip df-hudchip--keep"><span class="sc-hide-sm">theme </span><b id="chip-theme">night</b></span>
+  </div>
+</div>
+<aside class="df-caption df-caption--live" aria-hidden="true"><p class="df-caption__label"></p><h3 class="df-caption__title"></h3><p class="df-caption__body"></p></aside>
+<div class="df-found" id="found"><p class="df-found__kicker"></p><p class="df-found__title"></p><p class="df-found__line"></p><p class="df-found__fact"></p><p class="df-found__more"></p></div>
+<div class="df-lens-banner" id="lens-banner" role="status" hidden><i></i>Reality lens on: headings misregister, the art goes flat, and every chip shows what is proved, partial, proposed or missing. Escape turns it off.</div>
+
+<script src="project/components/bundle.js"></script>
+<script src="site/showcase.js"></script>
 </body>
 </html>

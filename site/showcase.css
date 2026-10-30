@@ -1,0 +1,91 @@
+/* Depthfield showcase — composition only. Colours, faces, sizes and timing are Depthfield tokens or come from
+   components/bundle.css; each chapter carries its own data-theme, and the ribbon and HUD take the chapter in view. */
+
+html { scroll-behavior: smooth; scroll-padding-top: calc(54px + env(safe-area-inset-top, 0px) + 12px); }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+.sc-page { overflow-x: clip; }
+.df-skiplink { position: absolute; left: -999px; top: 8px; z-index: var(--z-overlay); }
+.df-skiplink:focus { left: 8px; }
+
+/* the world fades between modes and steps back for the flat chapters */
+#world { transition: opacity var(--dur-base) var(--ease-out); }
+#world.is-out { opacity: 0; }
+.df-lens #world { filter: grayscale(.6) contrast(.85); }
+
+/* chapters */
+.sc-ch { position: relative; z-index: var(--z-content); }
+.sc-ch .df-scene__block { position: relative; }
+.sc-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); margin: var(--space-2) 0 0; }
+.sc-flat { background: var(--void); color: var(--ink); }
+.sc-flat + .sc-flat { border-top: var(--border-hair) solid var(--line); }
+.sc-lede { max-width: var(--size-measure-lede); margin: var(--space-3) 0 var(--space-5); }
+.eyebrow.sc-eyebrow { margin: 0; text-transform: uppercase; color: var(--ink-muted); }
+.sc-note { margin: 0; font-size: 14px; line-height: 20px; color: var(--ink-muted); }
+
+/* II · day chrome over a night sky */
+.sc-split { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(280px, 400px); gap: var(--space-7); align-items: start; width: 100%; max-width: var(--size-container); margin-inline: auto; }
+.sc-sheet {
+  pointer-events: auto; display: grid; gap: var(--space-4); padding: var(--space-6);
+  background: var(--surface-raised); color: var(--ink); border-radius: var(--radius-lg); box-shadow: var(--shadow-float);
+}
+.sc-sheet .df-readout { margin: 0; }
+@media (max-width: 899px) { .sc-split { grid-template-columns: 1fr; } }
+
+/* III · the weather turns while the stage holds */
+.sc-tall { height: calc(2.6 * var(--scene-beat)); }
+.sc-tall .df-scene { height: 100%; }
+.sc-weather { max-width: 560px; margin-top: var(--space-4); }
+.sc-weather .df-weather__state { min-height: 92px; transition: box-shadow var(--dur-slow) var(--ease-out), transform var(--dur-slow) var(--ease-out); }
+.sc-weather .df-weather__state.is-now { box-shadow: 0 0 0 2px var(--art-ink), 0 0 30px color-mix(in srgb, var(--art-accent) 60%, transparent); transform: translateY(-4px); }
+
+/* IV · a hub of worlds, and the eye */
+.sc-split--hub { grid-template-columns: minmax(0, 1fr) minmax(300px, 460px); }
+.sc-hub { pointer-events: auto; display: grid; gap: var(--space-4); }
+.sc-hub__cards { display: grid; gap: 0; padding: var(--space-2) var(--space-5); border-radius: var(--radius-lg); background: var(--surface-raised); box-shadow: var(--shadow-float); }
+.sc-hub__cards .df-world-card:last-child { border-bottom: 0; }
+.sc-eye { display: flex; align-items: center; gap: var(--space-4); padding: var(--space-4) var(--space-5); border-radius: var(--radius-lg); background: var(--surface-raised); box-shadow: var(--shadow-float); }
+.sc-eye .df-eye { width: 120px; flex: none; }
+.sc-hint { margin: 0; color: var(--cue); }
+@media (max-width: 899px) { .sc-split--hub { grid-template-columns: 1fr; } }
+
+/* V · the ledger */
+.sc-stations { display: grid; gap: var(--space-2); margin: var(--space-7) 0; }
+.sc-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+.sc-counts { margin: var(--space-7) 0 0; }
+
+/* VI · the archive */
+.sc-versions { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: var(--space-5); margin-top: var(--space-6); }
+.sc-art { background-color: var(--surface); }
+/* the mark's depth rings, cut from a different corner for each version */
+.sc-art--1 { background-image: radial-gradient(circle at 100% 100%, var(--accent) 0 18%, transparent 18% 34%, var(--line) 34% 36%, transparent 36%); }
+.sc-art--2 { background-image: radial-gradient(circle at 0 100%, transparent 0 22%, var(--accent) 22% 38%, transparent 38%), radial-gradient(circle at 100% 0, var(--line) 0 30%, transparent 30%); }
+.sc-art--3 { background-image: radial-gradient(circle at 100% 100%, transparent 0 26%, var(--accent) 26% 42%, transparent 42% 58%, var(--accent-soft) 58% 74%, transparent 74%); }
+.sc-art--4 { background-image: radial-gradient(circle at 0 0, var(--accent) 0 24%, transparent 24% 40%, var(--accent-soft) 40% 56%, transparent 56%), radial-gradient(circle at 100% 100%, var(--line) 0 20%, transparent 20%); }
+.sc-art--5 { background-image: radial-gradient(circle at 100% 100%, var(--accent) 0 16%, transparent 16% 30%, var(--accent) 30% 44%, transparent 44% 58%, var(--accent) 58% 72%, transparent 72%); }
+
+/* VII · the doors */
+.sc-end { min-height: calc(1.2 * var(--scene-beat)); padding-bottom: calc(var(--scene-pad-bottom) + 72px); }
+.sc-doors { display: flex; flex-wrap: wrap; gap: var(--space-8); align-items: flex-end; margin: var(--space-6) 0 var(--space-3); pointer-events: auto; }
+.sc-door { display: grid; justify-items: center; gap: var(--space-3); color: inherit; text-decoration: none; }
+.sc-door .df-door { width: 72px; height: 124px; }
+.sc-door:focus-visible { outline: var(--border-focus) solid var(--focus); outline-offset: var(--border-focus-offset-art); border-radius: var(--radius-md); }
+.sc-door__cap { display: grid; gap: 2px; text-align: center; }
+.sc-door__cap b { font: 500 15px/20px var(--df-text); }
+.sc-door__cap small { font: 400 12px/16px var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--art-ink-muted); }
+.sc-door:hover .df-door__arch::after, .sc-door:focus-visible .df-door__arch::after { transform: scaleX(.55); }
+@media (max-width: 599px) { .sc-doors { gap: var(--space-6); } }
+
+/* the found card and the ribbon share the top-left corner: the card drops below the ribbon */
+.df-found { top: calc(54px + env(safe-area-inset-top, 0px) + var(--space-3)); }
+
+/* seven knots on a phone: smaller beads, tighter thread */
+@media (max-width: 599px) {
+  .df-knots { gap: 2px; }
+  .df-knot { padding: 2px; }
+  .df-knot i { width: 23px; height: 23px; font-size: 11px; }
+  .sc-hide-sm { display: none; }
+}
+
+/* HUD */
+.sc-hud-chips { display: flex; gap: var(--space-2); align-items: center; }
+.df-foot { position: relative; z-index: var(--z-content); padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 112px); }
