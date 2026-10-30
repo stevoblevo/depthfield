@@ -1,5 +1,39 @@
 {
  "artifact": "https://claude.ai/code/artifact/93303f79-895a-44d2-b5a8-7a4012464911",
  "repo": "https://github.com/stevoblevo/depthfield",
- "sibling": {"name": "Storeybrook", "url": "https://stevoblevo.github.io/storeybrook/"}
+ "sibling": {
+  "name": "Storeybrook",
+  "url": "https://stevoblevo.github.io/storeybrook/"
+ },
+ "styleLabel": "Theme",
+ "themeGroups": [
+  {
+   "name": "Mint",
+   "themes": [
+    "night",
+    "day"
+   ]
+  },
+  {
+   "name": "Peach",
+   "themes": [
+    "peach-night",
+    "peach-day"
+   ]
+  },
+  {
+   "name": "Thread",
+   "themes": [
+    "thread-night",
+    "thread-day"
+   ]
+  },
+  {
+   "name": "High contrast",
+   "themes": [
+    "contrast"
+   ]
+  }
+ ],
+ "styleIntro": "Three skins (mint, peach, thread), each with a night and a day face, plus high contrast. Night comes first."
 }

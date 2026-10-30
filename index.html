@@ -5,11 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Design system</title>
 <link rel="stylesheet" href="project/tokens.css">
+<link rel="stylesheet" href="site/hooks.css">
+<link rel="stylesheet" href="project/components/bundle.css">
 <link rel="stylesheet" href="site/app.css">
 <script src="site/vendor/marked.min.js"></script>
 <script src="site/vendor/purify.min.js"></script>
 </head>
-<body>
+<body class="shell">
 <a class="skip" href="#main">Skip to content</a>
 <header class="bar">
   <a class="brand" href="#/" id="brand">…</a>
@@ -21,10 +23,17 @@
     <a href="#/assets" data-tab="assets">Assets</a>
   </nav>
   <div class="tools">
-    <label class="theme"><span class="sr">Theme</span><select id="theme"></select></label>
+    <button type="button" class="style-btn" id="style-btn" aria-haspopup="dialog" aria-expanded="false" aria-controls="style-panel">
+      <span class="style-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span class="style-k" id="style-k">Style</span>
+      <span class="style-name" id="style-name">…</span>
+      <svg class="caret" viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <button type="button" class="face" id="face" hidden></button>
     <a class="ext" id="repo" href="#" rel="noopener">GitHub</a>
   </div>
 </header>
+<div class="style-panel" id="style-panel" role="dialog" aria-labelledby="style-panel-h" hidden></div>
 <main id="main" tabindex="-1"><p class="loading">Loading…</p></main>
 <footer class="foot" id="foot"></footer>
 <script src="site/app.js"></script>
