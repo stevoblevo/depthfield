@@ -78,6 +78,9 @@ html { scroll-behavior: smooth; scroll-padding-top: calc(54px + env(safe-area-in
 /* the found card and the ribbon share the top-left corner: the card drops below the ribbon */
 .df-found { top: calc(54px + env(safe-area-inset-top, 0px) + var(--space-3)); }
 
+/* seven knots leave no room for the current one's name below desktop widths */
+@media (max-width: 1080px) { .df-knot[aria-current="page"] span { display: none; } }
+
 /* seven knots on a phone: smaller beads, tighter thread */
 @media (max-width: 599px) {
   .df-knots { gap: 2px; }
