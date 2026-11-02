@@ -1,0 +1,22 @@
+{
+  "id": "./",
+  "name": "Depthfield",
+  "short_name": "Depthfield",
+  "description": "A dark-first design system for scroll-driven, immersive sites, told as a scroll story through its seven themes.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "fullscreen",
+  "display_override": ["fullscreen", "standalone"],
+  "orientation": "any",
+  "background_color": "#07110f",
+  "theme_color": "#07110f",
+  "icons": [
+    { "src": "site/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "site/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "site/icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Watch the reel", "url": "./?autoplay", "icons": [{ "src": "site/icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "The docs", "url": "./docs.html", "icons": [{ "src": "site/icons/icon-192.png", "sizes": "192x192" }] }
+  ]
+}

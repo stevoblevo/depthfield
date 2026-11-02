@@ -3,6 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#07110f">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/svg+xml" href="project/assets/Mark/depthfield-mark.svg">
+<link rel="apple-touch-icon" href="site/icons/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Depthfield">
+<style>/* painted before any stylesheet arrives, so a slow font never leaves a white screen */ html{background:#07110f;color-scheme:dark}</style>
 <title>Depthfield — seven themes, one world</title>
 <meta name="description" content="Depthfield, a dark-first design system for scroll-driven, immersive sites, told as a scroll story through all seven of its themes.">
 <script>/* old docs links (#/…) live at docs.html now */ if (/^#\//.test(location.hash)) location.replace('docs.html' + location.search + location.hash);</script>
@@ -29,6 +38,8 @@
     </nav>
     <div class="df-ribbon__tools">
       <button class="df-tool" type="button" id="lens-tool" aria-pressed="false"><span data-df-icon="lens" data-size="16"></span><b class="df-tool__label">Lens</b></button>
+      <button class="df-tool" type="button" data-sc-reel><span data-df-icon="reel" data-size="16"></span><b class="df-tool__label">Reel</b></button>
+      <button class="df-tool" type="button" data-immersive hidden><span data-df-icon="expand" data-size="16"></span><b class="df-tool__label" data-immersive-label>Full screen</b></button>
       <a class="df-tool" href="docs.html"><span data-df-icon="chapters" data-size="16"></span><b class="df-tool__label">Docs</b></a>
     </div>
   </div>
@@ -41,8 +52,8 @@
   <div class="df-scene__block">
     <header class="df-chapter" data-df-reveal><span class="df-chapter__eyebrow">Chapter 01 — Night · mint</span><h1 class="df-h-xl">Depth<em>field</em></h1></header>
     <p class="df-lede" data-df-reveal>The picture is the page. Seven themes share one world: keep scrolling and the skin changes around the art, while the art keeps its own night.</p>
-    <p class="df-hint" data-df-reveal id="spore-hint">Three spores are hiding in the glasshouse. Press anything that looks like decoration.</p>
-    <p class="sc-actions" data-df-reveal><a class="df-btn df-btn--primary" href="#ch-day">Begin <span class="df-arrow" aria-hidden="true">→</span></a><a class="df-btn df-btn--text" href="docs.html">Skip to the docs</a></p>
+    <p class="df-hint" data-df-reveal id="spore-hint">Five night pets live in this world, three of them spores in the glasshouse. Press anything that looks like decoration; whatever you find follows you down.</p>
+    <p class="sc-actions" data-df-reveal><a class="df-btn df-btn--primary" href="#ch-day">Begin <span class="df-arrow" aria-hidden="true">→</span></a><button class="df-btn df-btn--ghost" type="button" data-sc-reel><span data-df-icon="reel" data-size="16"></span>Watch the reel</button><a class="df-btn df-btn--text" href="docs.html">Skip to the docs</a></p>
   </div>
 </section>
 
@@ -96,7 +107,7 @@
           <svg viewBox="-80 -60 160 120" aria-hidden="true"><defs><radialGradient id="eye-h"><stop offset="0" style="stop-color:var(--eye-iris);stop-opacity:.3"/><stop offset="1" style="stop-color:var(--eye-iris);stop-opacity:0"/></radialGradient><clipPath id="eye-c"><ellipse rx="62" ry="37"/></clipPath></defs>
             <circle r="80" fill="url(#eye-h)"/><g class="df-eye__lid"><ellipse class="df-eye__white" rx="62" ry="37"/><g clip-path="url(#eye-c)"><g class="df-eye__look"><circle class="df-eye__iris" r="24"/><circle class="df-eye__pupil" r="11"/><circle class="df-eye__glint" cx="-6" cy="-6" r="3.5"/></g></g><ellipse class="df-eye__rim" rx="62" ry="37"/><path class="df-eye__lash" d="M-32.8 -36.8L-40.3 -51.5M-17.3 -36.8L-21.3 -51.5M0 -36.8L0 -51.5M17.3 -36.8L21.3 -51.5M32.8 -36.8L40.3 -51.5"/></g></svg>
         </button>
-        <p class="hint sc-hint">It follows you. Press it and it winks back.</p>
+        <p class="hint sc-hint">It follows you. Press it and it winks back, and something small comes off the ridge.</p>
       </div>
     </div>
   </div>
@@ -143,7 +154,7 @@
       <a class="sc-door" href="docs.html"><span class="df-door" style="--door-c:var(--wx-mint-rim)"><span class="df-door__arch"></span></span><span class="df-over-art__text sc-door__cap"><b>The docs</b><small>every rule, styled</small></span></a>
       <a class="sc-door" href="https://github.com/stevoblevo/depthfield"><span class="df-door" style="--door-c:var(--wx-rain-rim)"><span class="df-door__arch"></span></span><span class="df-over-art__text sc-door__cap"><b>Source</b><small>on GitHub</small></span></a>
     </nav>
-    <p class="df-hint" data-df-reveal>Everything has a second way in: Tab reaches every door and spore, Enter opens it, Escape turns the lens off.</p>
+    <p class="df-hint" data-df-reveal>Everything has a second way in: Tab reaches every door, spore and firefly, Enter opens it, Escape turns the lens off.</p>
   </div>
 </section>
 
@@ -153,23 +164,39 @@
   <div class="df-wrap"><div class="df-foot__in">
     <svg class="df-foot__mark" viewBox="0 0 64 64" aria-hidden="true"><path fill="currentColor" d="M0 0H64V16A48 48 0 0 0 16 64H0Z M64 32A32 32 0 0 0 32 64H48A16 16 0 0 1 64 48Z"/></svg>
     <div><h2>Every chapter ends at a door.</h2><p>Built with Depthfield itself: its tokens, its stylesheet and its behaviour bundle, nothing else. The art is generated; the words are the content.</p>
-      <nav aria-label="Jump"><a class="df-jump" href="#ch-night">Back to the top</a><a class="df-jump" href="docs.html">The docs</a><a class="df-jump" href="https://github.com/stevoblevo/depthfield">GitHub</a><a class="df-jump" href="https://stevoblevo.github.io/storeybrook/">Storeybrook</a></nav></div>
+      <p class="sc-cross" id="cross-line"></p>
+      <nav aria-label="Jump"><button class="df-jump" type="button" data-sc-reel>Watch the reel</button><a class="df-jump" href="#ch-night">Back to the top</a><a class="df-jump" href="docs.html">The docs</a><a class="df-jump" href="https://github.com/stevoblevo/depthfield">GitHub</a><a class="df-jump" href="https://stevoblevo.github.io/storeybrook/">Storeybrook</a></nav></div>
   </div></div>
 </footer>
 
 <div class="df-hud">
   <div class="df-progress" data-df-progress role="progressbar" aria-label="Story progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span data-df-ch>01 / 07</span><span class="df-progress__track"><span class="df-progress__fill"></span></span><span data-df-pct>000%</span></div>
   <div class="sc-hud-chips">
-    <span class="df-hudchip" id="chip-spores">spores <b id="spore-n">0</b> / 3</span>
+    <button class="df-hudchip df-hudchip--keep sc-petchip" type="button" id="chip-pets" aria-haspopup="dialog" aria-expanded="false"><span class="sc-hide-sm">pets </span><span class="sc-petchip__dots" id="pet-dots" aria-hidden="true"></span><b id="pet-n">0</b> / 5</button>
     <span class="df-hudchip" id="chip-weather" hidden>weather <b id="wx-name">peach fall</b></span>
-    <span class="df-hudchip df-hudchip--keep"><span class="sc-hide-sm">theme </span><b id="chip-theme">night</b></span>
+    <span class="df-hudchip df-hudchip--keep" id="chip-themebox"><span class="sc-hide-sm">theme </span><b id="chip-theme">night</b></span>
   </div>
 </div>
 <aside class="df-caption df-caption--live" aria-hidden="true"><p class="df-caption__label"></p><h3 class="df-caption__title"></h3><p class="df-caption__body"></p></aside>
 <div class="df-found" id="found"><p class="df-found__kicker"></p><p class="df-found__title"></p><p class="df-found__line"></p><p class="df-found__fact"></p><p class="df-found__more"></p></div>
 <div class="df-lens-banner" id="lens-banner" role="status" hidden><i></i>Reality lens on: headings misregister, the art goes flat, and every chip shows what is proved, partial, proposed or missing. Escape turns it off.</div>
 
+<div class="df-drawer" id="petbook" role="dialog" aria-modal="true" aria-labelledby="petbook-h" hidden><div class="df-drawer__panel">
+  <div class="df-drawer__head"><h2 id="petbook-h">Night pets</h2><button class="df-tool" type="button" data-df-close>Close</button></div>
+  <p class="sc-note" id="petbook-count"></p>
+  <ul class="df-drawer__list" id="petbook-list"></ul>
+  <p class="sc-note" id="petbook-day"></p>
+  <p class="sc-actions"><button class="df-btn df-btn--primary" type="button" data-sc-reel><span data-df-icon="reel" data-size="16"></span>Watch the reel</button></p>
+</div></div>
+
+<div class="df-letterbox df-letterbox--top" aria-hidden="true"></div>
+<div class="df-reel" role="status" hidden><span class="df-reel__id">S01 / 07</span><span class="df-reel__line"><span class="df-reel__name"></span></span>
+  <button class="df-tool df-tool--round df-reel__stop" type="button" aria-label="Stop the reel and take over"><span data-df-icon="close" data-size="16"></span></button>
+  <span class="df-reel__bar"><i></i></span></div>
+<div class="df-letterbox df-letterbox--bottom" aria-hidden="true"></div>
+
 <script src="project/components/bundle.js"></script>
+<script src="site/immersive.js"></script>
 <script src="site/showcase.js"></script>
 </body>
 </html>

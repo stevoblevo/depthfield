@@ -7,7 +7,7 @@ This repo is a read-only export of the Depthfield design system (index format v3
 
 The artifact is the source of truth. Opening that link requires access on claude.ai; everything needed to read the system is in this repo.
 
-**Live site:** <https://stevoblevo.github.io/depthfield/> is the showcase, a scroll story through all seven themes, one chapter each: the glasshouse with three spores to find, day chrome over a night sky, a weather world that turns to red rain, a hub at the mint clearing, a ledger with the reality lens, this repo's own archive, and a high-contrast ending with doors out. The docs (brand book, tokens per theme, every component running live, assets) are at <https://stevoblevo.github.io/depthfield/docs.html>. Both are built from the system's own files.
+**Live site:** <https://stevoblevo.github.io/depthfield/> is the showcase, a scroll story through all seven themes, one chapter each: the glasshouse with three spores to find, day chrome over a night sky, a weather world that turns to red rain, a hub at the mint clearing, a ledger with the reality lens, this repo's own archive, and a high-contrast ending with doors out. Five night pets are hidden along the way, and a seven-shot reel plays the whole story (<https://stevoblevo.github.io/depthfield/?autoplay>). The docs (brand book, tokens per theme, every component running live, assets) are at <https://stevoblevo.github.io/depthfield/docs.html>. Both are built from the system's own files.
 
 ## Start here
 
@@ -53,5 +53,19 @@ project/
 - `site/site.json` is the site's index (sections, components, assets, style groups), and `site/hooks.css` repeats the bundle's per-look defaults so a look can sit inside another (the style cards). Both are written by the same script from `site/config.json`.
 - `site/vendor/` holds pinned copies of marked 12.0.2 and DOMPurify 3.1.6 for rendering the Markdown.
 - `.nojekyll` makes Pages serve the raw files.
+
+### Full screen on phones
+
+- **Android and iPad:** the first tap anywhere asks the browser for full screen (browsers only allow it after a tap), and the browser's bars fold away. Leaving full screen is respected for the rest of the visit. The full-screen button in the header switches it back on.
+- **iPhone:** Safari gives full screen only to sites opened from the Home Screen. A one-time hint says so: Share, then Add to Home Screen. The site ships `manifest.webmanifest` (`display: fullscreen`) and Apple's web-app meta so it opens there without Safari's bars.
+- The browser's own chrome (`theme-color`) is tinted to the ground of whatever is on screen, and the page paints its background before any stylesheet loads, so a slow font never shows a white screen.
+- All of this is in `site/immersive.js`, which is shared with the sister site and has no dependencies.
+
+### The adventure and the reel
+
+- **Night pets.** Five are hidden in the showcase: three spores in the glasshouse (chapter 01), Winkle, who comes off the ridge when you wink at the eye (chapter 04), and a firefly drifting over the night garden (chapter 07). Whatever you find follows your pointer through the art; without a pointer, the pets take a slow loop over the near ridge. The **pets** chip in the HUD opens the list, with a hint for each one still out there.
+- **The reel.** "Watch the reel" (in chapter 01, the ribbon, the pets list and the footer) plays the whole story in seven shots, about 47 seconds: it catches the spores, flips a setting, scrubs the weather, winks the eye, turns the lens on and off, and catches the firefly. Any key, wheel or touch hands control back, with every setting as it was. `?autoplay` starts it from a link, which is how the home-screen shortcut works. It never starts on its own.
+- **Shared with Storeybrook.** Both sites save to one `localStorage` key, `crossing:pets` (`df:` and `sb:` ids), on the same origin. Each site counts the other's pets, and finding all seven of Storeybrook's day pets puts Saelion in Depthfield's night sky as a constellation.
+- Reduced motion keeps the reel's cuts but drops the camera moves, and the pets wait in a row instead of following.
 
 After changing anything under `project/`, run `python3 site/build.py` and commit the output.

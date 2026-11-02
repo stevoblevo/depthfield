@@ -87,8 +87,38 @@ html { scroll-behavior: smooth; scroll-padding-top: calc(54px + env(safe-area-in
   .df-knot { padding: 2px; }
   .df-knot i { width: 23px; height: 23px; font-size: 11px; }
   .sc-hide-sm { display: none; }
+  #lens-tool { display: none; }
 }
 
 /* HUD */
 .sc-hud-chips { display: flex; gap: var(--space-2); align-items: center; }
 .df-foot { position: relative; z-index: var(--z-content); padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 112px); }
+
+/* ---------- night pets ---------- */
+.sc-petchip { border: 0; cursor: pointer; font: inherit; font: 400 13px/18px var(--font-mono); -webkit-tap-highlight-color: transparent; }
+.sc-petchip:focus-visible { outline: var(--border-focus) solid var(--focus); outline-offset: 2px; }
+.sc-petchip__dots { display: inline-flex; gap: 3px; margin-right: 2px; }
+.sc-petchip__dots i { width: 7px; height: 7px; border-radius: 50%; background: transparent; box-shadow: inset 0 0 0 1px var(--line); }
+.sc-petchip__dots i[style*="background"] { box-shadow: 0 0 6px currentColor; }
+@media (min-width: 600px) { .sc-hide-md { display: none !important; } }
+.sc-petitem { width: 100%; border: 0; background: none; font: inherit; text-align: left; cursor: pointer; }
+.sc-petitem .df-n { display: grid; place-items: center; color: var(--ink-muted); }
+.sc-petitem:focus-visible { outline: var(--border-focus) solid var(--focus); outline-offset: 2px; }
+#petbook .sc-note a, .sc-cross a { color: var(--link); }
+.sc-cross { margin: var(--space-3) 0; font-size: 14px; line-height: 20px; color: var(--ink-muted); }
+.df-foot nav .df-jump { background: none; border: 0; padding: 0; cursor: pointer; }
+
+/* ---------- the reel: the letterbox covers the ribbon, the HUD keeps to the story ---------- */
+.df-reel[hidden] { display: none; }
+.df-reel { z-index: calc(var(--z-hud) + 1); top: calc(max(1.5vh, var(--space-2)) + env(safe-area-inset-top, 0px)); }
+.df-reeling .df-ribbon, .df-reeling .df-hud { opacity: 0; pointer-events: none; transition: opacity var(--dur-base) var(--ease-out); }
+.df-reeling .df-found { top: auto; left: auto; right: var(--scene-gutter); bottom: calc(9vh + var(--space-5) + env(safe-area-inset-bottom, 0px)); }
+.df-reeling .df-caption--live { display: none; }
+@media (max-width: 599px) { .df-reel__name { display: block; font-size: 16px; line-height: 20px; } .df-reel__line { white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; } }
+
+/* the HUD pills never break their numbers */
+.df-progress, .df-progress span, .df-hudchip { white-space: nowrap; }
+@media (max-width: 420px) { .sc-petchip__dots { display: none; } .df-hud { gap: var(--space-2); } }
+
+/* scenes over the art start at the very top: the ribbon is glass over the art, so no strip of the last chapter shows */
+.sc-ch.df-over-art { scroll-margin-top: calc(-1 * (54px + env(safe-area-inset-top, 0px) + 12px)); }
