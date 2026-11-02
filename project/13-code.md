@@ -27,12 +27,22 @@ Load them in that order, set `data-theme` on `<html>`, give `<body>` `df-page df
 | `data-df-icon="name"`, `data-size` | an empty element | filled with that icon |
 | `data-df-weather-name` | an element | kept equal to the weather's name |
 | `data-df-cursor` | anything | grows the CursorRing |
+| `details.df-fold` (+ `df-fold--letter`, `--fan`, `--gate`) | a Fold | opens in panels; Escape folds it back |
+| `data-df-stack`, `data-df-legend="#id"` | a Stack and its legend | opens with the scroll; the legend pulls focus |
+| `data-df-popup` (`"shut"` to wait) | a PopUp | opens once over `dur-scene`; drag to open or shut |
+| `data-df-field="diamond"` or `"square"` | `<canvas class="df-field">` | a lattice running Life; press to plant cells |
+| `data-df-cloth="hang"` or `"lay"`, `data-df-threads="#id"`, `data-df-bands="#id"` | `<canvas>` in a `df-cloth-wrap`; two lists | a cloth woven from the lists; pull, pluck, hold |
+| `data-df-room` | an `<input type="range">` | the room light; the lamp follows the pointer and writes `--df-lamp-x`, `--df-lamp-y`, `--df-room` on `<html>` |
+| `data-df-stretch="0.7"` (+ `-min`, `-max`, `data-df-stretch-sense`) | a `df-h-stretch` heading | stretch type, optionally bound to the inferred state |
+| `data-df-sense` | a HudChip | the inferred state, labelled inferred |
+| `?df-taste` in the address | the page | shows Taste's findings |
+| `data-df-secret="id"` with `data-df-after`, `data-df-name-after`, `data-df-word`, `data-df-reveal-at`, `data-df-watch`, `data-df-hint`, `data-df-hint-target` | a Secret chip | the staged reveal; `data-df-secret-echo="id"` marks its second door |
 
 ## The API
 
-`Depthfield.init(options)` binds all of the above and returns the API. Underneath: `theme` (`get`, `set`, `toggleFace`, `init`), `story`, `reveal`, `world`, `hotspots`, `eye`, `tilt`, `sound`, `lens`, `drawer`, `dialog`, `found`, `reel`, `focus`, `cursor`, `slider`, `icon`, `icons`, `haptic`, `token`, `reducedMotion`. Each is typed in `index.d.ts`.
+`Depthfield.init(options)` binds all of the above and returns the API. Underneath: `theme` (`get`, `set`, `toggleFace`, `init`), `story`, `reveal`, `world`, `hotspots`, `eye`, `tilt`, `sound`, `lens`, `drawer`, `dialog`, `found`, `reel`, `focus`, `cursor`, `slider`, `icon`, `icons`, `haptic`, `token`, `reducedMotion`; and since 2.1 `fold`, `stack`, `secret`, `field`, `popup`; and since 2.2 `cloth`, `lamp`, `stretch`, `sense`, `guide`, `guardian`, `tone`, `taste` (with `taste.badge`). Each is typed in `index.d.ts`.
 
-Events arrive on `window` as `df:<name>` with a `detail`: `theme`, `progress`, `chapter`, `weather`, `ripple`, `found`, `wink`, `tilt`, `sound`, `lens`, `drawer`, `reel`, `ready`.
+Events arrive on `window` as `df:<name>` with a `detail`: `theme`, `progress`, `chapter`, `weather`, `ripple`, `found`, `wink`, `tilt`, `sound`, `lens`, `drawer`, `reel`, `ready`; and since 2.1 `fold`, `stack`, `secret`, `field`, `popup`; and since 2.2 `cloth`, `lamp`, `stretch`, `sense`, `guide`, `guardian`, `taste`.
 
 ## Progressive enhancement
 
@@ -43,7 +53,7 @@ Events arrive on `window` as `df:<name>` with a `detail`: `theme`, `progress`, `
 
 ## Storage
 
-`df:theme` (local storage: the chosen theme, kept) and `df:sound` (session storage: this visit only). Every read and write is wrapped; a page works with storage blocked.
+`df:theme` (local storage: the chosen theme, kept) and `df:sound` (session storage: this visit only), and since 2.1 `df:secret:<id>` (local storage: a secret once opened, so it starts named next time), and since 2.2 `df:guide:<id>` (local storage: the steps found). The inferred state is never stored. Every read and write is wrapped; a page works with storage blocked.
 
 ## Frames and embedding
 
@@ -52,5 +62,5 @@ A page inside an `<iframe>` gets motion sensors, controllers and the microphone 
 ## Budgets
 
 - One canvas; device pixel ratio capped at 2; up to 240 particles; the loop paused when hidden.
-- bundle.js under 60 KB, bundle.css under 60 KB, before compression; fonts are the largest cost: load only the families a page uses.
+- bundle.js under 120 KB (64 KB in 2.1, 60 KB before), bundle.css under 60 KB, before compression; fonts are the largest cost: load only the families a page uses.
 - Evergreen browsers. `color-mix()`, `:is()`, `backdrop-filter` and `svh` units are used with fallbacks (solid surfaces where blur is missing).

@@ -1,0 +1,16 @@
+<!-- @dsCard group="World" height=470 -->
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Cloth</title>
+<style>body{margin:0;background:var(--void);color:var(--ink);font-family:var(--font-sans);overflow:hidden}.stage{height:380px}.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 20px 0}.bar output{margin-left:auto;font:400 12px/1.3 var(--font-mono);color:var(--ink-muted)}.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}</style></head>
+<body>
+<div class="df-cloth-wrap stage"><canvas data-df-cloth="hang" data-df-threads="#threads" data-df-bands="#bands" aria-label="A woven cloth: each warp thread is one chapter of Depthfield."></canvas></div>
+<div class="bar"><button class="df-btn df-btn--mono df-btn--sm" type="button" id="view">Lay it down</button><button class="df-btn df-btn--mono df-btn--sm" type="button" id="wx">Weather · peach fall</button><output id="out" role="status">Pull the cloth, or tap a thread.</output></div>
+<ul class="df-threads sr" id="threads">
+<li data-color="#5ef2b8"><a href="#">Depth</a></li><li data-color="#c9e6ff"><a href="#">Motion</a></li><li data-color="#ffb48a"><a href="#">Layout</a></li><li data-color="#f2c98a"><a href="#">Color</a></li>
+<li data-color="#c4a2ff"><a href="#">Type</a></li><li data-color="#8ff0d2"><a href="#">The world</a></li><li data-color="#f29fb0"><a href="#">Input</a></li><li data-color="#f3cf8a"><a href="#">Sound</a></li><li data-color="#ffb48a"><a href="#">Play</a></li></ul>
+<ul class="sr" id="bands"><li data-color="#5ef2b8"><b>mint</b></li><li data-color="#ffb48a"><b>peach</b></li><li data-color="#f2c98a"><b>thread</b></li></ul>
+<script>(function(){function go(){if(!window.Depthfield)return;Depthfield.init();var c=document.querySelector('canvas'),cl=c.__dfCloth,out=document.getElementById('out'),v=document.getElementById('view'),wx=document.getElementById('wx');if(!cl)return;
+window.addEventListener('df:cloth',function(e){var d=e.detail;if(d.type==='pluck')out.textContent='Plucked: '+d.thread.name+'.';if(d.type==='reject')out.textContent='Rejected. Pulling harder is not a receipt.';if(d.type==='pull')out.textContent='Pulled. It springs back.';});
+v.onclick=function(){var lay=cl.view!=='lay';cl.setView(lay?'lay':'hang');v.textContent=lay?'Hang it up':'Lay it down';};wx.onclick=function(){var w=cl.setWeather(cl.weather+1);wx.textContent='Weather · '+w.name;if(cl.view!=='lay'){cl.setView('lay');v.textContent='Hang it up';}};}
+if(document.readyState!=='loading')go();else document.addEventListener('DOMContentLoaded',go);})();</script>
+</body></html>

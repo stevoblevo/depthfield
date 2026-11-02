@@ -1,0 +1,25 @@
+<!-- @dsCard group="Narrative" height=470 -->
+<!doctype html>
+<html><head><meta charset="utf-8"><title>PopUp</title>
+<style>body{margin:0;background:var(--void);color:var(--ink);font-family:var(--font-sans);overflow:hidden}.df-popup{padding-top:28px}.df-popup__book{width:min(620px,92%)}
+.moon{aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 38% 36%,var(--frost),color-mix(in srgb,var(--frost) 55%,var(--void)))}
+.ridge{aspect-ratio:2.2;background:var(--accent);clip-path:polygon(0 100%,0 55%,14% 30%,30% 52%,48% 12%,64% 46%,80% 24%,100% 50%,100% 100%)}
+.ridge.b{background:color-mix(in srgb,var(--accent) 45%,var(--surface))}
+.door{aspect-ratio:.62;border-radius:999px 999px 6px 6px;background:var(--peach);box-shadow:inset 0 0 0 6px color-mix(in srgb,var(--peach) 60%,var(--void))}
+.tree{aspect-ratio:.55;background:var(--thread);clip-path:polygon(50% 0,92% 70%,60% 70%,60% 100%,40% 100%,40% 70%,8% 70%)}
+.bar{display:flex;gap:8px;justify-content:center;margin-top:6px}</style></head>
+<body>
+<div class="df-popup" id="pop"><div class="df-popup__book" aria-hidden="true">
+<div class="df-popup__page df-popup__page--left">
+<div class="df-popup__piece" style="--x:30%;--y:58%;--w:34%"><div class="moon"></div></div>
+<div class="df-popup__piece" style="--x:8%;--y:16%;--w:30%;--lift:.92"><div class="tree"></div></div>
+</div>
+<div class="df-popup__page df-popup__page--right">
+<div class="df-popup__piece" style="--x:4%;--y:52%;--w:92%"><div class="ridge b"></div></div>
+<div class="df-popup__piece" style="--x:56%;--y:26%;--w:24%"><div class="door"></div></div>
+<div class="df-popup__piece" style="--x:0%;--y:6%;--w:100%;--lift:.96"><div class="ridge"></div></div>
+</div>
+</div></div>
+<div class="bar"><button class="df-btn df-btn--mono df-btn--sm" type="button" id="o">Open</button><button class="df-btn df-btn--mono df-btn--sm" type="button" id="s">Shut</button></div>
+<script>(function(){function go(){if(!window.Depthfield)return;run();}function run(){var p=Depthfield.popup(document.getElementById('pop'),{delay:400});document.getElementById('o').onclick=function(){p.open();};document.getElementById('s').onclick=function(){p.close();};}if(document.readyState!=='loading')go();else document.addEventListener('DOMContentLoaded',go);})();</script>
+</body></html>

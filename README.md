@@ -1,11 +1,11 @@
 # Depthfield
 
-A design system for scroll-driven, world-behind-the-words pages: three parallax ridges, generated canvas "worlds", night/day/contrast skins, and a small component bundle exposed as `window.Depthfield`.
+A design system for scroll-driven, world-behind-the-words pages: three parallax ridges, generated canvas "worlds", night/day/contrast skins, a cloth to pull and pluck, a guardian, stretch type, a lint for generic pages, and a component bundle exposed as `window.Depthfield` (2.2.0).
 
 This repo is a read-only export of the Depthfield design system (index format v3) from its Claude artifact:
-<https://claude.ai/code/artifact/93303f79-895a-44d2-b5a8-7a4012464911>
+<https://claude.ai/artifact/2yngsrbj7HRDirATXbTwMz>
 
-The artifact is the source of truth. Opening that link requires access on claude.ai; everything needed to read the system is in this repo.
+The artifact is the source of truth. (Until 2.2 this repo was exported from a 2.0 copy of the system, `Depthfield (Copy)`; it now follows the main artifact, and the copy is no longer a source.) Opening that link requires access on claude.ai; everything needed to read the system is in this repo.
 
 **Live site:** <https://stevoblevo.github.io/depthfield/> is the showcase, a scroll story through all seven themes, one chapter each: the glasshouse with three spores to find, day chrome over a night sky, a weather world that turns to red rain, a hub at the mint clearing, a ledger with the reality lens, this repo's own archive, and a high-contrast ending with doors out. Five night pets are hidden along the way, and a seven-shot reel plays the whole story (<https://stevoblevo.github.io/depthfield/?autoplay>). The docs (brand book, tokens per theme, every component running live, assets) are at <https://stevoblevo.github.io/depthfield/docs.html>. Both are built from the system's own files.
 
@@ -19,10 +19,11 @@ Read [`project/README.md`](project/README.md) first. It is the brand book and ex
 SKILL.md                     How the Design System artifact format works (file shapes, caps, write order)
 project/
   README.md                  Brand book — start here
-  01-depth.md … 14-governance.md
+  01-depth.md … 19-taste.md
                              Foundations, one topic per file:
                              depth, motion, layout, color, type, iconography, world,
-                             input, sound, accessibility, writing, patterns, code, governance
+                             input, sound, accessibility, writing, patterns, code, governance,
+                             folds and play, letters, threads and light, companions, taste
   design-system.json         Index: title, namespace, libraries, asset-group records
   tokens.json                All tokens (color themes, type, spacing, radius, shadow, …) as lists
   components/
@@ -67,5 +68,9 @@ project/
 - **The reel.** "Watch the reel" (in chapter 01, the ribbon, the pets list and the footer) plays the whole story in seven shots, about 47 seconds: it catches the spores, flips a setting, scrubs the weather, winks the eye, turns the lens on and off, and catches the firefly. Any key, wheel or touch hands control back, with every setting as it was. `?autoplay` starts it from a link, which is how the home-screen shortcut works. It never starts on its own.
 - **Shared with Storeybrook.** Both sites save to one `localStorage` key, `crossing:pets` (`df:` and `sb:` ids), on the same origin. Each site counts the other's pets, and finding all seven of Storeybrook's day pets puts Saelion in Depthfield's night sky as a constellation.
 - Reduced motion keeps the reel's cuts but drops the camera moves, and the pets wait in a row instead of following.
+
+### Taste
+
+Open any page with `?df-taste` in its address and the bundle lists the tells that make a page read as generated (see `project/19-taste.md`). The showcase passes its own check.
 
 After changing anything under `project/`, run `python3 site/build.py` and commit the output.

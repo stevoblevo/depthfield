@@ -1,0 +1,13 @@
+<!-- @dsCard group="Content" height=280 -->
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Stretch</title>
+<style>body{margin:0;background:var(--void);color:var(--ink);font-family:var(--font-sans)}.wrap{padding:22px 28px;display:grid;gap:14px}.df-h-stretch{font-size:clamp(36px,7vw,72px)}.row{display:flex;gap:14px;align-items:center;flex-wrap:wrap}.wrap .df-slider{max-width:360px;flex:1}</style></head>
+<body>
+<div class="wrap">
+<h2 class="df-h-stretch" id="h" data-df-stretch="0.7" data-df-stretch-sense>Light bends <em>green</em>.</h2>
+<div class="row"><span class="df-hudchip df-hudchip--keep" data-df-sense></span><div class="df-slider"><div class="df-slider__row"><label for="w">Width, by hand</label><output for="w">70</output></div><input type="range" id="w" min="0" max="100" value="70"></div></div>
+<p class="df-hint">Move fast and the line tenses; rest and it widens. Or set it by hand.</p>
+</div>
+<script>(function(){function go(){if(!window.Depthfield)return;Depthfield.init();var w=document.getElementById('w'),h=document.getElementById('h');Depthfield.slider(w);var s=Depthfield.stretch(h,{value:.7,intro:false});w.addEventListener('input',function(){s.unbind();s.to(w.value/100);});}
+if(document.readyState!=='loading')go();else document.addEventListener('DOMContentLoaded',go);})();</script>
+</body></html>

@@ -37,4 +37,10 @@ Say what happened and where it works, without apology: "no motion sensors reache
 
 ## Words to leave out
 
-In a page's own copy: "Experience", "journey", "immersive", "seamless", "delve", exclamation marks, emoji, "please", "simply", "just" as a softener, and any sentence that tells the reader how they will feel.
+In a page's own copy: "Experience", "journey", "immersive", "seamless", "delve", "unleash", "elevate", exclamation marks, emoji, "please", "simply", "just" as a softener, and any sentence that tells the reader how they will feel.
+
+## Slogans and the owner's words
+
+- Prefer a line the owner actually said to one written for them: "One lays on the table and the other… plays." beats "Touch becomes a place."
+- No "X becomes a Y" slogans, no triads of them, no "a little" used as a manner ("a little choreography"). Taste flags all three.
+- A guardian's lines are a reviewer's: dry and specific. "Rejected. Pulling harder is not a receipt." 

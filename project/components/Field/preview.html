@@ -1,0 +1,10 @@
+<!-- @dsCard group="Narrative" height=360 -->
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Field</title>
+<style>body{margin:0;background:var(--void);color:var(--ink);font-family:var(--font-sans);}.wrap{padding:0 0 12px}.df-field{height:280px}.df-field-bar{padding:12px 24px 0}</style></head>
+<body><div class="wrap">
+<canvas class="df-field" id="f" aria-label="A field of diamond cells running Conway's Life"></canvas>
+<div class="df-field-bar"><button class="df-btn df-btn--mono df-btn--sm" type="button" id="run">Pause</button><button class="df-btn df-btn--mono df-btn--sm" type="button" id="step">Step</button><button class="df-btn df-btn--mono df-btn--sm" type="button" id="soup">Soup</button><span class="df-field-stats" id="stats">Gen 0</span></div>
+</div>
+<script>(function(){function go(){if(!window.Depthfield)return;run();}function run(){var c=document.getElementById('f'),s=document.getElementById('stats'),f=Depthfield.field(c,{onStep:function(g,a,x){s.textContent='Gen '+g+' · '+a+' alive · '+x+' redraws'+(x===0&&a>0?' · settled, zero power to hold':'');}});var r=document.getElementById('run');if(Depthfield.reducedMotion()){f.run(false);r.textContent='Run';}r.onclick=function(){r.textContent=f.run()?'Pause':'Run';};document.getElementById('step').onclick=function(){f.step();};document.getElementById('soup').onclick=function(){f.soup();};}if(document.readyState!=='loading')go();else document.addEventListener('DOMContentLoaded',go);})();</script>
+</body></html>

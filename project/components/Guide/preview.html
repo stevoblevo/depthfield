@@ -1,0 +1,11 @@
+<!-- @dsCard group="HUD" height=170 -->
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Guide</title>
+<style>body{margin:0;background:var(--void);color:var(--ink);font-family:var(--font-sans)}.wrap{padding:22px 32px;display:grid;gap:12px}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}</style></head>
+<body>
+<div class="wrap"><div class="row"><span class="df-hudchip df-hudchip--keep" id="count"></span><button class="df-btn df-btn--mono df-btn--sm" type="button" data-step="pull">Pull</button><button class="df-btn df-btn--mono df-btn--sm" type="button" data-step="pluck">Pluck</button><button class="df-btn df-btn--mono df-btn--sm" type="button" data-step="flip">Flip</button><button class="df-btn df-btn--text df-btn--sm" type="button" id="reset">Start over</button></div>
+<p class="df-hint" id="hint"></p></div>
+<script>(function(){function go(){if(!window.Depthfield)return;var gd=Depthfield.guide({id:'preview',count:document.getElementById('count'),hint:document.getElementById('hint'),steps:[{id:'pull',hint:'Pull the cloth anywhere.'},{id:'pluck',hint:'Tap a colored thread to pluck it.'},{id:'flip',hint:'Lay it down. Same cloth.'}]});
+[].forEach.call(document.querySelectorAll('[data-step]'),function(b){b.onclick=function(){gd.find(b.getAttribute('data-step'));};});document.getElementById('reset').onclick=gd.reset;}
+if(document.readyState!=='loading')go();else document.addEventListener('DOMContentLoaded',go);})();</script>
+</body></html>

@@ -1,6 +1,6 @@
 Depthfield is a dark-first kit for scroll-driven, immersive sites: full-bleed scenes, pinned media, big editorial type and a minimal HUD. The content is the spectacle; the UI stays quiet and gets out of the way.
 
-The system has three skins (mint, peach, thread) in two faces (night, day) plus a high-contrast theme; a world canvas with real depth; thirty components with live previews; a behavior bundle (`window.Depthfield`); an icon set and a mark; and the rules below. This page is the short version. The sections after it go deep: depth, motion, layout, color and theming, type, iconography, the world, input, sound, accessibility, writing, patterns, code and governance.
+The system has three skins (mint, peach, thread) in two faces (night, day) plus a high-contrast theme; a world canvas with real depth; a cloth to pull and pluck; forty-three components with live previews; a behavior bundle (`window.Depthfield`); a letter template for email; an icon set and a mark; and the rules below. This page is the short version. The sections after it go deep: depth, motion, layout, color and theming, type, iconography, the world, input, sound, accessibility, writing, patterns, code, governance, folds and play, letters, threads and light, companions, and taste.
 
 ## Principles
 
@@ -15,6 +15,23 @@ Added in 2:
 - **Depth is earned.** Three planes, never more; each moves for a reason (the pointer, the scroll, the phone's tilt) and by a token amount. Flat is fine; fake depth is not.
 - **The art carries its own light.** The world is a night scene in every face. Text over it uses the art inks (`art-ink`, `art-accent`); the day face changes the chrome, not the sky.
 - **Everything has a second way in.** Nothing needs motion sensors, a microphone, a controller, sound or a mouse. Every hotspot is a real button; every scene is readable with JS off.
+
+Added in 2.1:
+
+- **Some things fold.** A letter, the long version and the receipts live in paper the reader opens (Fold), never in the main story.
+- **Show the layers.** Anything with parts gets an exploded Stack; its legend pulls focus to one layer and blurs the rest by distance.
+- **Hide modes kindly.** A Secret shows itself in stages, a glyph, then a name and a hint. Nothing a reader needs is ever behind one.
+- **Count what it costs.** The Field draws surfaces that hold state at zero power, and its readout counts only the changes.
+- **Stories can pop up.** A PopUp spread stands its pieces up as the book opens.
+
+Added in 2.2:
+
+- **Use the owner's words.** A line someone actually said beats a slogan written for them. Check every page with `?df-taste` (Taste) before anyone reviews it.
+- **The first screen answers a hand.** Something to pull, pluck, press or throw, above the fold; a settings sidebar beside a picture is a control panel, not a scene.
+- **Light asks, marks remember.** An invitation is light that closes in `dur-cue`; a contact is a mark that stays. Reflective things dim with the room (`lamp`); emitted light does not.
+- **Width can mean something.** `display-stretch` moves its width only for a reason the page can name, such as the inferred state.
+- **Infer, label, never gate.** Sense guesses a state from the pointer and always says "inferred"; nothing is scored, stored or sent.
+- **Keep one companion.** A guardian follows, reviews in one dry line, and can be thrown at things; everything it opens has a link twin.
 
 In the peach and thread skins, read `mint` above as the skin's accent (`accent` aliases `mint`, `peach` or `thread`).
 
@@ -68,7 +85,8 @@ Load `tokens.css`, `components/bundle.css` and `components/bundle.js`; set the t
 
 ## Type
 
-- Load from Google Fonts: Fraunces (variable, opsz 9–144, wght 300–600, italic), Hanken Grotesk (400–600), JetBrains Mono (400–500); the thread skin adds Bodoni Moda and Alegreya.
+- Load from Google Fonts: Fraunces (variable, opsz 9–144, wght 300–600, italic), Hanken Grotesk (400–600), JetBrains Mono (400–500); the thread skin adds Bodoni Moda and Alegreya; stretch type adds Anybody (wdth 50–150, wght 300–900).
+- `display-stretch` (`df-h-stretch`) replaces `display-xl` on a page whose headline width means something; never both.
 - `display-xl` once per page (the opening, `df-h-xl`). `display-l` for chapter titles, `display-m` for scene statements. Scale display styles fluidly with `clamp()` as each style's usage note gives; the token value is the max.
 - `eyebrow` above every chapter title; `readout` for numbers (tabular); `hint` for the one-line interaction hint, in `cue`.
 - `lede` beside scenes (max `size-measure-lede`), `body` for reading (max `size-measure-body`). Never set body copy on media.

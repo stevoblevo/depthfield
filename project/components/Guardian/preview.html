@@ -1,0 +1,14 @@
+<!-- @dsCard group="Narrative" height=320 -->
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Guardian</title>
+<style>body{margin:0;background:var(--void);color:var(--ink);font-family:var(--font-sans);overflow:hidden}.yard{position:relative;height:300px;margin:10px;border-radius:var(--radius-md);background:var(--surface)}
+.door{position:absolute;bottom:22px;display:grid;justify-items:center;gap:6px;font:400 12px/1.2 var(--font-mono);color:var(--ink-muted)}.door i{width:44px;height:64px;border-radius:999px 999px 6px 6px;background:color-mix(in srgb,var(--accent) 30%,var(--surface-raised));box-shadow:inset 0 0 0 2px var(--accent)}
+.door.hit i{background:var(--accent)}.hint{position:absolute;left:16px;top:12px}</style></head>
+<body>
+<div class="yard" id="yard"><p class="df-hint hint">Drag the strawberry and throw it at a door.</p>
+<div class="door" style="left:14%"><i></i>Field</div><div class="door" style="left:46%"><i></i>Loom</div><div class="door" style="left:78%"><i></i>Ledger</div></div>
+<script>(function(){function go(){if(!window.Depthfield)return;var y=document.getElementById('yard'),doors=[].slice.call(y.querySelectorAll('.door'));
+Depthfield.guardian({host:y,home:[.5,.45],hello:'Guardian on duty. Nothing gets adopted because I liked it.',lines:['I review. I do not praise.','Thrown, I find worlds. Dropped, I find the floor.','Receipts, or it did not happen.'],miss:'Found the floor. Standards remain high.',
+onLand:function(x,yy){var r=y.getBoundingClientRect(),best=null,bd=60;doors.forEach(function(d){var b=d.getBoundingClientRect(),dx=b.left+b.width/2-r.left-x,dy=b.top+b.height/2-r.top-yy,dd=Math.hypot(dx,dy);if(dd<bd){bd=dd;best=d;}});doors.forEach(function(d){d.classList.toggle('hit',d===best);});return best?'Thrown, it finds a world: '+best.textContent+'.':null;}});}
+if(document.readyState!=='loading')go();else document.addEventListener('DOMContentLoaded',go);})();</script>
+</body></html>

@@ -1,0 +1,13 @@
+<!-- @dsCard group="World" height=300 -->
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Lamp</title>
+<style>body{margin:0;color:var(--ink);font-family:var(--font-sans);background:var(--void)}.room{position:relative;height:200px;margin:10px;border-radius:var(--radius-md);overflow:hidden}
+.tiles{position:absolute;inset:auto 16px 16px 16px;display:grid;grid-template-columns:repeat(8,1fr);gap:8px}.tiles i{aspect-ratio:1;border-radius:3px}
+.cue{position:absolute;right:18px;top:16px;font:400 12px/1 var(--font-mono);color:var(--cue)}.wrap{padding:0 26px;max-width:380px}</style></head>
+<body>
+<div class="room df-lamp-pool" id="room"><span class="cue">cue · lit by itself</span><div class="tiles" id="tiles"></div></div>
+<div class="wrap"><div class="df-slider"><div class="df-slider__row"><label for="r">Room light</label><output for="r">85</output></div><input type="range" id="r" min="0" max="100" value="85"></div></div>
+<script>(function(){function go(){if(!window.Depthfield)return;var room=document.getElementById('room'),tiles=document.getElementById('tiles'),r=document.getElementById('r'),cols=['#5ef2b8','#ffb48a','#f2c98a','#c4a2ff','#8ff0d2','#f29fb0','#c9e6ff','#f3cf8a'],els=cols.map(function(c){var i=document.createElement('i');tiles.appendChild(i);return i;});
+Depthfield.slider(r);var lamp=Depthfield.lamp(room,{input:r,onMove:function(){var b=room.getBoundingClientRect();els.forEach(function(e,k){var t=e.getBoundingClientRect(),u=(t.left+t.width/2-b.left)/b.width,v=(t.top+t.height/2-b.top)/b.height,l=lamp?lamp.light(u,v):.6;e.style.background='color-mix(in srgb,'+cols[k]+' '+Math.round(l*100)+'%, #000)';});}});lamp.at(.5,.4);}
+if(document.readyState!=='loading')go();else document.addEventListener('DOMContentLoaded',go);})();</script>
+</body></html>

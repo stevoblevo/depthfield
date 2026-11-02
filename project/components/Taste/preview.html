@@ -1,0 +1,22 @@
+<!-- @dsCard group="Content" height=430 -->
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Taste</title>
+<style>body{margin:0;background:var(--void);color:var(--ink);font-family:var(--font-sans)}.wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:18px;padding:18px 22px}
+.sample{padding:14px;border:var(--border-hair) dashed var(--ink-muted);border-radius:var(--radius-md);font-family:Georgia,serif}.sample h3{margin:0 0 10px;font:400 26px/1.05 Georgia,serif}.sample h3 em{color:var(--ink-muted)}
+.sample .eb{font:500 9px/1.6 monospace;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-muted);margin:0 0 6px}.tiles{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px}.tiles div{display:flex;justify-content:space-between;padding:8px;border:1px solid var(--line);font:13px Georgia,serif}.tiles span{font:9px monospace;letter-spacing:.12em;color:var(--ink-muted)}
+.out ol{margin:8px 0 0;padding-left:20px}.out li{margin:0 0 8px;font-size:13.5px}.out b{font:500 12px var(--font-mono)}.out small{display:block;color:var(--ink-muted);font:11.5px var(--font-mono)}
+@media(max-width:620px){.wrap{grid-template-columns:1fr}}</style></head>
+<body>
+<div class="wrap">
+<div class="sample" id="sample" aria-label="A sample of generic copy to read">
+<p class="eb">SOFT CARTOGRAPHY</p><h3>Touch becomes<br><em>a place.</em></h3><p class="eb">A LITTLE CHOREOGRAPHY</p>
+<p>A seamless journey. The cloth becomes a surface. The table becomes a world. A little feint, a little less, a little world.</p>
+<p class="eb">RECEIVER BOARD</p><p class="eb">SCRIPTED SIGNALS</p><p class="eb">THE PHRASE, NOW</p>
+<div class="tiles"><div>Left hip<span>CHOOSE NEXT</span></div><div>Right hip<span>CHOOSE NEXT</span></div><div>Left thigh<span>CHOOSE NEXT</span></div><div>Right thigh<span>CHOOSE NEXT</span></div></div>
+<h3>What we found.<br><em>What we might make.</em></h3>
+</div>
+<div class="out"><button class="df-btn df-btn--mono df-btn--sm df-btn--primary" type="button" id="go">Read the sample</button><ol id="list"></ol></div>
+</div>
+<script>(function(){function go(){if(!window.Depthfield)return;var b=document.getElementById('go'),l=document.getElementById('list');b.onclick=function(){var f=Depthfield.taste({scope:document.getElementById('sample'),log:false}).filter(function(x){return x.rule!=='no-first-gesture';});l.innerHTML='';f.forEach(function(x){var li=document.createElement('li');li.innerHTML='<b></b> <span></span><small></small>';li.children[0].textContent=x.severity+' · '+x.rule+(x.count?' ×'+x.count:'');li.children[1].textContent=x.fix;li.children[2].textContent=x.sample;l.appendChild(li);});b.textContent=f.length+' found · read again';};b.click();}
+if(document.readyState!=='loading')go();else document.addEventListener('DOMContentLoaded',go);})();</script>
+</body></html>

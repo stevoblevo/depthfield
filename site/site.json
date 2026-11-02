@@ -38,7 +38,7 @@
   "shellVars": {},
   "intro": "Three skins (mint, peach, thread), each with a night and a day face, plus high contrast. Night comes first."
  },
- "artifact": "https://claude.ai/code/artifact/93303f79-895a-44d2-b5a8-7a4012464911",
+ "artifact": "https://claude.ai/artifact/2yngsrbj7HRDirATXbTwMz",
  "repo": "https://github.com/stevoblevo/depthfield",
  "sibling": {
   "name": "Storeybrook",
@@ -131,6 +131,26 @@
   {
    "path": "project/14-governance.md",
    "title": "Governance"
+  },
+  {
+   "path": "project/15-play.md",
+   "title": "Folds and play"
+  },
+  {
+   "path": "project/16-letters.md",
+   "title": "Letters"
+  },
+  {
+   "path": "project/17-threads-and-light.md",
+   "title": "Threads and light"
+  },
+  {
+   "path": "project/18-companions.md",
+   "title": "Companions and sensing"
+  },
+  {
+   "path": "project/19-taste.md",
+   "title": "Taste"
   }
  ],
  "cover": {
@@ -143,10 +163,10 @@
   "Actions",
   "Narrative",
   "Content",
+  "World",
   "Inputs",
   "Overlays",
-  "HUD",
-  "World"
+  "HUD"
  ],
  "components": [
   {
@@ -156,6 +176,14 @@
    "preview": "project/components/Button/preview.html",
    "readme": "project/components/Button/README.md",
    "summary": "Pill-shaped actions; one primary per screen, in `accent`."
+  },
+  {
+   "name": "Secret",
+   "group": "Actions",
+   "height": 220,
+   "preview": "project/components/Secret/preview.html",
+   "readme": "project/components/Secret/README.md",
+   "summary": "A hidden mode that shows itself in stages, so a reader who misses it is guided to it instead of locked out."
   },
   {
    "name": "Tool",
@@ -190,12 +218,36 @@
    "summary": "The wink: one eye shared across the worlds."
   },
   {
+   "name": "Field",
+   "group": "Narrative",
+   "height": 360,
+   "preview": "project/components/Field/preview.html",
+   "readme": "project/components/Field/README.md",
+   "summary": "A lattice of cells that each hold their state at zero power, the e-paper idea as a canvas, with Conway's Life built in."
+  },
+  {
+   "name": "Guardian",
+   "group": "Narrative",
+   "height": 320,
+   "preview": "project/components/Guardian/preview.html",
+   "readme": "project/components/Guardian/README.md",
+   "summary": "A small companion that follows the hand, watches with one eye, says one dry line when pressed, and can be thrown at things."
+  },
+  {
    "name": "Hotspot",
    "group": "Narrative",
    "height": 320,
    "preview": "project/components/Hotspot/preview.html",
    "readme": "project/components/Hotspot/README.md",
    "summary": "A real button laid over something drawn in the art, so the picture itself is the interface (spores in the haze, an eye on a ridge, doors at the end)."
+  },
+  {
+   "name": "PopUp",
+   "group": "Narrative",
+   "height": 470,
+   "preview": "project/components/PopUp/preview.html",
+   "readme": "project/components/PopUp/README.md",
+   "summary": "A spread whose pieces stand up as the book opens: chapters that unfold instead of scroll."
   },
   {
    "name": "Scene",
@@ -214,6 +266,14 @@
    "summary": "A blurred `scrim` card that carries words over live media, the world canvas or video."
   },
   {
+   "name": "Stack",
+   "group": "Narrative",
+   "height": 420,
+   "preview": "project/components/Stack/preview.html",
+   "readme": "project/components/Stack/README.md",
+   "summary": "An exploded cross-section: the layers of a thing, skin out, lying in 3D, with a legend that pulls focus to one layer."
+  },
+  {
    "name": "Chip",
    "group": "Content",
    "height": 150,
@@ -222,12 +282,28 @@
    "summary": "Reality status, told by shape first and color never alone."
   },
   {
+   "name": "Fold",
+   "group": "Content",
+   "height": 440,
+   "preview": "project/components/Fold/preview.html",
+   "readme": "project/components/Fold/README.md",
+   "summary": "Paper that opens in panels, for something the reader chose to open: a letter, the long version, the receipts."
+  },
+  {
    "name": "Footer",
    "group": "Content",
    "height": 260,
    "preview": "project/components/Footer/preview.html",
    "readme": "project/components/Footer/README.md",
    "summary": "The closing band: the mark, one statement that closes the loop, a short colophon and jump links back into the story."
+  },
+  {
+   "name": "Letter",
+   "group": "Content",
+   "height": 560,
+   "preview": "project/components/Letter/preview.html",
+   "readme": "project/components/Letter/README.md",
+   "summary": "Depthfield in an inbox: an email built from tables and inline styles that says what a page would say."
   },
   {
    "name": "Readout",
@@ -246,12 +322,28 @@
    "summary": "A numbered step in a long explanation: the numeral, the step (eyebrow + display title + paragraphs) and an aside of owners and notes."
   },
   {
+   "name": "Stretch",
+   "group": "Content",
+   "height": 280,
+   "preview": "project/components/Stretch/preview.html",
+   "readme": "project/components/Stretch/README.md",
+   "summary": "Display type with a width axis that moves for a reason: Anybody, from condensed to wide, bound to a value the page actually has."
+  },
+  {
    "name": "Tag",
    "group": "Content",
    "height": 120,
    "preview": "project/components/Tag/preview.html",
    "readme": "project/components/Tag/README.md",
    "summary": "Categorical labels: owners, worlds, kinds."
+  },
+  {
+   "name": "Taste",
+   "group": "Content",
+   "height": 430,
+   "preview": "project/components/Taste/preview.html",
+   "readme": "project/components/Taste/README.md",
+   "summary": "A lint for pages: `Depthfield.taste()` reads the rendered page for the tells that make it look generated and returns findings, each with the rule, a sample and a fix."
   },
   {
    "name": "VersionCard",
@@ -268,6 +360,38 @@
    "preview": "project/components/WorldCard/preview.html",
    "readme": "project/components/WorldCard/README.md",
    "summary": "A list row that opens a world: a 64px tile (art or an icon on `surface`), the world's name in italic display, one line under it."
+  },
+  {
+   "name": "Cloth",
+   "group": "World",
+   "height": 470,
+   "preview": "project/components/Cloth/preview.html",
+   "readme": "project/components/Cloth/README.md",
+   "summary": "A woven cloth on a canvas: warp threads you can pluck, a weft you can pull, hung on a loom (`hang`) or laid down as land under the weather (`lay`)."
+  },
+  {
+   "name": "Lamp",
+   "group": "World",
+   "height": 300,
+   "preview": "project/components/Lamp/preview.html",
+   "readme": "project/components/Lamp/README.md",
+   "summary": "One warm light that follows the hand, and a room light that dims everything reflective while cues that make their own light stay bright."
+  },
+  {
+   "name": "Weather",
+   "group": "World",
+   "height": 200,
+   "preview": "project/components/Weather/preview.html",
+   "readme": "project/components/Weather/README.md",
+   "summary": "Four weathers that follow the music, or the scroll: peach fall, red rain, mint clearing, night garden."
+  },
+  {
+   "name": "WorldCanvas",
+   "group": "World",
+   "height": 360,
+   "preview": "project/components/WorldCanvas/preview.html",
+   "readme": "project/components/WorldCanvas/README.md",
+   "summary": "The world behind the words: one full-bleed canvas of sky, a pointer-led sun, light shafts, three ridges with haze, particles that part around you, ripples where you press, and a vignette."
   },
   {
    "name": "CursorRing",
@@ -326,6 +450,14 @@
    "summary": "The entry veil while the world warms up: the site's name, a thin progress line, a percentage, and a way past it."
   },
   {
+   "name": "Guide",
+   "group": "HUD",
+   "height": 170,
+   "preview": "project/components/Guide/preview.html",
+   "readme": "project/components/Guide/README.md",
+   "summary": "The \"find N\" pattern as an API: a count, one hint at a time for the next thing not yet found, and memory between visits."
+  },
+  {
    "name": "HudChip",
    "group": "HUD",
    "height": 110,
@@ -366,28 +498,20 @@
    "summary": "The floating HUD pill that tells the reader where they are in the story."
   },
   {
+   "name": "Sense",
+   "group": "HUD",
+   "height": 150,
+   "preview": "project/components/Sense/preview.html",
+   "readme": "project/components/Sense/README.md",
+   "summary": "A state inferred from how the pointer moves (arriving, calm, curious, caffeinated, still), shown in a HudChip that says it is inferred."
+  },
+  {
    "name": "TiltChip",
    "group": "HUD",
    "height": 120,
    "preview": "project/components/TiltChip/preview.html",
    "readme": "project/components/TiltChip/README.md",
    "summary": "The bubble level in the top bar: the phone's tilt, live."
-  },
-  {
-   "name": "Weather",
-   "group": "World",
-   "height": 200,
-   "preview": "project/components/Weather/preview.html",
-   "readme": "project/components/Weather/README.md",
-   "summary": "Four weathers that follow the music, or the scroll: peach fall, red rain, mint clearing, night garden."
-  },
-  {
-   "name": "WorldCanvas",
-   "group": "World",
-   "height": 360,
-   "preview": "project/components/WorldCanvas/preview.html",
-   "readme": "project/components/WorldCanvas/README.md",
-   "summary": "The world behind the words: one full-bleed canvas of sky, a pointer-led sun, light shafts, three ridges with haze, particles that part around you, ripples where you press, and a vignette."
   }
  ],
  "assets": [

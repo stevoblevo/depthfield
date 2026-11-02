@@ -1,6 +1,6 @@
-@import url("https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Hanken+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..700;1,6..96,400..700&family=Alegreya:ital,wght@0,400;0,500;0,700;1,400;1,500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Hanken+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..700;1,6..96,400..700&family=Alegreya:ital,wght@0,400;0,500;0,700;1,400;1,500&family=Anybody:wdth,wght@50..150,300..900&display=swap");
 
-/* Depthfield 2 — component styles. Requires tokens.css. Prefix: df-. Theme = data-theme on <html>: a face × skin
+/* Depthfield 2.2 — component styles (2.1 adds Fold, Stack, Secret, Field, PopUp and the Letter frame). Requires tokens.css. Prefix: df-. Theme = data-theme on <html>: a face × skin
    (night, day, peach-night, peach-day, thread-night, thread-day, contrast). Behaviors live in bundle.js (window.Depthfield). */
 
 /* ---------- skin hooks ---------- */
@@ -380,6 +380,92 @@ a.df-progress__tick::before, button.df-progress__tick::before { content: ""; pos
 /* ---------- depth of field (bundle.js sets --df-dof per layer) ---------- */
 .df-plane { filter: blur(var(--df-dof, 0px)); transition: filter var(--dur-scene) var(--ease-in-out); }
 
+/* ======================= added in 2.1 ======================= */
+
+/* ---------- Fold: paper that opens in panels; a <details> underneath ---------- */
+.df-fold { --df-paper: var(--surface-raised); --df-paper-back: color-mix(in srgb, var(--surface-raised) 72%, var(--void)); --df-k: 0; --df-n: 1; }
+.df-fold > summary { list-style: none; }
+.df-fold > summary::-webkit-details-marker { display: none; }
+.df-fold__tab { position: relative; display: inline-flex; align-items: center; gap: var(--space-2); min-height: var(--size-target); padding: 0 var(--space-6) 0 var(--space-4); background: var(--df-paper); color: var(--ink); font: 500 12px/16px var(--font-mono); letter-spacing: .08em; text-transform: uppercase; cursor: pointer; clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%); transition: background var(--dur-fast); }
+.df-fold__tab::after { content: ""; position: absolute; right: 0; top: 0; width: 16px; height: 16px; background: linear-gradient(225deg, transparent 50%, var(--df-paper-back) 50%); }
+.df-fold__tab:hover { background: color-mix(in srgb, var(--df-paper) 88%, var(--ink)); }
+.df-fold__tab:focus-visible { outline: var(--border-focus) solid var(--focus); outline-offset: var(--border-focus-offset); }
+.df-fold__panels { perspective: 1600px; margin-top: var(--space-3); }
+.df-fold__panel { position: relative; transform-style: preserve-3d; transform-origin: var(--df-fold-origin, 50% 0); padding: var(--space-5) var(--space-6); color: var(--ink); }
+.df-fold__panel::before, .df-fold__panel::after { content: ""; position: absolute; inset: 0; pointer-events: none; -webkit-backface-visibility: hidden; backface-visibility: hidden; }
+.df-fold__panel::after { background: var(--df-paper); transform: translateZ(-1px); }
+.df-fold__panel + .df-fold__panel::after { box-shadow: inset 0 1px 0 color-mix(in srgb, var(--ink) 16%, transparent); }
+.df-fold__panel::before { background: linear-gradient(var(--df-paper-back), color-mix(in srgb, var(--df-paper-back) 82%, var(--void))); transform: rotateX(180deg) translateZ(1px); }
+.df-fold__panel > * { position: relative; -webkit-backface-visibility: hidden; backface-visibility: hidden; transform: translateZ(1px); }
+@keyframes df-fold-open { from { transform: var(--df-fold-from, none); } to { transform: none; } }
+@keyframes df-fold-close { from { transform: none; } to { transform: var(--df-fold-from, none); } }
+.df-fold[open] .df-fold__panel { animation: df-fold-open var(--dur-fold) var(--ease-fold) both; animation-delay: calc(var(--df-k) * var(--dur-fold-stagger)); }
+.df-fold.is-closing .df-fold__panel { animation: df-fold-close var(--dur-fold) var(--ease-in-out) both; animation-delay: calc((var(--df-n) - 1 - var(--df-k)) * var(--dur-fold-stagger)); }
+/* fan: a strip that unrolls downward, panel by panel */
+.df-fold--fan .df-fold__panel { --df-fold-from: rotateX(-96deg); }
+.df-fold--fan .df-fold__panel:nth-child(even)::after { background: linear-gradient(color-mix(in srgb, var(--df-paper) 86%, var(--void)), var(--df-paper)); }
+/* letter: three panels; the bottom flap drops first, then the top flap lifts */
+.df-fold--letter { --df-n: 2; }
+.df-fold--letter .df-fold__panel:first-child { --df-fold-from: rotateX(-178deg); --df-fold-origin: 50% 100%; --df-k: 1; }
+.df-fold--letter .df-fold__panel:last-child { --df-fold-from: rotateX(178deg); --df-fold-origin: 50% 0; --df-k: 0; }
+/* gate: two doors open from the middle; on phones it folds like a letter */
+.df-fold--gate .df-fold__panels { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr) minmax(0, 1fr); }
+.df-fold--gate .df-fold__panel:first-child { --df-fold-from: rotateY(178deg); --df-fold-origin: 100% 50%; }
+.df-fold--gate .df-fold__panel:last-child { --df-fold-from: rotateY(-178deg); --df-fold-origin: 0 50%; }
+.df-fold--gate .df-fold__panel:first-child::before, .df-fold--gate .df-fold__panel:last-child::before { transform: rotateY(180deg) translateZ(1px); }
+@media (max-width: 599px) {
+  .df-fold--gate .df-fold__panels { grid-template-columns: minmax(0, 1fr); }
+  .df-fold--gate .df-fold__panel:first-child { --df-fold-from: rotateX(-178deg); --df-fold-origin: 50% 100%; }
+  .df-fold--gate .df-fold__panel:last-child { --df-fold-from: rotateX(178deg); --df-fold-origin: 50% 0; }
+  .df-fold--gate .df-fold__panel:first-child::before, .df-fold--gate .df-fold__panel:last-child::before { transform: rotateX(180deg) translateZ(1px); }
+}
+
+/* ---------- Stack: an exploded cross-section; bundle.js sets --df-gap from the scroll and --df-dof from the legend ---------- */
+.df-stack { position: relative; height: var(--df-stack-h, 560px); perspective: 1700px; perspective-origin: 50% 10%; --df-plane: clamp(220px, 27vw, 330px); }
+.df-stack__set { position: absolute; left: 50%; bottom: var(--space-6); width: var(--df-plane); height: var(--df-plane); margin-left: calc(var(--df-plane) / -2); transform-style: preserve-3d; transform: rotateX(60deg) rotateZ(-36deg); --df-gap: 32px; }
+.df-stack__plane { position: absolute; inset: 0; border-radius: var(--radius-md); background: var(--surface-raised); border: var(--border-hair) solid color-mix(in srgb, var(--ink) 16%, transparent); transform: translateZ(calc(var(--i, 0) * var(--df-gap))); filter: blur(var(--df-dof, 0px)); transition: transform var(--dur-base) var(--ease-out), filter var(--dur-slow) var(--ease-in-out), box-shadow var(--dur-fast); }
+.df-stack__plane.is-focus { transform: translateZ(calc(var(--i, 0) * var(--df-gap) + 18px)); box-shadow: 0 0 0 2px var(--accent); }
+.df-stack__n { position: absolute; left: 10px; top: 8px; font: 500 12px/16px var(--font-mono); color: var(--ink); background: color-mix(in srgb, var(--void) 72%, transparent); padding: 2px 6px; border-radius: var(--radius-sm); }
+.df-stack__legend { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.df-stack__legend li { display: grid; grid-template-columns: 2.5ch minmax(0, 1fr); gap: var(--space-3); padding: var(--space-3) var(--space-4); border-radius: var(--radius-md); transition: background var(--dur-fast); }
+.df-stack__legend li.is-focus { background: var(--accent-soft); }
+.df-stack__legend li:focus-visible { outline: var(--border-focus) solid var(--focus); outline-offset: 0; }
+.df-stack__legend .df-n { font: 500 12px/24px var(--font-mono); color: var(--ink-muted); font-variant-numeric: tabular-nums; }
+.df-stack__legend b { display: block; font: 600 16px/24px var(--df-text); }
+.df-stack__legend span:last-child { font-size: 15px; line-height: 22px; color: var(--ink-muted); }
+
+/* ---------- Secret: a hidden mode that shows itself in stages ---------- */
+.df-secret { display: inline-flex; align-items: center; gap: var(--space-2); min-height: var(--size-tool); padding: 0 var(--space-3); border-radius: var(--radius-pill); border: var(--border-hair) solid var(--ink-muted); background: transparent; color: var(--ink); font: 500 12px/16px var(--font-mono); letter-spacing: .04em; cursor: pointer; }
+.df-secret__glyph { width: 9px; height: 9px; flex: none; transform: rotate(45deg); border-radius: 1px; background: var(--cue); }
+.df-secret__name { display: none; }
+.df-secret.is-named .df-secret__name { display: inline; }
+.df-secret.is-pulsing .df-secret__glyph { animation: df-secret-blink 7s var(--ease-in-out) infinite; }
+.df-secret.is-flash { animation: df-secret-flash .5s var(--ease-in-out) 4; }
+.df-secret[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--void); }
+.df-secret[aria-pressed="true"] .df-secret__glyph { background: var(--void); }
+.df-secret:focus-visible, .df-secret-echo:focus-visible { outline: var(--border-focus) solid var(--focus); outline-offset: var(--border-focus-offset); }
+.df-secret-echo { display: inline-grid; place-items: center; width: 24px; height: 24px; padding: 0; border: 0; background: none; cursor: pointer; vertical-align: middle; }
+.df-secret-echo::before { content: ""; width: 7px; height: 7px; transform: rotate(45deg); border-radius: 1px; background: var(--ink-muted); animation: df-secret-blink 5s var(--ease-in-out) infinite; }
+@keyframes df-secret-blink { 0%, 84%, 100% { opacity: .3; box-shadow: none; } 90% { opacity: 1; box-shadow: 0 0 12px 3px var(--cue); } }
+@keyframes df-secret-flash { 50% { border-color: var(--cue); box-shadow: 0 0 0 3px color-mix(in srgb, var(--cue) 30%, transparent); } }
+
+/* ---------- Field: a lattice that holds its state at zero power ---------- */
+.df-field { display: block; width: 100%; height: 320px; background: var(--void); touch-action: none; cursor: crosshair; }
+.df-field-bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-3); padding-top: var(--space-3); }
+.df-field-stats { font: 400 12px/16px var(--font-mono); color: var(--ink-muted); font-variant-numeric: tabular-nums; }
+
+/* ---------- PopUp: a spread whose pieces stand as the book opens; --df-open (0 shut, 1 flat) on .df-popup ---------- */
+.df-popup { --df-open: 1; --df-paper: var(--surface-raised); position: relative; perspective: 1500px; perspective-origin: 50% 15%; padding-block: var(--space-7) var(--space-5); touch-action: pan-y; cursor: grab; -webkit-user-select: none; user-select: none; }
+.df-popup:active { cursor: grabbing; }
+.df-popup__book { position: relative; width: min(var(--size-popup), 100%); aspect-ratio: 1.6; margin-inline: auto; transform-style: preserve-3d; transform: rotateX(calc(var(--depth-popup-tilt, 58) * 1deg)); }
+.df-popup__page { position: absolute; top: 0; bottom: 0; width: 50%; transform-style: preserve-3d; background: var(--df-paper); }
+.df-popup__page--left { left: 0; transform-origin: 100% 50%; transform: rotateY(calc(180deg * (1 - var(--df-open)))); background: linear-gradient(90deg, var(--df-paper) 78%, color-mix(in srgb, var(--df-paper) 78%, var(--void))); }
+.df-popup__page--right { right: 0; background: linear-gradient(270deg, var(--df-paper) 78%, color-mix(in srgb, var(--df-paper) 78%, var(--void))); }
+.df-popup__piece { position: absolute; left: var(--x, 10%); bottom: var(--y, 12%); width: var(--w, 34%); transform-origin: 50% 100%; transform: rotateX(calc(-90deg * var(--df-open) * var(--lift, 1))); transform-style: preserve-3d; }
+.df-popup__piece > * { display: block; width: 100%; }
+.df-popup__caption { max-width: var(--size-measure-lede); margin: var(--space-5) auto 0; text-align: center; }
+.df-letter-frame { max-width: var(--size-letter); margin-inline: auto; }
+
 /* ---------- reduced motion: no scrubbing, no parallax, crossfades only ---------- */
 @media (prefers-reduced-motion: reduce) {
   .df-btn, .df-btn .df-arrow, .df-tool, .df-chip, .df-version figure img, .df-door__arch, .df-door__arch::after { transition: none; }
@@ -387,4 +473,44 @@ a.df-progress__tick::before, button.df-progress__tick::before { content: ""; pos
   .df-btn[aria-busy="true"]::after { animation: none; border-right-color: currentColor; opacity: .5; }
   .df-caption--live, .df-found { transform: none; transition: opacity var(--dur-fast) linear; }
   .df-letterbox, .df-plane { transition: none; }
+  .df-fold .df-fold__panel { animation: none !important; }
+  .df-stack__plane { transition: none; }
+  .df-secret.is-pulsing .df-secret__glyph, .df-secret-echo::before { animation: none; opacity: 1; }
+  .df-secret.is-flash { animation: none; box-shadow: 0 0 0 2px var(--cue); }
 }
+
+/* ---------- 2.2: threads, light, companions and taste ---------- */
+.df-cloth { display: block; width: 100%; height: 100%; touch-action: none; cursor: grab; }
+.df-cloth.is-over { cursor: pointer; }
+.df-cloth.is-held { cursor: grabbing; }
+.df-cloth-wrap { position: relative; }
+.df-cloth__tip { position: absolute; z-index: var(--z-caption); left: 0; top: 0; transform: translate(-50%, -150%); padding: 6px 10px; border-radius: var(--radius-sm); background: var(--chrome); border: var(--border-hair) solid var(--line); color: var(--ink); font: 400 12px/1.3 var(--font-mono); white-space: nowrap; pointer-events: none; }
+.df-cloth__tip::before { content: ""; display: inline-block; width: 8px; height: 8px; margin-right: 7px; transform: rotate(45deg); border-radius: 1px; background: var(--c, var(--accent)); vertical-align: 1px; }
+.df-threads { margin: 0; padding: 0; list-style: none; display: grid; gap: 2px; }
+.df-threads li { display: grid; grid-template-columns: 10px minmax(0, 1fr); gap: 2px 12px; padding: 8px 10px; border-radius: var(--radius-sm); }
+.df-threads li::before { content: ""; width: 9px; height: 9px; margin-top: 6px; transform: rotate(45deg); border-radius: 1px; background: var(--c, var(--accent)); }
+.df-threads a, .df-threads b { color: var(--ink); font: 500 15px/1.35 var(--font-sans); text-decoration: none; }
+.df-threads small { grid-column: 2; color: var(--ink-muted); font: 400 13.5px/1.45 var(--font-sans); }
+.df-stretch { font-family: var(--font-stretch); transition: font-variation-settings var(--dur-stretch) var(--ease-out); }
+.df-h-stretch { margin: 0; font-family: var(--font-stretch); font-weight: 820; font-size: clamp(40px, 7vw, 120px); line-height: .9; letter-spacing: -.01em; text-wrap: balance; }
+.df-h-stretch em { font-style: normal; color: var(--accent); }
+.df-lamp-pool { background: radial-gradient(circle at var(--df-lamp-x, 62%) var(--df-lamp-y, 38%), color-mix(in srgb, var(--lamp) calc(var(--df-room, .85) * 24%), transparent), transparent 58%), var(--void); }
+.df-guardian { position: fixed; z-index: calc(var(--z-hud) + 1); left: 0; top: 0; width: var(--size-guardian); height: calc(var(--size-guardian) * 1.14); padding: 0; border: 0; background: none; cursor: grab; touch-action: none; filter: drop-shadow(0 0 14px rgba(255, 61, 99, .45)) drop-shadow(0 8px 10px rgba(0, 0, 0, .4)); will-change: transform; }
+.df-guardian--boxed, .df-guardian--boxed + .df-guardian__say { position: absolute; }
+.df-guardian.is-held { cursor: grabbing; }
+.df-guardian svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.df-guardian__say { position: fixed; z-index: calc(var(--z-hud) + 2); left: 0; top: 0; max-width: 16rem; margin: 0; padding: 9px 12px; border-radius: 14px; background: #2a1220; border: 1px solid rgba(255, 61, 99, .45); color: #f6ece4; font: 400 13.5px/1.4 var(--font-sans); box-shadow: var(--shadow-float); pointer-events: none; transition: opacity var(--dur-base) var(--ease-out); }
+.df-guardian__say.is-off { opacity: 0; }
+.df-hudchip small { margin-left: 6px; font: 400 10.5px/1 var(--font-mono); color: var(--ink-muted); }
+.df-taste { position: fixed; z-index: var(--z-overlay); left: 16px; bottom: 16px; width: min(440px, calc(100vw - 32px)); max-height: 60vh; overflow: auto; background: var(--surface-raised); border: var(--border-hair) solid var(--ink-muted); border-radius: var(--radius-md); color: var(--ink); font: 400 13px/1.45 var(--font-sans); box-shadow: var(--shadow-float); }
+.df-taste summary { cursor: pointer; padding: 10px 14px; font: 500 12px/1.2 var(--font-mono); }
+.df-taste summary b { color: var(--danger); }
+.df-taste ol { margin: 0; padding: 0 14px 6px 32px; }
+.df-taste li { margin: 0 0 10px; }
+.df-taste li b { font: 500 12px/1.4 var(--font-mono); }
+.df-taste li.is-warn b::before { content: "warn · "; color: var(--danger); }
+.df-taste li.is-info b::before { content: "info · "; color: var(--ink-muted); }
+.df-taste li span { display: block; }
+.df-taste li small { display: block; color: var(--ink-muted); font: 400 11.5px/1.4 var(--font-mono); word-break: break-word; }
+.df-taste p { margin: 0; padding: 0 14px 12px; color: var(--ink-muted); font-size: 12px; }
+@media (prefers-reduced-motion: reduce) { .df-stretch { transition: none; } .df-guardian__say { transition: none; } }

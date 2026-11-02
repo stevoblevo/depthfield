@@ -1,4 +1,4 @@
-/* Depthfield 2 — types as documentation. Components are HTML + bundle.css classes; behaviors are window.Depthfield.
+/* Depthfield 2.2 — types as documentation. Components are HTML + bundle.css classes; behaviors are window.Depthfield.
    Each <Comp>Props names the markup contract a page provides (classes, attributes, data); the functions are the JS API. */
 
 export type Face = 'night' | 'day';
@@ -82,3 +82,54 @@ export interface DepthfieldApi {
 }
 declare global { interface Window { Depthfield: DepthfieldApi } }
 /** Events on window: df:theme, df:progress, df:chapter, df:weather, df:ripple, df:found, df:wink, df:tilt, df:sound, df:lens, df:drawer, df:reel, df:ready (detail objects as named above). */
+
+/** Added in 2.1: folds, the stack, secrets, the field, pop-ups and letters */
+export interface FoldProps { variant: 'letter' | 'fan' | 'gate'; tab: string; panels: string[]; open?: boolean }
+export interface StackProps { planes: { name: string; note: string; texture?: string }[]; legend?: string }
+export interface SecretProps { id: string; name: string; after?: number; nameAfter?: number; word?: string; revealAt?: string; watch?: string; hint?: string; hintTarget?: string; echoes?: string[] }
+export interface FieldProps { lattice?: 'diamond' | 'square'; cell?: number; pace?: number; light?: number; paint?: boolean; on?: string; off?: string }
+export interface PopUpProps { spreads: { left: { x: string; y: string; w: string; lift?: number; html: string }[]; right: { x: string; y: string; w: string; lift?: number; html: string }[]; caption?: string }[]; shut?: boolean }
+export interface LetterProps { subject: string; preheader: string; eyebrow: string; title: string; dek: string; sections: { eyebrow: string; title: string; body: string }[]; action?: { label: string; href: string }; sources?: { label: string; href: string }[] }
+export interface FoldApi { open(): void; close(): void; toggle(): void }
+export interface StackApi { focus(index: number | null): void; update(): void }
+export interface SecretApi { open(): void; stage(): number; reveal(): void; name(): void }
+export interface FieldApi { step(): number; soup(p?: number): void; clear(): void; run(on?: boolean): boolean; pace(ms: number): void; light(v: number): void; alive(): number; readonly gen: number }
+export interface PopUpApi { open(ms?: number): void; close(ms?: number): void; to(value: number, ms?: number, done?: () => void): void; readonly value: number }
+export interface DepthfieldApi {
+  fold(el: HTMLDetailsElement): FoldApi | null;
+  stack(el: HTMLElement, o?: { legend?: HTMLElement }): StackApi | null;
+  secret(o: { id: string; chip: HTMLElement; echoes?: HTMLElement[]; after?: number | null; nameAfter?: number | null; word?: string | null; revealAt?: Element | null; watch?: Element | null; hint?: (() => void) | null; onOpen?(): void }): SecretApi | null;
+  field(canvas: HTMLCanvasElement, o?: FieldProps & { run?: boolean; seed?: number | false; onStep?(gen: number, alive: number, flips: number): void }): FieldApi | null;
+  popup(el: HTMLElement, o?: { open?: number; auto?: boolean; delay?: number }): PopUpApi | null;
+}
+/** Events added in 2.1: df:fold {el, open}, df:stack {el, focus}, df:secret {id, stage: 1 glyph | 2 named | 3 opened}, df:field {canvas, gen, alive, flips} or {canvas, gen, painted}, df:popup {el, open}. */
+
+/** Added in 2.2: the cloth, the lamp, stretch type, sense, the guide, the guardian, tone and taste */
+export interface ClothThread { name: string; href?: string; color: string; line?: string }
+export interface ClothProps { view?: 'hang' | 'lay'; threads: ClothThread[]; bands?: { name: string; color: string }[]; weather?: 0 | 1 | 2 | 3 }
+export interface ClothOptions extends ClothProps { cols?: number; rows?: number; intro?: boolean; tip?: boolean; rejectAt?: number; holdMs?: number;
+  frame?(view: 'hang' | 'lay', W: number, H: number, tall: boolean): { x: number; y: number; w: number; h: number };
+  onPluck?(thread: ClothThread, index: number): void; onPull?(): void; onReject?(): void; onHold?(on: boolean, x?: number, y?: number): void; onRipple?(x: number, y: number): void;
+  onHover?(info: { kind: 'thread' | 'band'; item: ClothThread; color: string } | null, x?: number, y?: number): void; onFrame?(ctx: CanvasRenderingContext2D, api: ClothApi): void }
+export interface ClothApi { canvas: HTMLCanvasElement; threads: ClothThread[]; readonly view: 'hang' | 'lay'; readonly weather: number; rows: number;
+  setView(v: 'hang' | 'lay'): void; setWeather(n: number): { id: WeatherId; name: string }; pluck(index: number): void; ripple(x: number, y: number, strength?: number): void;
+  threadAt(x: number, y: number, within?: number): number; screen(row: number, col: number): [number, number]; columnOf(index: number): number; redraw(): void; layout(): void; destroy(): void }
+export interface LampApi { light(u: number, v: number): number; at(u: number, v: number): void; set(room: number): void; readonly room: number; readonly u: number; readonly v: number; destroy(): void }
+export interface StretchApi { to(v: number): void; bind(map?: Partial<Record<SenseState, number>>): StretchApi; unbind(): void; readonly value: number }
+export type SenseState = 'arriving' | 'still' | 'calm' | 'curious' | 'caffeinated';
+export interface SenseDetail { state: SenseState; label: string; speed: number; jerk: number; inferred: true }
+export interface GuideApi { find(id: string): boolean; has(id: string): boolean; count(): number; next(): { id: string; hint: string } | null; paint(): void; reset(): void; total: number }
+export interface GuardianApi { el: HTMLButtonElement; say(text: string, ms?: number): void; place(x: number, y: number): void; wink(): void; readonly x: number; readonly y: number; readonly mode: 'follow' | 'held' | 'fly'; destroy(): void }
+export interface TasteFinding { rule: string; severity: 'warn' | 'info'; count: number; sample: string; fix: string }
+export interface DepthfieldApi {
+  cloth(canvas: HTMLCanvasElement, o: ClothOptions): ClothApi | null;
+  lamp(el?: HTMLElement, o?: { input?: HTMLInputElement; radius?: number; floor?: number; lag?: number; room?: number; u?: number; v?: number; onMove?(u: number, v: number, room: number): void }): LampApi;
+  stretch(el: HTMLElement, o?: { value?: number; min?: number; max?: number; intro?: boolean; extra?: string }): StretchApi | null;
+  sense(o?: { el?: HTMLElement; labels?: Partial<Record<SenseState, string>>; still?: number; prefix?: string }): { readonly state: SenseState; on(fn: (d: SenseDetail) => void): unknown; destroy(): void };
+  guide(o: { id: string; steps: { id: string; hint: string }[]; count?: HTMLElement; hint?: HTMLElement; label?: string; done?: string; onFind?(id: string, found: number, total: number): void; onDone?(): void }): GuideApi;
+  guardian(o?: { host?: HTMLElement; home?: [number, number]; hello?: string; lines?: string[]; miss?: string; label?: string; svg?: string | ((id: string) => string);
+    follow?(pointer: { x: number; y: number; on: boolean }): { x: number; y: number } | null; onLand?(x: number, y: number): string | false | null | void; onPress?(): void }): GuardianApi;
+  tone: { scale: number[]; freq(k: number): number; pluck(k: number, volume?: number): void; thump(): void; readonly on: boolean; enable(on?: boolean): boolean };
+  taste: ((o?: { scope?: Element; log?: boolean }) => TasteFinding[]) & { badge(findings?: TasteFinding[]): HTMLDetailsElement };
+}
+/** Events added in 2.2: df:cloth {canvas, type: 'pluck' | 'pull' | 'reject' | 'view' | 'weather', …}, df:lamp {el, room}, df:stretch {el, value}, df:sense SenseDetail, df:guide {id, step, found, total}, df:guardian {say} or {landed}, df:taste {findings}. */

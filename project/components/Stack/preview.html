@@ -1,0 +1,22 @@
+<!-- @dsCard group="Narrative" height=420 -->
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Stack</title>
+<style>body{margin:0;background:var(--void);color:var(--ink);font-family:var(--font-sans);}.wrap{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:16px;align-items:center;padding:0 24px;height:420px;overflow:hidden}.df-stack{--df-plane:200px;height:400px!important}
+.t0{background:linear-gradient(135deg,color-mix(in srgb,var(--peach) 40%,var(--void)),color-mix(in srgb,var(--peach) 22%,var(--void)))}
+.t1{background:repeating-linear-gradient(90deg,color-mix(in srgb,var(--frost) 30%,var(--surface-raised)) 0 2px,var(--surface-raised) 2px 5px)}
+.t2{background-color:var(--surface);background-image:linear-gradient(color-mix(in srgb,var(--ink-muted) 40%,transparent) 1px,transparent 1px),linear-gradient(90deg,color-mix(in srgb,var(--ink-muted) 40%,transparent) 1px,transparent 1px);background-size:12px 12px}
+.t3{background-color:var(--surface-raised);background-image:radial-gradient(circle at 30% 32%,var(--thread) 0 9%,transparent 9.5%),radial-gradient(circle at 70% 30%,var(--thread) 0 9%,transparent 9.5%),radial-gradient(circle at 34% 72%,var(--thread) 0 9%,transparent 9.5%),radial-gradient(circle at 72% 70%,var(--thread) 0 9%,transparent 9.5%)}
+.t4{background:conic-gradient(from 45deg,var(--accent) 0 25%,var(--surface-raised) 0 50%,var(--frost) 0 75%,var(--surface-raised) 0) 0 0/24px 24px}</style></head>
+<body><div class="wrap">
+<div class="df-stack" data-df-stack data-df-legend="#layers"><div class="df-stack__set" aria-hidden="true">
+<div class="df-stack__plane t0"><span class="df-stack__n">0</span></div><div class="df-stack__plane t1"><span class="df-stack__n">1</span></div><div class="df-stack__plane t2"><span class="df-stack__n">2</span></div><div class="df-stack__plane t3"><span class="df-stack__n">3</span></div><div class="df-stack__plane t4"><span class="df-stack__n">4</span></div>
+</div></div>
+<ol class="df-stack__legend" id="layers">
+<li data-i="4"><span class="df-n">4</span><span><b>E-paper scales</b><span>Hold color at zero power.</span></span></li>
+<li data-i="3"><span class="df-n">3</span><span><b>Pads and electrodes</b><span>Haptics at zone centers.</span></span></li>
+<li data-i="2"><span class="df-n">2</span><span><b>Driven shield</b><span>Keeps the body out of the signal.</span></span></li>
+<li data-i="1"><span class="df-n">1</span><span><b>Base layer</b><span>The only part that gets washed.</span></span></li>
+<li data-i="0"><span class="df-n">0</span><span><b>Skin</b><span>Touches only the base layer.</span></span></li>
+</ol></div>
+<script>(function(){function go(){if(!window.Depthfield)return;run();}function run(){var s=Depthfield.stack(document.querySelector('[data-df-stack]'));if(s)s.focus(2);setTimeout(function(){if(s)s.focus(null);},2400);}if(document.readyState!=='loading')go();else document.addEventListener('DOMContentLoaded',go);})();</script>
+</body></html>

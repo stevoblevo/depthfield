@@ -86,6 +86,7 @@
   --eye-iris: #5ef2b8;
   --eye-pupil: #07110f;
   --eye-glint: #ffffff;
+  --lamp: #ffd6a0;
   --shadow-float: 0 24px 64px rgba(0, 8, 6, 0.6);
   --shadow-glow: 0 0 48px rgba(94, 242, 184, 0.35);
   --shadow-drawer: -30px 0 80px rgba(0, 0, 0, 0.35);
@@ -180,6 +181,7 @@
   --eye-iris: #5ef2b8;
   --eye-pupil: #07110f;
   --eye-glint: #ffffff;
+  --lamp: #ffd6a0;
   --shadow-float: 0 24px 64px rgba(22, 23, 26, 0.14);
   --shadow-glow: 0 0 0 rgba(0, 0, 0, 0);
   --shadow-drawer: -30px 0 80px rgba(22, 23, 26, 0.12);
@@ -274,6 +276,7 @@
   --eye-iris: #5ef2b8;
   --eye-pupil: #07110f;
   --eye-glint: #ffffff;
+  --lamp: #ffd6a0;
   --shadow-float: 0 24px 64px rgba(0, 0, 0, 0.5);
   --shadow-glow: 0 0 48px rgba(255, 180, 138, 0.35);
   --shadow-drawer: -30px 0 80px rgba(0, 0, 0, 0.35);
@@ -368,6 +371,7 @@
   --eye-iris: #5ef2b8;
   --eye-pupil: #07110f;
   --eye-glint: #ffffff;
+  --lamp: #ffd6a0;
   --shadow-float: 0 24px 64px rgba(27, 33, 48, 0.14);
   --shadow-glow: 0 0 0 rgba(0, 0, 0, 0);
   --shadow-drawer: -30px 0 80px rgba(27, 33, 48, 0.12);
@@ -462,6 +466,7 @@
   --eye-iris: #5ef2b8;
   --eye-pupil: #07110f;
   --eye-glint: #ffffff;
+  --lamp: #ffd6a0;
   --shadow-float: 0 24px 64px rgba(6, 4, 16, 0.6);
   --shadow-glow: 0 0 34px rgba(242, 201, 138, 0.55);
   --shadow-drawer: -30px 0 80px rgba(0, 0, 0, 0.35);
@@ -556,6 +561,7 @@
   --eye-iris: #5ef2b8;
   --eye-pupil: #07110f;
   --eye-glint: #ffffff;
+  --lamp: #ffd6a0;
   --shadow-float: 0 24px 64px rgba(33, 27, 48, 0.14);
   --shadow-glow: 0 0 0 rgba(0, 0, 0, 0);
   --shadow-drawer: -30px 0 80px rgba(33, 27, 48, 0.12);
@@ -650,6 +656,7 @@
   --eye-iris: #5ef2b8;
   --eye-pupil: #07110f;
   --eye-glint: #ffffff;
+  --lamp: #ffd6a0;
   --shadow-float: 0 0 0 1px #8fa79d;
   --shadow-glow: 0 0 0 2px #ffffff;
   --shadow-drawer: -1px 0 0 #8fa79d;
@@ -692,6 +699,10 @@
   --depth-scroll-max: 0.3;
   --depth-follow: 0.05;
   --depth-tilt-gain: 2.2;
+  --depth-stack-min: 12px;
+  --depth-stack-max: 56px;
+  --depth-popup-tilt: 58;
+  --depth-cloth-pitch: 0.64;
   --blur-backdrop: 16px;
   --blur-chrome: 14px;
   --blur-dof-1: 2px;
@@ -705,9 +716,18 @@
   --dur-stagger: 60ms;
   --dur-wink-open: 2600ms;
   --dur-wink-closed: 160ms;
+  --dur-fold: 700ms;
+  --dur-fold-stagger: 90ms;
+  --dur-generation: 420ms;
+  --dur-stretch: 1800ms;
+  --dur-cue: 800ms;
+  --dur-response: 1200ms;
+  --dur-weave: 2600ms;
+  --dur-pluck: 1600ms;
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
   --ease-scrub: linear;
+  --ease-fold: cubic-bezier(0.34, 1.32, 0.64, 1);
   --bp-medium: 600px;
   --bp-expanded: 900px;
   --bp-wide: 1240px;
@@ -725,10 +745,15 @@
   --size-drawer: 420px;
   --size-container: 1240px;
   --size-track: 160px;
+  --size-letter: 600px;
+  --size-popup: 860px;
+  --size-guardian: 58px;
   --op-haze: 0.08;
   --op-shaft: 0.07;
   --op-vignette: 0.75;
   --op-disabled: 0.4;
+  --op-paper-back: 0.72;
+  --op-lamp-floor: 0.35;
   --border-hair: 1px;
   --border-glyph: 1.5px;
   --border-focus: 2px;
@@ -745,6 +770,7 @@
   --font-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
   --font-display-thread: "Bodoni Moda", "Bodoni 72", Didot, Georgia, serif;
   --font-body-thread: "Alegreya", "Iowan Old Style", Georgia, serif;
+  --font-stretch: "Anybody", "Hanken Grotesk", system-ui, sans-serif;
 }
 .display-xl { font-family: var(--font-display); font-size: 160px; line-height: 0.9; font-weight: 300; letter-spacing: -0.03em; font-variation-settings: 'opsz' 144; }
 .display-l { font-family: var(--font-display); font-size: 96px; line-height: 0.95; font-weight: 300; letter-spacing: -0.025em; font-variation-settings: 'opsz' 144; }
@@ -766,3 +792,4 @@
 .thread-station { font-family: var(--font-display-thread); font-size: 46px; line-height: 1.05; font-weight: 400; letter-spacing: -0.015em; }
 .thread-numeral { font-family: var(--font-display-thread); font-size: 56px; line-height: 1; font-weight: 500; font-style: italic; }
 .thread-body { font-family: var(--font-body-thread); font-size: 19px; line-height: 1.6; font-weight: 400; }
+.display-stretch { font-family: var(--font-stretch); font-size: 120px; line-height: 0.9; font-weight: 820; letter-spacing: -0.01em; }
