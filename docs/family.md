@@ -2,7 +2,7 @@
 
 Depthfield (night), Storeybrook (day) and Hypermetapunk (their child, incubating) are one family of design systems for Bleve's Saelion sites and games. This file is the shared plan. It lives here, in `stevoblevo/depthfield`, and is the only copy; Storeybrook's `AGENTS.md` links to it.
 
-Owner: Bleve. Written 3 Nov 2026 by Claude (session 01ApCRaiX6JVCSowgVuAsG4V) after a survey of what every agent had made.
+Owner: Bleve. Written 3 Nov 2026 by Claude (session 01ApCRaiX6JVCSowgVuAsG4V) after a survey of what every agent had made; statuses updated the same evening (Storeybrook 1.3 paper, Hypermetapunk 0.1).
 
 **How to take part.** Any agent (Claude, Grok, ChatGPT, Muse, Codex or a person) may pick an open task: put your name in **Who**, set **Status** to `doing` on your branch, and set it to `done` with the commit in the same change that finishes it. Keep one task per branch, named `<agent>/<task-id>-<topic>`. A task that changes one system is listed in that repo's `docs/plan.md`; this file holds the work that crosses systems. In code, mark work that belongs to a task with a short comment naming it, such as `/* plan O1: … */`, so the next agent can find the thread.
 
@@ -49,13 +49,13 @@ What this says about the toolkits: every app copies the kit and then re-derives 
 | F1 | Merge Depthfield 2.2 and Storeybrook 1.2 into `main`; rebuild; keep the showcases and docs working | Docs list 43 and 30 previews with no console errors; both adventure tests pass | S | Claude | done |
 | F2 | Versioned builds: `build.py` writes `v/<x.y.z>/` (tokens.css, bundle.css, bundle.js, index.d.ts, icons) and `v/index.json`; an existing version folder is never rewritten | `/depthfield/v/2.2.0/bundle.js` and `/storeybrook/v/1.2.0/bundle.js` serve; a second build leaves older folders byte-identical | M | open | open |
 | F3 | CI on push: build is idempotent (no diff after `build.py`), Playwright smoke of `docs.html` and `index.html` | A workflow run fails on a dirty build or a console error | M | open | open |
-| F4 | Looks as data and a pen: `<System>.looks` (`{id, name, light, motion, print}`) and `<System>.pen(look)` giving resolved RGB inks and canvas materials (`grain`, `halftone`, `stipple`, `knit`, `facets`) | A demo draws the same scene in every look of both systems from the pen alone; AND SO's `paperPal` and Reignfawn's look palette could be replaced by it | M | open | open |
+| F4 | Looks as data and a pen: `<System>.looks` (`{id, name, light, motion, print}`) and `<System>.pen(look)` giving resolved RGB inks and canvas materials (`grain`, `halftone`, `stipple`, `knit`, `facets`) | A demo draws the same scene in every look of both systems from the pen alone; AND SO's `paperPal` and Reignfawn's look palette could be replaced by it | M | Claude (Storeybrook half) | doing: Storeybrook 1.3 has `Storeybrook.looks` and `Storeybrook.pen(look)`; Depthfield and Hypermetapunk halves open |
 | F5 | Upstream AND SO's voice picker into Storeybrook's Reader (accent pool, skip the listener's own region, no novelty voices, quality rank) | `Storeybrook.voices()` returns the ranked list; Reader uses it | S | open | open |
 | F6 | Pin the copies: offer AND SO, the Malachi sites and Reignfawn a change from vendored copies to versioned URLs, each through that repo's own rules (candidate branch and PR, never their `main`) | A PR exists per consumer; nothing breaks offline (keep a fallback copy where the app must work from a file) | M | open | open |
 | F7 | One list of generic tells for Taste, included by every system | `Depthfield.taste()` and `Storeybrook.taste()` report the same generic findings on the same page | S | open | open |
 | F8 | Carry repo work back to the artifacts at each release (Depthfield `2yngsrbj7HRDirATXbTwMz`, Storeybrook `YQrpanzsuY5WPgr47GFCNe`), and create a Design System artifact for Hypermetapunk | Each artifact lists the same components as its repo's `project/` | M | open | open |
-| O1 | Origami papercraft pen in Storeybrook (see Storeybrook plan O1 to O4) | Storeybrook plan | M | Claude | doing |
-| H1 | Hypermetapunk 0.1 lifted from Kit v0 into the family format (see "Hypermetapunk" below) | H1 to H5 below | L | Claude | doing |
+| O1 | Origami papercraft pen in Storeybrook (see Storeybrook plan O1 to O4) | Storeybrook plan | M | Claude | done: Storeybrook 1.3 (`components/paper.js`, Pen and Folded); O4 to O6 open |
+| H | Hypermetapunk 0.1 lifted from Kit v0 into the family format (see "Hypermetapunk" below) | H1 to H5 below | L | Claude | done except the repo: 0.1 is on branch `claude/H1-hypermetapunk` of this repo |
 
 ## Hypermetapunk
 
@@ -63,10 +63,10 @@ Hyperreal wave surfaces (dusk bands, chrome type, a receding grid floor, a bande
 
 | ID | Task | Acceptance check | Size | Who | Status |
 | --- | --- | --- | --- | --- | --- |
-| H1 | Home: repo `stevoblevo/hypermetapunk` in the family format, with Pages | The docs site serves at `/hypermetapunk/` | S | Claude | doing |
-| H2 | Tokens from Kit v0: themes `dusk` (neon night, the default), `zine` (photocopy day) and `contrast`; type on open-licence fonts (Archivo Black, Archivo Narrow, Space Mono, Permanent Marker) instead of Impact and Comic Sans | Every text pair in every theme is 4.5:1 or better, measured | M | Claude | doing |
-| H3 | Components from the seed: Chrome type, Sun, Grid floor, Sticker, Stamp, Tape, Scrawl, Misregister, Grain, Button, Card, Door (from Depthfield) and Ticker; `window.Hypermetapunk` | Each has `README.md` and `preview.html`; previews run in the docs with no errors | L | Claude | doing |
-| H4 | Showcase: the kit's own front page, then bespoke.gig rebuilt on it | `index.html` uses only the kit | M | open | open |
+| H1 | Home: repo `stevoblevo/hypermetapunk` in the family format, with Pages | The docs site serves at `/hypermetapunk/` | S | Claude | waiting for Bleve: creating a new public repo needs his go-ahead; 0.1 waits on `depthfield` branch `claude/H1-hypermetapunk`, laid out as the repo |
+| H2 | Tokens from Kit v0: themes `dusk` (neon night, the default), `zine` (photocopy day) and `contrast`; type on open-licence fonts (Archivo Black, Archivo Narrow, Space Mono, Permanent Marker) instead of Impact and Comic Sans | Every text pair in every theme is 4.5:1 or better, measured | M | Claude | done (0.1: 77 pairs measured by `tools/contrast.py`) |
+| H3 | Components from the seed: Chrome type, Sun, Grid floor, Sticker, Stamp, Tape, Scrawl, Misregister, Grain, Button, Card, Door (from Depthfield) and Ticker; `window.Hypermetapunk` | Each has `README.md` and `preview.html`; previews run in the docs with no errors | L | Claude | done (0.1: thirteen components, `window.Hypermetapunk`) |
+| H4 | Showcase: the kit's own front page, then bespoke.gig rebuilt on it | `index.html` uses only the kit | M | Claude (front page) | doing: the front page is done; bespoke.gig rebuilt on the kit is open |
 | H5 | Family membership: `immersive.js`, a third set of crossing pets, `pen()` for AND SO's `hmp` skin, Taste rules ("stickers go on the frame, never over the words") | AND SO can draw `hmp` from `Hypermetapunk.pen('dusk')` | M | open | open |
 
 ## Needs Bleve
