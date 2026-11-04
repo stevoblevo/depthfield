@@ -55,22 +55,17 @@ What this says about the toolkits: every app copies the kit and then re-derives 
 | F7 | One list of generic tells for Taste, included by every system | `Depthfield.taste()` and `Storeybrook.taste()` report the same generic findings on the same page | S | open | open |
 | F8 | Carry repo work back to the artifacts at each release (Depthfield `2yngsrbj7HRDirATXbTwMz`, Storeybrook `YQrpanzsuY5WPgr47GFCNe`), and create a Design System artifact for Hypermetapunk | Each artifact lists the same components as its repo's `project/` | M | open | open |
 | O1 | Origami papercraft pen in Storeybrook (see Storeybrook plan O1 to O4) | Storeybrook plan | M | Claude | done: Storeybrook 1.3 (`components/paper.js`, Pen and Folded); O4 to O6 open |
-| H | Hypermetapunk 0.1 lifted from Kit v0 into the family format (see "Hypermetapunk" below) | H1 to H5 below | L | Claude | done except the repo: 0.1 is on branch `claude/H1-hypermetapunk` of this repo |
+| H | Hypermetapunk 0.1 lifted from Kit v0 into the family format (its plan: `stevoblevo/hypermetapunk`, `docs/plan.md`) | H1 to H5 there | L | Claude | done: 0.1 live in its own repo |
 
 ## Hypermetapunk
 
 Hyperreal wave surfaces (dusk bands, chrome type, a receding grid floor, a banded sun) slapped with punk print culture (stickers, stamps, tape, marker scrawl, misregistration, photocopy grain). Parents: Storeybrook's paper and Comix, Depthfield's night, doors and depth. First hosts: bespoke.gig and AND SO's `hmp` skin.
 
-| ID | Task | Acceptance check | Size | Who | Status |
-| --- | --- | --- | --- | --- | --- |
-| H1 | Home: repo `stevoblevo/hypermetapunk` in the family format, with Pages | The docs site serves at `/hypermetapunk/` | S | Claude | waiting for Bleve: creating a new public repo needs his go-ahead; 0.1 waits on `depthfield` branch `claude/H1-hypermetapunk`, laid out as the repo |
-| H2 | Tokens from Kit v0: themes `dusk` (neon night, the default), `zine` (photocopy day) and `contrast`; type on open-licence fonts (Archivo Black, Archivo Narrow, Space Mono, Permanent Marker) instead of Impact and Comic Sans | Every text pair in every theme is 4.5:1 or better, measured | M | Claude | done (0.1: 77 pairs measured by `tools/contrast.py`) |
-| H3 | Components from the seed: Chrome type, Sun, Grid floor, Sticker, Stamp, Tape, Scrawl, Misregister, Grain, Button, Card, Door (from Depthfield) and Ticker; `window.Hypermetapunk` | Each has `README.md` and `preview.html`; previews run in the docs with no errors | L | Claude | done (0.1: thirteen components, `window.Hypermetapunk`) |
-| H4 | Showcase: the kit's own front page, then bespoke.gig rebuilt on it | `index.html` uses only the kit | M | Claude (front page) | doing: the front page is done; bespoke.gig rebuilt on the kit is open |
-| H5 | Family membership: `immersive.js`, a third set of crossing pets, `pen()` for AND SO's `hmp` skin, Taste rules ("stickers go on the frame, never over the words") | AND SO can draw `hmp` from `Hypermetapunk.pen('dusk')` | M | open | open |
+It has its own repo now: <https://github.com/stevoblevo/hypermetapunk>, served at <https://stevoblevo.github.io/hypermetapunk/>. Its tasks (H1 to H5, and C1 to C12: signs, flyers, the wall, the pen, a third set of crossing pets, holo foil, zines, sound, one state through three systems) and the picture behind them live there, in `docs/plan.md` and `docs/creative-direction.md`. Status on 3 Nov: H1 to H3 done (0.1), H4 half done (the front page; bespoke.gig rebuilt on the kit is open). The parking branch `claude/H1-hypermetapunk` in this repo is kept as history and is no longer updated.
 
 ## Needs Bleve
 
 - `storeybrook` holds Show & Tell, the Malachi site and bespoke.gig, which are not part of the design system. They could move to their own repos (`malachi-sermon-experience` already exists); nothing moves without your go-ahead.
 - The unused `/storeybrook/` copy in `stevoblevo.github.io` can be kept as an archive or removed.
 - Storeybrook PR #2 (Malachi 1.0.1) is waiting for review.
+- Hypermetapunk's camera play (gesture slaps) is parked until Bleve says go (see its creative direction).
