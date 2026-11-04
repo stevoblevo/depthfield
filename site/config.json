@@ -1,0 +1,20 @@
+{
+ "artifact": null,
+ "repo": "https://github.com/stevoblevo/hypermetapunk",
+ "sibling": {
+  "name": "Storeybrook × Depthfield (the family plan)",
+  "url": "https://github.com/stevoblevo/depthfield/blob/main/docs/family.md"
+ },
+ "styleLabel": "Theme",
+ "themeGroups": [
+  {
+   "name": "Themes",
+   "themes": [
+    "dusk",
+    "zine",
+    "contrast"
+   ]
+  }
+ ],
+ "styleIntro": "Dusk is the neon night and comes first; Zine is the photocopied day; High contrast is for anyone who asks for more."
+}

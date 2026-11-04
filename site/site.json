@@ -1,0 +1,208 @@
+{
+ "title": "Hypermetapunk",
+ "namespace": "Hypermetapunk",
+ "style": {
+  "label": "Theme",
+  "groups": [
+   {
+    "name": "Themes",
+    "themes": [
+     "dusk",
+     "zine",
+     "contrast"
+    ]
+   }
+  ],
+  "modes": [],
+  "bodyClass": null,
+  "cardClass": null,
+  "shellVars": {},
+  "intro": "Dusk is the neon night and comes first; Zine is the photocopied day; High contrast is for anyone who asks for more."
+ },
+ "artifact": null,
+ "repo": "https://github.com/stevoblevo/hypermetapunk",
+ "sibling": {
+  "name": "Storeybrook \u00d7 Depthfield (the family plan)",
+  "url": "https://github.com/stevoblevo/depthfield/blob/main/docs/family.md"
+ },
+ "themes": [
+  {
+   "id": "dusk",
+   "name": "Dusk"
+  },
+  {
+   "id": "zine",
+   "name": "Zine"
+  },
+  {
+   "id": "contrast",
+   "name": "High contrast"
+  }
+ ],
+ "readme": "project/README.md",
+ "sections": [
+  {
+   "path": "project/01-wave.md",
+   "title": "Wave"
+  },
+  {
+   "path": "project/02-punk.md",
+   "title": "Punk"
+  },
+  {
+   "path": "project/03-color.md",
+   "title": "Color"
+  },
+  {
+   "path": "project/04-type.md",
+   "title": "Type"
+  },
+  {
+   "path": "project/05-motion.md",
+   "title": "Motion"
+  },
+  {
+   "path": "project/06-accessibility.md",
+   "title": "Accessibility"
+  },
+  {
+   "path": "project/07-writing.md",
+   "title": "Writing"
+  },
+  {
+   "path": "project/08-code.md",
+   "title": "Code"
+  }
+ ],
+ "cover": null,
+ "groups": [
+  "Controls",
+  "Surface",
+  "Type",
+  "Horizon",
+  "Punk"
+ ],
+ "components": [
+  {
+   "name": "Button",
+   "group": "Controls",
+   "height": 190,
+   "preview": "project/components/Button/preview.html",
+   "readme": "project/components/Button/README.md",
+   "summary": "A control slapped onto the page: heavy capitals on acid with a hard shadow that presses in when you push it; a quiet ghost in monospace for the rest."
+  },
+  {
+   "name": "Door",
+   "group": "Controls",
+   "height": 260,
+   "preview": "project/components/Door/preview.html",
+   "readme": "project/components/Door/README.md",
+   "summary": "A lit arch that goes somewhere: a real link drawn as a doorway, from Depthfield's doors, in neon."
+  },
+  {
+   "name": "Ticker",
+   "group": "Controls",
+   "height": 150,
+   "preview": "project/components/Ticker/preview.html",
+   "readme": "project/components/Ticker/README.md",
+   "summary": "One line of news that runs along a slapped strip, and stops when you point at it or tab into it."
+  },
+  {
+   "name": "Card",
+   "group": "Surface",
+   "height": 300,
+   "preview": "project/components/Card/preview.html",
+   "readme": "project/components/Card/README.md",
+   "summary": "A sheet torn from a zine and taped over the art, or, for the neon side, a pane of glass lit from behind."
+  },
+  {
+   "name": "Grain",
+   "group": "Surface",
+   "height": 220,
+   "preview": "project/components/Grain/preview.html",
+   "readme": "project/components/Grain/README.md",
+   "summary": "Photocopy grain over art and paper, and a halftone for flat fills, so nothing looks rendered."
+  },
+  {
+   "name": "Chrome",
+   "group": "Type",
+   "height": 230,
+   "preview": "project/components/Chrome/preview.html",
+   "readme": "project/components/Chrome/README.md",
+   "summary": "Liquid-metal type for one display line: the dusk reflected in chrome, with a slow light passing over it."
+  },
+  {
+   "name": "Misregister",
+   "group": "Type",
+   "height": 170,
+   "preview": "project/components/Misregister/preview.html",
+   "readme": "project/components/Misregister/README.md",
+   "summary": "Two print plates that slipped: cyan to one side, magenta to the other, so a word looks run off a cheap press."
+  },
+  {
+   "name": "GridFloor",
+   "group": "Horizon",
+   "height": 300,
+   "preview": "project/components/GridFloor/preview.html",
+   "readme": "project/components/GridFloor/README.md",
+   "summary": "A neon grid floor that runs toward you under the dusk band; together with the Sun it makes the Horizon, the system's one scene."
+  },
+  {
+   "name": "Sun",
+   "group": "Horizon",
+   "height": 260,
+   "preview": "project/components/Sun/preview.html",
+   "readme": "project/components/Sun/README.md",
+   "summary": "The banded disc at the horizon: acid light at the top, tangerine, then magenta, cut by bars that thin toward the bottom."
+  },
+  {
+   "name": "Scrawl",
+   "group": "Punk",
+   "height": 200,
+   "preview": "project/components/Scrawl/preview.html",
+   "readme": "project/components/Scrawl/README.md",
+   "summary": "Marker notes in the margin, written by the people who made the page: an aside, a correction, an arrow at the thing that matters."
+  },
+  {
+   "name": "Stamp",
+   "group": "Punk",
+   "height": 170,
+   "preview": "project/components/Stamp/preview.html",
+   "readme": "project/components/Stamp/README.md",
+   "summary": "A rubber mark: a word or two in spaced monospace capitals inside a double border, struck at an angle in the accent."
+  },
+  {
+   "name": "Sticker",
+   "group": "Punk",
+   "height": 220,
+   "preview": "project/components/Sticker/preview.html",
+   "readme": "project/components/Sticker/README.md",
+   "summary": "A slap tag: a short word or two in heavy capitals on acid, orange, magenta, mint or cyan stock, outlined and shadowed in photocopy black and turned a little."
+  },
+  {
+   "name": "Tape",
+   "group": "Punk",
+   "height": 230,
+   "preview": "project/components/Tape/preview.html",
+   "readme": "project/components/Tape/README.md",
+   "summary": "A strip of masking tape holding a card or a picture to the page."
+  }
+ ],
+ "assets": [
+  {
+   "name": "Mark",
+   "tile": "l",
+   "readme": "project/assets/Mark/README.md",
+   "files": [
+    {
+     "name": "hypermetapunk-mark.svg",
+     "path": "project/assets/Mark/hypermetapunk-mark.svg"
+    },
+    {
+     "name": "hypermetapunk-mark-zine.svg",
+     "path": "project/assets/Mark/hypermetapunk-mark-zine.svg"
+    }
+   ]
+  }
+ ]
+}

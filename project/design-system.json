@@ -1,0 +1,46 @@
+{
+ "v": 3,
+ "title": "Hypermetapunk",
+ "namespace": "Hypermetapunk",
+ "layout": "files",
+ "libraries": [],
+ "sections": {},
+ "docs": {
+  "readme": "project/README.md",
+  "sections": []
+ },
+ "groups": [
+  "Mark"
+ ],
+ "assetGroups": {
+  "Mark": {
+   "name": "Mark",
+   "tile": "l",
+   "order": [
+    "hypermetapunk-mark.svg",
+    "hypermetapunk-mark-zine.svg"
+   ],
+   "files": {
+    "hypermetapunk-mark.svg": {
+     "name": "hypermetapunk-mark.svg",
+     "type": "image/svg+xml"
+    },
+    "hypermetapunk-mark-zine.svg": {
+     "name": "hypermetapunk-mark-zine.svg",
+     "type": "image/svg+xml"
+    }
+   }
+  }
+ },
+ "blobs": {},
+ "createdOnFiles": {
+  "at": "2026-11-04T02:30:00Z",
+  "v": 1
+ },
+ "lastChange": {
+  "by": "Bleve",
+  "at": "2026-11-04T02:30:00Z",
+  "via": "Claude",
+  "note": "Hypermetapunk 0.1: lifted from the Kit v0 seed in storeybrook/show-tell/bespoke (parents Storeybrook × Depthfield). Three themes (dusk, zine, contrast) measured at 4.5:1 or better, open-licence type, thirteen components, window.Hypermetapunk. Family tasks H1 to H3."
+ }
+}
