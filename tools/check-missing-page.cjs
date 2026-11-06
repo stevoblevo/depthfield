@@ -32,7 +32,7 @@ const complete={version:1,clues:['rule','room','receipt'],layer:'wall',alignment
   await page.locator('#connect').click();ok((await page.locator('#deduction-response').textContent()).includes('Choose a claim'),'empty claim has feedback');
   for(let i=0;i<4;i++)await page.locator('#hint').click();ok((await page.locator('#hint-copy').textContent()).includes('Press “Read the margin”'),'third hint states answer');
   await page.locator('input[value=absent]').check();await page.locator('#connect').click();ok(await page.locator('#refuge').isHidden(),'cannot skip all clues');
-  await discover(page);ok((await value(page)).clues.length===3,'all discoveries persisted');
+  await discover(page);await page.locator('#layers').screenshot({path:'missing-page-qa/layers-desktop.png'});await page.locator('#threads').screenshot({path:'missing-page-qa/threads-desktop.png'});ok((await value(page)).clues.length===3,'all discoveries persisted');
   await page.locator('[data-layer=glass]').click();ok(await page.locator('#room-note').isVisible(),'found room survives changed layer');
   await page.locator('input[value=unlit]').check();await page.locator('#connect').click();ok((await page.locator('#deduction-response').textContent()).includes('channel'),'wrong deduction teaches reason');
   await page.locator('input[value=absent]').check();await page.locator('#connect').click();ok(await page.locator('#refuge').isVisible(),'correct deduction opens light lab');
@@ -45,11 +45,11 @@ const complete={version:1,clues:['rule','room','receipt'],layer:'wall',alignment
  }
  // Existing pets and shared preferences are read-only; stable single Guardian.
  for(const reducedMotion of ['reduce','no-preference']){
-  const {page,context,errors}=await setup({viewport:{width:390,height:844},reducedMotion},()=>{localStorage.setItem('crossing:pets',JSON.stringify({found:{'df:winkle':123,'sb:poppy':456}}));localStorage.setItem('df:theme','peach-day');sessionStorage.setItem('df:sound','1');});
+  const {page,context,errors}=await setup({viewport:{width:390,height:844},reducedMotion},()=>{localStorage.setItem('crossing:pets',JSON.stringify({found:{'df:winkle':123,'df:firefly':321,'sb:poppy':456}}));localStorage.setItem('df:theme','peach-day');sessionStorage.setItem('df:sound','1');});
   await load(page);const originalPets=await page.evaluate(()=>localStorage.getItem('crossing:pets'));await solve(page);await page.locator('#guardian-select').selectOption('winkle');
   const guardian=page.locator(reducedMotion==='reduce'?'.mp-guardian-static':'.df-guardian');await guardian.scrollIntoViewIfNeeded();ok(await guardian.isVisible(),`${reducedMotion}: found pet renders`);await guardian.focus();await page.keyboard.press('Enter');ok((await page.locator('.mp-keeper-line').textContent()).includes('Six on the ledger'),`${reducedMotion}: guardian keyboard note`);
   await guardian.evaluate(e=>e.click());ok((await page.locator('.mp-keeper-line').textContent()).includes('shade stays'),`${reducedMotion}: guardian synthetic activation`);
-  await page.locator('#guardian-select').selectOption('none');await page.locator('#guardian-select').selectOption('winkle');ok(await page.locator('.df-guardian').count()===(reducedMotion==='reduce'?0:1),`${reducedMotion}: no duplicate guardian`);
+  await page.locator('#guardian-select').selectOption('firefly');ok((await page.locator('.mp-keeper-line').textContent()).includes('Firefly keeps'),`${reducedMotion}: keeper name changes`);await page.locator('#guardian-select').selectOption('none');await page.locator('#guardian-select').selectOption('winkle');ok(await page.locator('.df-guardian').count()===(reducedMotion==='reduce'?0:1),`${reducedMotion}: no duplicate guardian`);
   ok(await page.evaluate(()=>Depthfield.tone.on)===false,`${reducedMotion}: sound stays off despite saved on`);
   await page.locator('#theme').selectOption('contrast');ok(await page.evaluate(()=>localStorage.getItem('df:theme'))==='peach-day',`${reducedMotion}: shared theme untouched`);
   await page.locator('#reset-open').click();await page.locator('#reset-yes').click();ok(await page.evaluate(()=>localStorage.getItem('crossing:pets'))===originalPets,`${reducedMotion}: pets unchanged after reset`);ok(!errors.length,`${reducedMotion}: no guardian errors ${errors}`);await context.close();
@@ -67,9 +67,18 @@ const complete={version:1,clues:['rule','room','receipt'],layer:'wall',alignment
  {
   const {page,context,errors}=await setup({viewport:{width:390,height:844},hasTouch:true,isMobile:true,reducedMotion:'reduce'});await load(page);await page.locator('#read-margin-copy').tap();await page.locator('[data-layer=wall]').tap();await page.locator('#alignment').fill('2');await page.locator('[data-receipt=blankets]').tap();await page.locator('input[value=absent]').tap();await page.locator('#connect').tap();await page.locator('[data-light-choice=sheltered]').tap();await page.locator('#keep-room').tap();ok(await page.locator('#ending').isVisible(),'touch-only controls complete story');ok(!errors.length,'touch route no errors');await context.close();
  }
+ // The canvas pluck and native receipt button share the same discovery handler.
+ {
+  const {page,context,errors}=await setup({viewport:{width:390,height:844},reducedMotion:'reduce'});await load(page);await page.locator('#receipt-cloth').scrollIntoViewIfNeeded();await page.waitForFunction(()=>!!document.querySelector('#receipt-cloth').__dfCloth);await page.waitForTimeout(400);
+  const point=await page.locator('#receipt-cloth').evaluate(c=>{const api=c.__dfCloth,r=c.getBoundingClientRect(),p=api.screen(Math.floor(api.rows/2),api.columnOf(2));return {x:r.left+p[0],y:r.top+p[1]};});await page.mouse.click(point.x,point.y);ok((await value(page)).clues.includes('receipt'),'actual canvas blanket pluck discovers receipt');ok((await page.locator('#receipt-title').textContent())==='Blankets','canvas shows same blanket record');await page.locator('#threads').screenshot({path:'missing-page-qa/threads-phone.png'});await page.locator('[data-layer=wall]').click();await page.locator('#alignment').fill('2');await page.locator('#layers').screenshot({path:'missing-page-qa/layers-phone.png'});ok(!errors.length,'canvas pointer route no errors');await context.close();
+ }
+ // Forced colors keeps the textual route and state visibly available.
+ if(kind==='chromium'){
+  const {page,context,errors}=await setup({viewport:{width:390,height:844},reducedMotion:'reduce',forcedColors:'active'});await load(page);await solve(page);ok(await page.locator('#ending').isVisible(),'forced colors completes');ok((await page.locator('#room-reading').textContent())==='Lit','forced colors retains non-color result');await noOverflow(page,'forced colors no sideways scroll');await page.locator('#ending').scrollIntoViewIfNeeded();await page.screenshot({path:'missing-page-qa/ending-forced-colors.png'});ok(!errors.length,'forced colors no script errors');await context.close();
+ }
  // Main showcase and shared docs keep existing boot and phone layout.
  for(const path of ['/','/docs.html']){
   const {page,context,errors}=await setup({viewport:{width:390,height:844},reducedMotion:'reduce'});await load(page,path);await noOverflow(page,`${path}: baseline phone no sideways scroll`);ok(!errors.length,`${path}: no script errors ${errors}`);if(path==='/'){ok(await page.locator('[data-df-chapter]').count()===7,'baseline seven chapters intact');ok(await page.locator('a[href="missing-page/"]').count()===2,'chapter reachable from hero and ledger');}await context.close();
  }
  fs.writeFileSync('missing-page-qa/results.json',JSON.stringify({browser:kind,checks,results},null,2));console.log(`${kind}: ${checks} checks passed`);await browser.close();
-})().catch(e=>{fs.writeFileSync('missing-page-qa/failure.txt',e.stack);console.error(e);process.exitCode=1;});
+})().catch(e=>{fs.writeFileSync('missing-page-qa/failure.txt',e.stack);console.error(e);process.exit(1);});
