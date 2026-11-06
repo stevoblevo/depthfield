@@ -12,3 +12,5 @@ html:not(.js) .controls,html:not(.js) .preview-controls,html:not(.js) .light,htm
 
 .scene-heading .primary{font:700 14px Arial,Helvetica,sans-serif;white-space:nowrap}.scene-heading>div p{margin-top:5px}html:not(.js) #quiet{display:none}
 @media(max-width:720px){.scene-heading{gap:14px}.scene-heading .primary{width:100%}}
+/* Clip the skip link, including full-page captures, until keyboard focus. */
+.skip{clip-path:inset(50%)}.skip:focus{clip-path:none}
