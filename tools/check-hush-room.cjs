@@ -47,6 +47,10 @@ function ok(v,label){assert.ok(v,label);checks.push(label);}
  if(kind==='chromium'){
   const {c,p}=await setup({forcedColors:'active',viewport:{width:390,height:844}});await load(p);await p.locator('#trace').click();ok(await p.locator('#trace').getAttribute('aria-pressed')==='true','forced colors has equal reveal');await noOverflow(p,'forced-colors no overflow');await p.screenshot({path:`${out}/forced-colors.png`,fullPage:true});await c.close();
  }
+ // The exact packaged file works offline and makes no network requests.
+ {
+  const {c,p,errors}=await setup({viewport:{width:390,height:844}});let network=0;p.on('request',r=>{if(/^https?:/.test(r.url()))network++;});await p.goto('file://'+process.cwd()+'/hush-room-qa/The-Hush-Room-0.1.0.html');await p.waitForFunction(()=>window.HushRoom);await p.locator('#quiet').click();await p.locator('#trace').click();ok((await p.evaluate(()=>HushRoom.snapshot())).trace,'offline single file reveals both secrets');ok(network===0,'offline single file makes zero network requests');await noOverflow(p,'offline file fits phone');ok(!errors.length,'offline file no script errors');await c.close();
+ }
  // Load existing surfaces without modifying their preferences or source.
  for(const path of ['/','/docs.html','/missing-page/']){const {c,p,errors}=await setup({viewport:{width:390,height:844}});await p.goto(base+path,{waitUntil:'networkidle'});await noOverflow(p,`${path}: existing page fits phone`);ok(!errors.length,`${path}: no script errors ${errors}`);await c.close();}
  await b.close();const report={browser:kind,checks:checks.length,results:checks,metrics,commit:process.env.GITHUB_SHA||'local'};fs.writeFileSync(`${out}/report.json`,JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));
