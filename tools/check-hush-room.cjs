@@ -35,7 +35,7 @@ function ok(v,label){assert.ok(v,label);checks.push(label);}
   await p.locator('#trace').focus();await p.keyboard.press('Enter');ok(await p.locator('#trace').getAttribute('aria-pressed')==='false','keyboard removes outlines');await p.keyboard.press('Space');ok(await p.locator('#trace').getAttribute('aria-pressed')==='true','keyboard restores outlines');
   for(let i=0;i<10;i++)await p.locator('#quiet').click();ok((await p.evaluate(()=>HushRoom.snapshot())).trace,'repeated model toggles retain explicit outline state');
   await p.reload({waitUntil:'networkidle'});ok((await p.evaluate(()=>HushRoom.snapshot())).mode==='original','reload starts original, no inferred vision');
-  await p.addScriptTag({url:base+'/project/components/bundle.js'});const taste=await p.evaluate(()=>Depthfield.taste({log:false}));fs.writeFileSync(`${out}/taste.json`,JSON.stringify(taste,null,2));
+  await p.addScriptTag({url:base+'/project/components/bundle.js'});const taste=await p.evaluate(()=>Depthfield.taste({log:false}));fs.writeFileSync(`${out}/taste.json`,JSON.stringify(taste,null,2));ok(!taste.some(x=>x.severity==='warn'),'Depthfield taste has no warning');
   ok(!errors.length,'all comparison paths no script errors');await c.close();
  }
  {

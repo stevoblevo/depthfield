@@ -12,6 +12,8 @@ function paint(){
  const color=(y,t)=>`rgb(${C.palette(family,y,t).join(',')})`;
  function poly(points,y,t){g.beginPath();points.forEach((p,i)=>i?g.lineTo(...p):g.moveTo(...p));g.closePath();g.fillStyle=color(y,t);g.fill();}
  function line(points,y,t,width=1){g.beginPath();points.forEach((p,i)=>i?g.lineTo(...p):g.moveTo(...p));g.strokeStyle=color(y,t);g.lineWidth=width;g.stroke();}
+ // Integer scanline discs avoid gamma-encoded antialias blends leaking a door outline.
+ function dot(x,y,radius){for(let yy=Math.ceil(y-radius);yy<=Math.floor(y+radius);yy++){const half=Math.sqrt(Math.max(0,radius*radius-(yy-y)**2));const left=Math.ceil(x-half),right=Math.floor(x+half);if(right>=left)g.fillRect(left,yy,right-left+1,1);}}
  g.fillStyle=color(.012,.25);g.fillRect(0,0,1200,760);
  // Three architectural planes, all authored in the same linear-light family.
  poly([[0,0],[1200,0],[1005,110],[195,110]],.025,.88);
@@ -28,13 +30,13 @@ function paint(){
  // Equal level distributions on either side of the door's chromatic boundary.
  for(let y=228;y<613;y+=12)for(let x=280;x<541;x+=12){
   const xx=x+(r()-.5)*5, yy=y+(r()-.5)*5, lum=.13+r()*.15;
-  g.fillStyle=color(lum,C.isDoor(xx,yy)?-.93:.9);g.beginPath();g.arc(xx,yy,3.6+r()*1.7,0,Math.PI*2);g.fill();
+  g.fillStyle=color(lum,C.isDoor(xx,yy)?-.93:.9);dot(xx,yy,3.6+r()*1.7);
  }
  // The moth's weak lightness signal survives while hue noise converges.
  for(let y=227;y<610;y+=11)for(let x=660;x<964;x+=11){
   const xx=x+(r()-.5)*4,yy=y+(r()-.5)*4;
   const lum=(C.isMoth(xx,yy)?.31:.215)+(r()-.5)*.043;
-  g.fillStyle=color(lum,r()*2-1);g.beginPath();g.arc(xx,yy,3.4+r()*1.5,0,Math.PI*2);g.fill();
+  g.fillStyle=color(lum,r()*2-1);dot(xx,yy,3.4+r()*1.5);
  }
  // Hanging lanterns and a low reflective threshold, never gameplay signals.
  [275,925].forEach((x,i)=>{line([[x,0],[x,137]],.23,-.9,2);poly([[x-22,137],[x+22,137],[x+28,182],[x-28,182]],.54,i?.9:-.9);poly([[x-27,181],[x+27,181],[x+35,190],[x-35,190]],.15,-.8);});
