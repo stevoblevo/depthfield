@@ -17,3 +17,5 @@ Owner: Bleve. Last updated 3 Nov 2026 by Claude (session 01ApCRaiX6JVCSowgVuAsG4
 | D3 | A changelog page in the docs, one entry per version, read from `project/` | `docs.html#/changes` lists 2.0, 2.1 and 2.2 | S | open | open |
 | D4 | Night pets reach the 2.2 companions: a found pet can become the page's Guardian | Picking a pet in the list sets the Guardian | S | open | open |
 | D5 | The showcase's reel gains a shot for each new chapter added by D1 | Reel runs end to end; any touch still hands it back | S | open | open |
+
+| D6 | Optional colour-perception art rooms with equal outline/text reveals; non-diagnostic model previews | Candidate-only; preserve shared runtime/game state; numerical model and browser checks | M | Sae(lion) | doing: isolated sae/D6-colour-hush candidate; no live publication |
