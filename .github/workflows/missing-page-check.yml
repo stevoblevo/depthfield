@@ -1,0 +1,40 @@
+name: Missing Page candidate check
+on:
+  push:
+    branches: [sae/D1-missing-page]
+permissions:
+  contents: read
+jobs:
+  browser:
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, webkit]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install official browser tooling
+        run: |
+          npm install --prefix /tmp/missing-page-qa playwright@1.56.1
+          if [ '${{ matrix.browser }}' = webkit ]; then /tmp/missing-page-qa/node_modules/.bin/playwright install --with-deps webkit; else google-chrome --version; fi
+      - name: Test state and protected baseline
+        run: |
+          node --test missing-page/model.test.cjs
+          python3 tools/check-missing-page-baseline.py
+      - name: Check chapter and original showcase
+        run: |
+          python3 -m http.server 8091 --bind 127.0.0.1 >/tmp/missing-page-server.log 2>&1 &
+          sleep 1
+          NODE_PATH=/tmp/missing-page-qa/node_modules BROWSER=${{ matrix.browser }} node tools/check-missing-page.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: missing-page-${{ matrix.browser }}-review
+          path: missing-page-qa/
+          retention-days: 7
