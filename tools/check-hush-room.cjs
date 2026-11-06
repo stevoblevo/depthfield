@@ -12,8 +12,10 @@ function ok(v,label){assert.ok(v,label);checks.push(label);}
  for(const width of [320,390,768,1440])for(const theme of ['night','day','contrast']){
   const {c,p,errors}=await setup({viewport:{width,height:1000}});await load(p);await p.locator('#theme').selectOption(theme);await noOverflow(p,`${width}/${theme}: no overflow`);
   for(const selector of ['#quiet','#trace','#change-room','.small','#status','#theme','.scene-heading p'])await contrast(p,selector,`${width}/${theme}: ${selector}`);
+  await p.mouse.move(1,1);
   const ui=await p.locator('#quiet').evaluate(el=>({fg:getComputedStyle(el).color,bg:getComputedStyle(el).backgroundColor}));
   await p.locator('#quiet').click();ok((await p.evaluate(()=>HushRoom.snapshot())).mode==='protan','quiet selects matching protan model');
+  await p.mouse.move(1,1);
   const uiAfter=await p.locator('#quiet').evaluate(el=>({fg:getComputedStyle(el).color,bg:getComputedStyle(el).backgroundColor}));ok(JSON.stringify(ui)===JSON.stringify(uiAfter),'art model leaves UI colours unchanged');
   await p.locator('#trace').click();ok(await p.locator('#trace').getAttribute('aria-pressed')==='true','outline state exposed');
   await p.locator('#change-room').click();ok((await p.evaluate(()=>HushRoom.snapshot())).family==='deutan','second room opens');ok((await p.evaluate(()=>HushRoom.snapshot())).mode==='original','room change restores original');
