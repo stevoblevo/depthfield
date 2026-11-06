@@ -15,15 +15,23 @@ const complete={version:1,clues:['rule','room','receipt'],layer:'wall',alignment
  async function noOverflow(page,label){ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),label);}
  async function discover(page){await page.locator('#read-margin-copy').click();await page.locator('[data-layer=wall]').click();await page.locator('#alignment').focus();await page.keyboard.press('Home');await page.keyboard.press('ArrowRight');await page.keyboard.press('ArrowRight');await page.locator('[data-receipt=blankets]').click();}
  async function solve(page){await discover(page);await page.locator('input[value=absent]').check();await page.locator('#connect').click();await page.locator('[data-light-choice=sheltered]').click();await page.locator('#keep-room').click();}
+ async function inkContrast(page,selector,label){
+ const ratio=await page.locator(selector).first().evaluate(el=>{
+  const canvas=document.createElement('canvas');canvas.width=canvas.height=1;const g=canvas.getContext('2d');
+  function rgba(color){g.clearRect(0,0,1,1);g.fillStyle=color;g.fillRect(0,0,1,1);return Array.from(g.getImageData(0,0,1,1).data).map((x,i)=>i===3?x/255:x);}
+  let bg=[255,255,255,1];const ancestors=[];for(let n=el;n;n=n.parentElement)ancestors.unshift(n);for(const n of ancestors){const c=rgba(getComputedStyle(n).backgroundColor);bg=bg.map((v,i)=>i===3?1:c[i]*c[3]+v*(1-c[3]));}
+  const fg=rgba(getComputedStyle(el).color).slice(0,3);const lum=c=>c.map(v=>v/255).map(v=>v<=.04045?v/12.92:((v+.055)/1.055)**2.4).reduce((a,v,i)=>a+v*[.2126,.7152,.0722][i],0);const a=lum(fg),b=lum(bg.slice(0,3));return (Math.max(a,b)+.05)/(Math.min(a,b)+.05);
+ });ok(ratio>=4.5,label+' contrast '+ratio.toFixed(2));
+ }
  // First screen and every theme at phone/tablet/desktop widths.
  for(const width of [320,390,768,1440])for(const theme of ['night','day','contrast']){
   const {page,context,errors}=await setup({viewport:{width,height:900},reducedMotion:'reduce'});await load(page,'/missing-page/?theme='+theme);
-  await noOverflow(page,`${width}/${theme}: no sideways scroll`);
+  await noOverflow(page,`${width}/${theme}: no sideways scroll`);await inkContrast(page,'#read-margin-copy',`${width}/${theme}: primary action`);await inkContrast(page,'.mp-save',`${width}/${theme}: muted ink`);
   const first=await page.locator('#read-margin-copy').boundingBox();ok(first.y+first.height<=900,`${width}/${theme}: first action above fold`);
   ok(await page.locator('html').getAttribute('data-theme')===theme,`${width}/${theme}: theme applied`);
   const taste=await page.evaluate(()=>Depthfield.taste({log:false}));ok(!taste.some(r=>r.severity==='warn'),`${width}/${theme}: taste clean ${JSON.stringify(taste)}`);
   await page.screenshot({path:`missing-page-qa/open-${width}-${theme}.png`});
-  if(width===390||width===1440){await solve(page);await page.locator('#ending').scrollIntoViewIfNeeded();await page.screenshot({path:`missing-page-qa/ending-${width}-${theme}.png`});await noOverflow(page,`${width}/${theme}: ending no sideways scroll`);}
+  if(width===390||width===1440){await solve(page);await page.locator('#ending').scrollIntoViewIfNeeded();await page.screenshot({path:`missing-page-qa/ending-${width}-${theme}.png`});await noOverflow(page,`${width}/${theme}: ending no sideways scroll`);await inkContrast(page,'[data-light-choice=sheltered]',`${width}/${theme}: selected trial`);}
   ok(!errors.length,`${width}/${theme}: no script errors ${errors}`);await context.close();
  }
  // Actual state transitions, wrong routes, explicit commit, replay and reset.
@@ -70,7 +78,7 @@ const complete={version:1,clues:['rule','room','receipt'],layer:'wall',alignment
  // The canvas pluck and native receipt button share the same discovery handler.
  {
   const {page,context,errors}=await setup({viewport:{width:390,height:844},reducedMotion:'reduce'});await load(page);await page.locator('#receipt-cloth').scrollIntoViewIfNeeded();await page.waitForFunction(()=>!!document.querySelector('#receipt-cloth').__dfCloth);await page.waitForTimeout(400);
-  const point=await page.locator('#receipt-cloth').evaluate(c=>{const api=c.__dfCloth,r=c.getBoundingClientRect(),p=api.screen(Math.floor(api.rows/2),api.columnOf(2));return {x:r.left+p[0],y:r.top+p[1]};});await page.mouse.click(point.x,point.y);ok((await value(page)).clues.includes('receipt'),'actual canvas blanket pluck discovers receipt');ok((await page.locator('#receipt-title').textContent())==='Blankets','canvas shows same blanket record');await page.locator('#threads').screenshot({path:'missing-page-qa/threads-phone.png'});await page.locator('[data-layer=wall]').click();await page.locator('#alignment').fill('2');await page.locator('#layers').screenshot({path:'missing-page-qa/layers-phone.png'});ok(!errors.length,'canvas pointer route no errors');await context.close();
+  const point=await page.locator('#receipt-cloth').evaluate(c=>{const api=c.__dfCloth,r=c.getBoundingClientRect(),p=api.screen(Math.floor(api.rows/2),api.columnOf(2));return {x:r.left+p[0],y:r.top+p[1]};});await page.mouse.click(point.x,point.y);ok((await value(page)).clues.includes('receipt'),'actual canvas blanket pluck discovers receipt');ok((await page.locator('#receipt-title').textContent())==='Blankets','canvas shows same blanket record');await page.locator('#threads').screenshot({path:'missing-page-qa/threads-phone.png'});await page.locator('[data-layer=wall]').click();await page.locator('#alignment').fill('2');await page.locator('#layers').screenshot({path:'missing-page-qa/layers-phone.png'});await page.locator('#section-stack').hover();ok(await page.locator('.mp-plane-wall').evaluate(el=>el.classList.contains('is-focus')),'incidental hover does not override chosen wall');ok(await page.locator('.df-skiplink').evaluate(el=>getComputedStyle(el).clipPath==='inset(50%)'),'skip link clipped until focus');ok(!errors.length,'canvas pointer route no errors');await context.close();
  }
  // Forced colors keeps the textual route and state visibly available.
  if(kind==='chromium'){

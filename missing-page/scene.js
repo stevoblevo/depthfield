@@ -122,6 +122,7 @@
     all('[data-evidence]').forEach(el => { const present=state.clues.includes(el.dataset.evidence); el.classList.toggle('is-found',present); el.querySelector('p').textContent=evidence[el.dataset.evidence][present?0:1]; });
     all('[data-layer]').forEach(b => b.setAttribute('aria-pressed',String(b.dataset.layer===state.layer)));
     $('#alignment').value=String(state.alignment); $('#alignment-value').textContent=positions[state.alignment]; $('#alignment').setAttribute('aria-valuetext',positions[state.alignment]);
+    $('#section-stack').dataset.layer=state.layer;
     $('#section-stack').classList.toggle('is-aligned',state.layer==='wall' && state.alignment===2);
     $('#section-stack').style.setProperty('--mp-channel',[22,34,44,60][state.alignment]+'%');
     stack.focus({glass:2,passage:1,wall:0}[state.layer]);
