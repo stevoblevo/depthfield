@@ -26,7 +26,7 @@ const complete={version:1,clues:['rule','room','receipt'],layer:'wall',alignment
  // First screen and every theme at phone/tablet/desktop widths.
  for(const width of [320,390,768,1440])for(const theme of ['night','day','contrast']){
   const {page,context,errors}=await setup({viewport:{width,height:900},reducedMotion:'reduce'});await load(page,'/missing-page/?theme='+theme);
-  await noOverflow(page,`${width}/${theme}: no sideways scroll`);await inkContrast(page,'#read-margin-copy',`${width}/${theme}: primary action`);await inkContrast(page,'.mp-save',`${width}/${theme}: muted ink`);
+  await noOverflow(page,`${width}/${theme}: no sideways scroll`);await inkContrast(page,'#read-margin-copy',`${width}/${theme}: primary action`);await inkContrast(page,'.mp-save',`${width}/${theme}: muted ink`);await inkContrast(page,'#theme',`${width}/${theme}: theme selector`);ok(await page.locator('#theme').evaluate(el=>getComputedStyle(el).appearance)==='none',`${width}/${theme}: explicit select appearance`);
   const first=await page.locator('#read-margin-copy').boundingBox();ok(first.y+first.height<=900,`${width}/${theme}: first action above fold`);
   ok(await page.locator('html').getAttribute('data-theme')===theme,`${width}/${theme}: theme applied`);
   const taste=await page.evaluate(()=>Depthfield.taste({log:false}));ok(!taste.some(r=>r.severity==='warn'),`${width}/${theme}: taste clean ${JSON.stringify(taste)}`);
