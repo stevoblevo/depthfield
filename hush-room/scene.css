@@ -9,3 +9,6 @@
 @media print{.controls,.preview-controls,.light{display:none}.stage{break-inside:avoid}:root{--bg:#fff;--panel:#fff;--ink:#000;--muted:#333;--edge:#555}header,footer{padding:12px 0}.opening{padding-top:20px}.field-notes{padding:25px 0}}
 /* Fallback is the poster and native text disclosure, not inert controls. */
 html:not(.js) .controls,html:not(.js) .preview-controls,html:not(.js) .light,html:not(.js) .scene-status{display:none}
+
+.scene-heading .primary{font:700 14px Arial,Helvetica,sans-serif;white-space:nowrap}.scene-heading>div p{margin-top:5px}html:not(.js) #quiet{display:none}
+@media(max-width:720px){.scene-heading{gap:14px}.scene-heading .primary{width:100%}}
