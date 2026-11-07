@@ -54,6 +54,7 @@ What this says about the toolkits: every app copies the kit and then re-derives 
 | F6 | Pin the copies: offer AND SO, the Malachi sites and Reignfawn a change from vendored copies to versioned URLs, each through that repo's own rules (candidate branch and PR, never their `main`) | A PR exists per consumer; nothing breaks offline (keep a fallback copy where the app must work from a file) | M | open | open |
 | F7 | One list of generic tells for Taste, included by every system | `Depthfield.taste()` and `Storeybrook.taste()` report the same generic findings on the same page | S | open | open |
 | F8 | Carry repo work back to the artifacts at each release (Depthfield `2yngsrbj7HRDirATXbTwMz`, Storeybrook `YQrpanzsuY5WPgr47GFCNe`), and create a Design System artifact for Hypermetapunk | Each artifact lists the same components as its repo's `project/` | M | open | open |
+| F9 | Pinned Impeccable reference adapter and reversible visual pilot ([scope](impeccable.md)) | Import tests, real-runtime browser evidence, existing Taste check, independent exact-candidate review; no automatic adoption | M | Sae | doing: sae/F9-impeccable-pilot; offline checks pass, full-runtime review open |
 | O1 | Origami papercraft pen in Storeybrook (see Storeybrook plan O1 to O4) | Storeybrook plan | M | Claude | done: Storeybrook 1.3 (`components/paper.js`, Pen and Folded); O4 to O6 open |
 | H | Hypermetapunk 0.1 lifted from Kit v0 into the family format (its plan: `stevoblevo/hypermetapunk`, `docs/plan.md`) | H1 to H5 there | L | Claude | done: 0.1 live in its own repo |
 
