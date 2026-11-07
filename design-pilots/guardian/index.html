@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en" data-theme="night">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Guardian · Depthfield refinement study</title>
+<link rel="stylesheet" href="../../project/tokens.css">
+<link rel="stylesheet" href="../../project/components/bundle.css">
+<style>
+/* plan F9: isolated preview; native tokens win, offline fallback remains readable. */
+:root{color-scheme:dark;--pilot-ground:var(--void,#07110f);--pilot-surface:var(--surface,#10251f);--pilot-raised:var(--surface-raised,#18362d);--pilot-ink:var(--ink,#edf6ee);--pilot-muted:var(--ink-muted,#bdcfc6);--pilot-accent:var(--accent,#7becbc);--pilot-on:var(--on-accent,#07110f);--pilot-focus:var(--focus,#b3f9db)}
+html[data-theme="day"]{color-scheme:light;--pilot-ground:var(--void,#eef5ef);--pilot-surface:var(--surface,#e1eee5);--pilot-raised:var(--surface-raised,#d1e4d7);--pilot-ink:var(--ink,#142b23);--pilot-muted:var(--ink-muted,#3b584b);--pilot-accent:var(--accent,#126448);--pilot-on:var(--on-accent,#fff);--pilot-focus:var(--focus,#126448)}
+html[data-theme="contrast"]{color-scheme:dark;--pilot-ground:var(--void,#000);--pilot-surface:var(--surface,#111);--pilot-raised:var(--surface-raised,#222);--pilot-ink:var(--ink,#fff);--pilot-muted:var(--ink-muted,#ddd);--pilot-accent:var(--accent,#a5ffcb);--pilot-on:var(--on-accent,#000);--pilot-focus:var(--focus,#fff)}
+*{box-sizing:border-box}body{margin:0;background:var(--pilot-ground);color:var(--pilot-ink);font-family:var(--font-sans,system-ui,sans-serif);line-height:1.5}button,select{font:inherit}button,select,a{-webkit-tap-highlight-color:transparent}:focus-visible{outline:3px solid var(--pilot-focus);outline-offset:5px}::selection{background:var(--pilot-accent);color:var(--pilot-on)}
+main{max-width:1600px;margin:auto;padding:clamp(24px,5vw,80px)}header{display:flex;justify-content:space-between;align-items:flex-start;gap:24px}h1{font-family:var(--font-display,Georgia,serif);font-size:clamp(2.5rem,5vw,5.5rem);font-weight:400;line-height:1.08;letter-spacing:-.025em;margin:0 0 18px;text-wrap:balance;overflow-wrap:anywhere}header p{color:var(--pilot-muted);margin:0;max-width:47ch;font-size:clamp(1rem,1.3vw,1.25rem)}.theme{display:grid;gap:8px;flex:none;font-size:.875rem}.theme select{background:var(--pilot-surface);color:var(--pilot-ink);border:1px solid var(--pilot-muted);border-radius:4px;min-height:46px;padding:9px 30px 9px 12px;max-width:100%}
+.yard{position:relative;isolation:isolate;margin-top:clamp(28px,4vw,56px);min-height:clamp(400px,48vh,640px);height:auto;display:flex;flex-direction:column;background:var(--pilot-surface);border-radius:3px;overflow:hidden}.floor{position:absolute;left:6%;right:6%;bottom:28px;height:1px;background:var(--pilot-muted);opacity:.35;pointer-events:none}.arc{position:absolute;left:calc(50% - 23%);top:12%;width:46%;height:70%;border:1px solid var(--pilot-muted);border-radius:50% 50% 0 0;opacity:.12;pointer-events:none}
+.doors{position:relative;margin:0 7%;margin-top:auto;padding:100px 0 46px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,6rem),1fr));gap:clamp(8px,5vw,80px);align-items:end}.door{position:relative;appearance:none;color:var(--pilot-ink);background:none;border:0;min-width:44px;min-height:44px;padding:16px 5px 8px;cursor:pointer;display:grid;justify-items:center;gap:16px;border-radius:3px}.portal{display:block;position:relative;width:clamp(52px,9vw,128px);height:clamp(95px,15vw,190px);border:1px solid var(--pilot-muted);border-radius:80px 80px 0 0;background:var(--pilot-raised);transition:background 180ms ease-out,border-color 180ms ease-out}.portal:after{content:'';position:absolute;inset:9px;border:1px solid var(--pilot-muted);border-bottom:0;border-radius:80px 80px 0 0;opacity:.4}.door:hover .portal{border-color:var(--pilot-accent)}.door[aria-pressed="true"] .portal{background:var(--pilot-accent);border-color:var(--pilot-accent)}.door[aria-pressed="true"] .portal:after{border-color:var(--pilot-on)}.door-name{overflow-wrap:anywhere;font-size:clamp(1rem,1.8vw,1.5rem)}.selected-label{font-size:.75rem;min-height:1.5em;color:var(--pilot-muted)}
+.runtime-note{position:relative;margin:18px 24px 0;color:var(--pilot-muted);font-size:.875rem;max-width:56ch}.result{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px;align-items:start;padding:24px 0;border-bottom:1px solid var(--pilot-muted)}.result p{margin:0}.result-title{font-size:1.125rem}.result-detail{margin-top:4px!important;color:var(--pilot-muted);max-width:65ch}#clear{background:transparent;color:var(--pilot-ink);border:1px solid var(--pilot-muted);border-radius:4px;min-height:46px;padding:10px 18px;cursor:pointer}#clear:disabled{cursor:default;opacity:.6}footer{display:flex;flex-wrap:wrap;gap:12px 32px;justify-content:space-between;color:var(--pilot-muted);font-size:.8125rem;margin-top:24px}footer a{color:inherit;text-underline-offset:4px}
+/* Real companion uses the kit's implementation. These layout rules only scope its stage. */
+.yard .df-guardian{z-index:3}.yard .df-guardian__say{z-index:4;max-width:min(260px,75%)}
+@media(max-width:600px){header{display:block}.theme{margin-top:24px;display:flex;flex-wrap:wrap;align-items:center;gap:12px}.yard{min-height:380px;height:auto}.doors{margin-left:4%;margin-right:4%;gap:6px}.result{grid-template-columns:minmax(0,1fr)}#clear{justify-self:start}.runtime-note{margin-left:16px;margin-right:16px;font-size:.8125rem}.portal{width:58px;height:110px}}
+@media(prefers-reduced-motion:reduce){.portal{transition:none}}
+@media(forced-colors:active){.door[aria-pressed="true"] .portal{background:Highlight}.door .portal{border:2px solid ButtonText}.door[aria-pressed="true"]{outline:2px solid Highlight}.selected-label{color:CanvasText}}
+</style>
+</head>
+<body>
+<main>
+<header><div><h1>Send the guardian.</h1><p>Throw the strawberry at a door, or choose a door directly. Both paths select the same place.</p></div><label class="theme" for="theme">Appearance<select id="theme"><option value="night">Night</option><option value="day">Day</option><option value="contrast">High contrast</option></select></label></header>
+<section class="yard" id="yard" aria-label="Guardian practice yard" aria-describedby="runtime-note">
+<div class="arc" aria-hidden="true"></div><div class="floor" aria-hidden="true"></div>
+<p class="runtime-note" id="runtime-note">Direct door selection is ready. Loading the kit companion…</p>
+<div class="doors" role="group" aria-label="Choose a destination">
+<button type="button" class="door" data-place="Field" aria-pressed="false"><span class="portal" aria-hidden="true"></span><span class="door-name">Field</span><span class="selected-label" aria-hidden="true"></span></button>
+<button type="button" class="door" data-place="Loom" aria-pressed="false"><span class="portal" aria-hidden="true"></span><span class="door-name">Loom</span><span class="selected-label" aria-hidden="true"></span></button>
+<button type="button" class="door" data-place="Ledger" aria-pressed="false"><span class="portal" aria-hidden="true"></span><span class="door-name">Ledger</span><span class="selected-label" aria-hidden="true"></span></button>
+</div>
+</section>
+<div class="result"><div id="result" role="status" aria-live="polite" aria-atomic="true"><p class="result-title" id="selection">No door selected.</p><p class="result-detail" id="detail">Tab to Field, Loom or Ledger. Press Enter or Space to choose.</p></div><button type="button" id="clear" disabled>Clear selection</button></div>
+<noscript><p>JavaScript is off. This is a static preview of the Field, Loom and Ledger destinations; selection and throwing are unavailable.</p></noscript>
+<footer><span>Depthfield · Guardian refinement study · candidate</span><span>Selection demo only. No game save, navigation or authority changes.</span><a href="../../project/components/Guardian/preview.html">Original component source preview</a></footer>
+</main>
+<script>
+/* plan F9: one state transition shared by direct input and the existing throw callback. */
+(function(){
+'use strict';
+var yard=document.getElementById('yard'),doors=Array.from(document.querySelectorAll('.door')),clear=document.getElementById('clear'),selection=document.getElementById('selection'),detail=document.getElementById('detail'),note=document.getElementById('runtime-note');
+var selected=null,guardian=null,attached=false;
+function choose(place,via){
+ selected=place;
+ doors.forEach(function(d){var hit=d.dataset.place===place;d.setAttribute('aria-pressed',String(hit));d.querySelector('.selected-label').textContent=hit?'Selected':'';});
+ selection.textContent=place?place+' selected.':'No door selected.';
+ detail.textContent=place?(via==='throw'?'The guardian reached this door.':'Direct selection reaches the same state as a throw.'):'Tab to Field, Loom or Ledger. Press Enter or Space to choose.';
+ clear.disabled=!place;
+ return place?'Thrown, it finds a world: '+place+'.':null;
+}
+doors.forEach(function(d){d.addEventListener('click',function(){choose(d.dataset.place,'direct');});});
+clear.addEventListener('click',function(){var previous=doors.find(function(d){return d.dataset.place===selected;});choose(null);if(previous)previous.focus();});
+document.getElementById('theme').addEventListener('change',function(e){document.documentElement.setAttribute('data-theme',e.target.value);});
+function unavailable(){note.textContent='Kit companion unavailable. Choose a door directly; throwing needs the existing Depthfield bundle.';document.documentElement.dataset.companion='unavailable';}
+function attach(){
+ if(attached)return;
+ if(!window.Depthfield||typeof Depthfield.guardian!=='function'){unavailable();return;}
+ try{
+ guardian=Depthfield.guardian({host:yard,home:[.5,.34],hello:'Guardian on duty. Nothing gets adopted because I liked it.',lines:['I review. I do not praise.','Thrown, I find worlds. Dropped, I find the floor.','Receipts, or it did not happen.'],miss:'Found the floor. Standards remain high.',onLand:function(x,y){
+  var r=yard.getBoundingClientRect(),best=null,bd=60;
+  doors.forEach(function(d){var b=d.querySelector('.portal').getBoundingClientRect(),distance=Math.hypot(b.left+b.width/2-r.left-x,b.top+b.height/2-r.top-y);if(distance<bd){bd=distance;best=d;}});
+  return choose(best?best.dataset.place:null,'throw');
+ }});
+ attached=true;note.textContent='Drag and throw, or use the door buttons. No sound, permissions or saved state.';document.documentElement.dataset.companion='ready';
+ }catch(error){unavailable();console.warn('Guardian preview could not initialize the kit companion.');}
+}
+var script=document.createElement('script');script.src='../../project/components/bundle.js';script.onload=attach;script.onerror=unavailable;document.head.appendChild(script);
+})();
+</script>
+</body></html>
