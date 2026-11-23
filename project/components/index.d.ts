@@ -140,15 +140,16 @@ type DfWeatherId = 'peach' | 'rain' | 'mint' | 'night';
 type DfInk = [number, number, number] | [number, number, number, number];
 interface DfLook { id: DfLookId; name: string; light: boolean; motion: boolean; print: boolean; weather: DfWeatherId; }
 interface DfWeatherPalette { sky: [DfInk, DfInk]; sun: DfInk; ridge: [DfInk, DfInk, DfInk]; rim: DfInk; }
-interface DfBox { x?: number; y?: number; w: number; h: number; weather?: DfWeatherId | number; t?: number; }
+type DfWeather = DfWeatherId | number | [number, number, number, number];
+interface DfBox { x?: number; y?: number; w: number; h: number; weather?: DfWeather; t?: number; }
 interface DfPen {
   look: DfLookId; name: string; light: boolean;
   inks: Record<string, DfInk>;
   rgb(name: string | DfInk, alpha?: number): string;
   weathers: { id: DfWeatherId; name: string }[];
-  weather(wx?: DfWeatherId | number): DfWeatherPalette;
+  weather(wx?: DfWeather): DfWeatherPalette;
   sky(ctx: CanvasRenderingContext2D, o: DfBox): void;
-  sun(ctx: CanvasRenderingContext2D, o: { x: number; y: number; r?: number; glow?: number; w?: number; h?: number; weather?: DfWeatherId | number }): void;
+  sun(ctx: CanvasRenderingContext2D, o: { x: number; y: number; r?: number; glow?: number; w?: number; h?: number; weather?: DfWeather }): void;
   stars(ctx: CanvasRenderingContext2D, o: DfBox & { count?: number; depth?: number; alpha?: number }): void;
   ridgeY(n: 0 | 1 | 2, x: number, o: DfBox & { par?: number; base?: number[]; amp?: number[] }): number;
   ridges(ctx: CanvasRenderingContext2D, o: DfBox & { par?: number; base?: number[]; amp?: number[]; from?: number; to?: number }): void;

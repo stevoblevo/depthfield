@@ -45,11 +45,17 @@
     for (k in INKS[id]) I[k] = INKS[id][k];
     function ink(name) { return I[name] || I.ink; }
     function rgb(name, a) { var c = typeof name === 'string' ? ink(name) : name; return 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + (a == null ? (c.length > 3 ? c[3] : 1) : a) + ')'; }
-    /* a weather's palette. Pass an id, or a number from 0 (peach fall) to 3 (night garden) to blend between neighbours. */
+    /* a weather's palette. Pass an id, a number from 0 (peach fall) to 3 (night garden) to blend between neighbours,
+       or four weights [peach, rain, mint, night] to blend any of them (a game whose weather follows its music). */
     function one(n) { var p = 'wx-' + WEATHER[n].id + '-'; return { sky: [ink(p + 'sky-top'), ink(p + 'sky-low')], sun: ink(p + 'sun'), ridge: [ink(p + 'ridge-1'), ink(p + 'ridge-2'), ink(p + 'ridge-3')], rim: ink(p + 'rim') }; }
     function weather(wx) {
       if (wx == null) wx = L.weather;
       if (typeof wx === 'string') { for (var n = 0; n < 4; n++) if (WEATHER[n].id === wx) return one(n); return one(3); }
+      if (wx && wx.length === 4) {
+        var all = [one(0), one(1), one(2), one(3)], sum = (wx[0] + wx[1] + wx[2] + wx[3]) || 1;
+        var blend = function (get) { var o = [0, 0, 0], q, c; for (q = 0; q < 4; q++) { c = get(all[q]); o[0] += c[0] * wx[q] / sum; o[1] += c[1] * wx[q] / sum; o[2] += c[2] * wx[q] / sum; } return [Math.round(o[0]), Math.round(o[1]), Math.round(o[2])]; };
+        return { sky: [blend(function (p) { return p.sky[0]; }), blend(function (p) { return p.sky[1]; })], sun: blend(function (p) { return p.sun; }), ridge: [0, 1, 2].map(function (j) { return blend(function (p) { return p.ridge[j]; }); }), rim: blend(function (p) { return p.rim; }) };
+      }
       var f = clamp(wx, 0, 3), i0 = Math.min(2, Math.floor(f)), t = f - i0, a = one(i0), b = one(i0 + 1);
       return { sky: [mixc(a.sky[0], b.sky[0], t), mixc(a.sky[1], b.sky[1], t)], sun: mixc(a.sun, b.sun, t), ridge: a.ridge.map(function (c, j) { return mixc(c, b.ridge[j], t); }), rim: mixc(a.rim, b.rim, t) };
     }
@@ -102,7 +108,7 @@
     }
     /* the whole world in one call: sky, sun, stars at night, ridges, vignette */
     function world(ctx, o) {
-      var x = o.x || 0, y = o.y || 0, wx = o.weather == null ? L.weather : o.weather, night = wx === 'night' || wx >= 2.5;
+      var x = o.x || 0, y = o.y || 0, wx = o.weather == null ? L.weather : o.weather, night = wx === 'night' || wx >= 2.5 || (wx && wx.length === 4 && wx[3] > 0.5);
       sky(ctx, o); sun(ctx, { x: x + o.w * (o.sunX == null ? 0.7 : o.sunX), y: y + o.h * (o.sunY == null ? 0.24 : o.sunY), w: o.w, h: o.h, weather: wx });
       if (night || bare) stars(ctx, o);
       ridges(ctx, o); if (o.vignette !== false) vignette(ctx, o);
