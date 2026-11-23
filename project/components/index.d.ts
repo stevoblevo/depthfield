@@ -133,3 +133,27 @@ export interface DepthfieldApi {
   taste: ((o?: { scope?: Element; log?: boolean }) => TasteFinding[]) & { badge(findings?: TasteFinding[]): HTMLDetailsElement };
 }
 /** Events added in 2.2: df:cloth {canvas, type: 'pluck' | 'pull' | 'reject' | 'view' | 'weather', …}, df:lamp {el, room}, df:stretch {el, value}, df:sense SenseDetail, df:guide {id, step, found, total}, df:guardian {say} or {landed}, df:taste {findings}. */
+
+/** Added in 2.3: looks as data and the pen (components/pen.js, an add-on that also works alone). Family task F4. */
+type DfLookId = 'night' | 'day' | 'peach-night' | 'peach-day' | 'thread-night' | 'thread-day' | 'contrast';
+type DfWeatherId = 'peach' | 'rain' | 'mint' | 'night';
+type DfInk = [number, number, number] | [number, number, number, number];
+interface DfLook { id: DfLookId; name: string; light: boolean; motion: boolean; print: boolean; weather: DfWeatherId; }
+interface DfWeatherPalette { sky: [DfInk, DfInk]; sun: DfInk; ridge: [DfInk, DfInk, DfInk]; rim: DfInk; }
+interface DfBox { x?: number; y?: number; w: number; h: number; weather?: DfWeatherId | number; t?: number; }
+interface DfPen {
+  look: DfLookId; name: string; light: boolean;
+  inks: Record<string, DfInk>;
+  rgb(name: string | DfInk, alpha?: number): string;
+  weathers: { id: DfWeatherId; name: string }[];
+  weather(wx?: DfWeatherId | number): DfWeatherPalette;
+  sky(ctx: CanvasRenderingContext2D, o: DfBox): void;
+  sun(ctx: CanvasRenderingContext2D, o: { x: number; y: number; r?: number; glow?: number; w?: number; h?: number; weather?: DfWeatherId | number }): void;
+  stars(ctx: CanvasRenderingContext2D, o: DfBox & { count?: number; depth?: number; alpha?: number }): void;
+  ridgeY(n: 0 | 1 | 2, x: number, o: DfBox & { par?: number; base?: number[]; amp?: number[] }): number;
+  ridges(ctx: CanvasRenderingContext2D, o: DfBox & { par?: number; base?: number[]; amp?: number[]; from?: number; to?: number }): void;
+  haze(ctx: CanvasRenderingContext2D, o: DfBox & { amount?: number; ink?: string }): void;
+  vignette(ctx: CanvasRenderingContext2D, o: DfBox & { amount?: number }): void;
+  world(ctx: CanvasRenderingContext2D, o: DfBox & { par?: number; sunX?: number; sunY?: number; vignette?: boolean }): void;
+}
+interface DepthfieldPenAddOn { looks: DfLook[]; pen(look?: DfLookId | Element, opts?: { still?: boolean }): DfPen; penVersion: string; }

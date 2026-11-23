@@ -74,3 +74,7 @@ project/
 Open any page with `?df-taste` in its address and the bundle lists the tells that make a page read as generated (see `project/19-taste.md`). The showcase passes its own check.
 
 After changing anything under `project/`, run `python3 site/build.py` and commit the output.
+
+## 2.3.0: the pen
+
+`project/components/pen.js` adds `Depthfield.looks` (the seven looks as data) and `Depthfield.pen(look)`: a look's inks resolved to RGB and the world drawn on canvas (sky, sun, stars, three ridges, haze, vignette) in any of the four weathers. It works after `bundle.js` or alone, so a single-file game can use it. Versioned builds start here: pin `v/2.3.0/` (`tokens.css`, `bundle.css`, `bundle.js`, `index.d.ts`, `pen.js`); `tools/release.py` never rewrites a published version. Family tasks F2 and F4.

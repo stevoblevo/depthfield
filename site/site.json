@@ -378,6 +378,14 @@
    "summary": "One warm light that follows the hand, and a room light that dims everything reflective while cues that make their own light stay bright."
   },
   {
+   "name": "Pen",
+   "group": "World",
+   "height": 360,
+   "preview": "project/components/Pen/preview.html",
+   "readme": "project/components/Pen/README.md",
+   "summary": "A look's inks and its world for canvas: `Depthfield.pen(look)` resolves the look's colours to RGB and draws the sky, the sun, the stars and the three ridges, so a game drawn on canvas stands in the same world as the page around it."
+  },
+  {
    "name": "Weather",
    "group": "World",
    "height": 200,

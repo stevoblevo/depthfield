@@ -1,0 +1,30 @@
+<!-- @dsCard group="World" height=360 -->
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Pen</title>
+<style>body{margin:0;background:var(--void);color:var(--ink);font-family:var(--font-sans)}.pv-pen{padding:16px 20px;display:grid;gap:10px}.pv-pen canvas{display:block;width:100%;height:270px;border-radius:var(--radius-md,12px);border:1px solid var(--line)}.pv-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;font-size:13px;color:var(--ink-muted)}.pv-row button{font:inherit;color:var(--ink);background:var(--surface-raised);border:1px solid var(--line);border-radius:999px;padding:6px 12px;min-height:32px;cursor:pointer}.pv-row button[aria-pressed="true"]{border-color:var(--accent);color:var(--accent)}.pv-row button:focus-visible{outline:2px solid var(--focus);outline-offset:2px}</style></head>
+<body>
+<div class="pv-pen">
+<canvas id="pv-pen-c" role="img" aria-label="The world drawn on canvas by the pen: a sky in the chosen weather, a low sun or moon, stars at night, and three ridges lit along their edges."></canvas>
+<div class="pv-row" role="group" aria-label="Weather"><span>Depthfield.pen(look).world(ctx, { weather })</span><button type="button" data-wx="peach">peach fall</button><button type="button" data-wx="rain">red rain</button><button type="button" data-wx="mint">mint clearing</button><button type="button" data-wx="night">night garden</button></div>
+</div>
+<script src="../pen.js"></script>
+<script>
+(function () {
+  var c = document.getElementById('pv-pen-c'), D = window.Depthfield, wx = null, t0 = performance.now(), raf = 0;
+  if (!c || !D || !D.pen) return;
+  var buttons = [].slice.call(document.querySelectorAll('[data-wx]'));
+  function draw(now) {
+    var dpr = Math.min(2, window.devicePixelRatio || 1), w = c.clientWidth, h = c.clientHeight, x = c.getContext('2d'), P = D.pen(c);
+    if (c.width !== Math.round(w * dpr)) { c.width = Math.round(w * dpr); c.height = Math.round(h * dpr); }
+    x.setTransform(dpr, 0, 0, dpr, 0, 0);
+    P.world(x, { w: w, h: h, weather: wx, t: (now - t0) / 1000 });
+    if (!(D.reducedMotion && D.reducedMotion()) && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) raf = requestAnimationFrame(draw);
+  }
+  function again() { cancelAnimationFrame(raf); raf = requestAnimationFrame(draw); }
+  buttons.forEach(function (b) { b.setAttribute('aria-pressed', 'false'); b.addEventListener('click', function () { wx = b.getAttribute('data-wx'); buttons.forEach(function (o) { o.setAttribute('aria-pressed', String(o === b)); }); again(); }); });
+  window.addEventListener('df:theme', again); window.addEventListener('resize', again);
+  new MutationObserver(again).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  again();
+})();
+</script>
+</body></html>

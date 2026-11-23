@@ -8,6 +8,8 @@ Read these first: `docs/family.md` (the family plan, contracts and open tasks ac
 
 ```
 python3 -I site/build.py              # compiles project/tokens.css, site/hooks.css and site/site.json
+python3 -I tools/pen-inks.py           # the pen's inks still match tokens.json
+python3 -I tools/release.py            # writes v/<version>/ once; refuses to rewrite a published version
 python3 -m http.server 8701           # then open http://127.0.0.1:8701/ and /docs.html
 ```
 Run the build after any change under `project/` and commit what it writes. Before pushing, open the showcase and the docs with the console open: no errors, and no sideways scroll at 390 px.

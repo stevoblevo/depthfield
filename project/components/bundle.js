@@ -25,7 +25,7 @@
   function pad(n, k) { n = String(n); while (n.length < k) n = '0' + n; return n; }
   function focusables(el) { return $$('a[href],button:not([disabled]),input:not([disabled]),select,textarea,[tabindex]:not([tabindex="-1"])', el).filter(function (x) { return x.offsetParent !== null || x === doc.activeElement; }); }
 
-  var D = { version: '2.2.0', token: token, clamp: clamp, reducedMotion: function () { return RM.matches; } };
+  var D = { version: '2.3.0', token: token, clamp: clamp, reducedMotion: function () { return RM.matches; } };
 
   /* ---------- haptics: short, rare, and only where the hand already is ---------- */
   D.haptic = function (msec) { if (D.haptic.off) return; try { if (w.navigator.vibrate) w.navigator.vibrate(msec || 8); } catch (e) {} };
