@@ -1,4 +1,4 @@
-/* Depthfield 2.2 — behaviors (2.1 added folds, the stack, secrets, the field and pop-ups; 2.2 adds the cloth, the guardian, the lamp, stretch type, sense, guide, tone and taste). One classic script: window.Depthfield. No dependencies, no network.
+/* Depthfield 2.3 — behaviors (2.3 adds the plate: scan and stage media for canvas art; 2.1 added folds, the stack, secrets, the field and pop-ups; 2.2 adds the cloth, the guardian, the lamp, stretch type, sense, guide, tone and taste). One classic script: window.Depthfield. No dependencies, no network.
    Everything degrades: without this file the page is a static story; with reduced motion there is no scrubbing,
    no parallax and no ambient loop, and every frame is drawn on demand instead. */
 (function () {
@@ -25,7 +25,7 @@
   function pad(n, k) { n = String(n); while (n.length < k) n = '0' + n; return n; }
   function focusables(el) { return $$('a[href],button:not([disabled]),input:not([disabled]),select,textarea,[tabindex]:not([tabindex="-1"])', el).filter(function (x) { return x.offsetParent !== null || x === doc.activeElement; }); }
 
-  var D = { version: '2.2.0', token: token, clamp: clamp, reducedMotion: function () { return RM.matches; } };
+  var D = { version: '2.3.0', token: token, clamp: clamp, reducedMotion: function () { return RM.matches; } };
 
   /* ---------- haptics: short, rare, and only where the hand already is ---------- */
   D.haptic = function (msec) { if (D.haptic.off) return; try { if (w.navigator.vibrate) w.navigator.vibrate(msec || 8); } catch (e) {} };
@@ -1236,6 +1236,60 @@
   function itemsFrom(list) {
     return $$('li', list).map(function (li) { var a = $('a', li), nm = $('b, strong', li); return { name: (nm || a || li).textContent.trim(), href: a ? a.getAttribute('href') : '', color: li.getAttribute('data-color') || (a && a.getAttribute('data-color')), line: li.getAttribute('data-line') || (a && a.getAttribute('data-line')) || '' }; });
   }
+
+  /* ================= 2.3: the plate (family task F9: a look's material is a process over one drawing) =================
+     Depthfield.plate(mode, source, o) takes a canvas of flat fills on transparency and returns a new canvas of the
+     same size made in a night material. 'scan' is a contour scan on a mint grid with a mono readout; 'stage' is a
+     footlit shadow play. Colours come from the art-* tokens. Nothing animates, so reduced motion needs no branch.
+     tint and edges are the family's two shared helpers. Recipes: stevoblevo/reignfawn docs/look-media.md. */
+  function mk(wd, ht) { var c = doc.createElement('canvas'); c.width = wd; c.height = ht; return c; }
+  function rgbOf(v, fb) { var m = /^#?([0-9a-f]{6})$/i.exec((v || '').trim()); if (!m) return fb; var n = parseInt(m[1], 16); return [n >> 16 & 255, n >> 8 & 255, n & 255]; }
+  D.tint = function (source, colour) {
+    var c = mk(source.width, source.height), g = c.getContext('2d');
+    g.drawImage(source, 0, 0); g.globalCompositeOperation = 'source-in'; g.fillStyle = colour; g.fillRect(0, 0, c.width, c.height); return c;
+  };
+  D.edges = function (source, rgb, gain) {
+    var W = source.width, H = source.height, sc = mk(W, H), sg = sc.getContext('2d'); sg.drawImage(source, 0, 0);
+    var src = sg.getImageData(0, 0, W, H).data, out = sg.createImageData(W, H), od = out.data, L = new Float32Array(W * H), i, j, x, y;
+    for (i = 0, j = 0; i < src.length; i += 4, j++) L[j] = (src[i + 3] / 255) * (60 + .3 * src[i] + .59 * src[i + 1] + .11 * src[i + 2]);
+    for (y = 1; y < H - 1; y++) for (x = 1; x < W - 1; x++) {
+      j = y * W + x;
+      var gx = L[j - W + 1] + 2 * L[j + 1] + L[j + W + 1] - L[j - W - 1] - 2 * L[j - 1] - L[j + W - 1];
+      var gy = L[j + W - 1] + 2 * L[j + W] + L[j + W + 1] - L[j - W - 1] - 2 * L[j - W] - L[j - W + 1];
+      var m = Math.min(255, Math.sqrt(gx * gx + gy * gy) * (gain || 2) * .5);
+      if (m < 28) continue;
+      od[j * 4] = rgb[0]; od[j * 4 + 1] = rgb[1]; od[j * 4 + 2] = rgb[2]; od[j * 4 + 3] = m;
+    }
+    var c = mk(W, H); c.getContext('2d').putImageData(out, 0, 0); return c;
+  };
+  D.plate = function (mode, source, o) {
+    o = o || {}; var W = source.width, H = source.height, c = mk(W, H), g = c.getContext('2d'), el = o.el || null;
+    var acc = rgbOf(token('art-accent', el), [94, 242, 184]), vd = token('art-void', el) || '#07110f', ink = token('art-ink', el) || '#e9f5ef';
+    var a = function (k) { return 'rgba(' + acc[0] + ',' + acc[1] + ',' + acc[2] + ',' + k + ')'; };
+    if (mode === 'stage') {
+      var warm = o.warm || '#f2c46a', rg = g.createRadialGradient(W / 2, H * .95, 10, W / 2, H * .7, W * .75);
+      rg.addColorStop(0, warm); rg.addColorStop(.38, 'rgba(176,122,58,.9)'); rg.addColorStop(1, vd);
+      g.fillStyle = vd; g.fillRect(0, 0, W, H); g.fillStyle = rg; g.fillRect(0, 0, W, H);
+      g.fillStyle = 'rgba(0,0,0,.55)'; g.fillRect(0, H * .86, W, H * .14);
+      for (var s = 0; s < 5; s++) { var sx = W * (.1 + s * .2), sy = H * (.1 + (s % 2) * .07); g.strokeStyle = 'rgba(233,245,239,.3)'; g.lineWidth = 1; g.beginPath(); g.moveTo(sx, 0); g.lineTo(sx, sy - 5); g.stroke(); g.fillStyle = warm; g.beginPath(); for (var k = 0; k < 10; k++) { var an = -Math.PI / 2 + k * Math.PI / 5, rr = (k % 2 ? .45 : 1) * W * .016; g.lineTo(sx + Math.cos(an) * rr, sy + Math.sin(an) * rr); } g.closePath(); g.fill(); }
+      g.drawImage(D.tint(source, ink), -2, -2); g.drawImage(D.tint(source, '#0b0a10'), 0, 0);
+      if (o.rods !== false) { g.strokeStyle = '#0b0a10'; g.lineWidth = Math.max(1.5, W / 180); g.beginPath(); g.moveTo(W * .46, H); g.lineTo(W * .5, H * .66); g.moveTo(W * .6, H); g.lineTo(W * .58, H * .7); g.stroke(); }
+      return c;
+    }
+    /* scan (the default) */
+    g.fillStyle = vd; g.fillRect(0, 0, W, H);
+    var step = Math.max(12, Math.round(W / 20)); g.strokeStyle = a(.1); g.lineWidth = 1;
+    for (var gx2 = 0; gx2 < W; gx2 += step) { g.beginPath(); g.moveTo(gx2 + .5, 0); g.lineTo(gx2 + .5, H); g.stroke(); }
+    for (var gy2 = 0; gy2 < H; gy2 += step) { g.beginPath(); g.moveTo(0, gy2 + .5); g.lineTo(W, gy2 + .5); g.stroke(); }
+    g.save(); g.globalAlpha = .14; g.drawImage(D.tint(source, a(1)), 0, 0); g.restore();
+    g.save(); g.shadowColor = a(1); g.shadowBlur = Math.max(4, W / 60); g.drawImage(D.edges(source, acc, o.gain || 2.4), 0, 0); g.restore();
+    if (o.label !== false) {
+      var fs = Math.max(10, Math.round(W / 32)); g.fillStyle = a(.75); g.font = fs + 'px ' + (token('font-mono', el) || 'ui-monospace, Menlo, monospace');
+      g.fillText(String(o.label || 'SPECIMEN').toUpperCase(), fs, H - fs);
+      if (o.readout) g.fillText(String(o.readout), fs, fs * 1.6);
+    }
+    return c;
+  };
 
   w.Depthfield = D;
 })();
