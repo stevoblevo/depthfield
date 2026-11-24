@@ -156,5 +156,58 @@ interface DfPen {
   haze(ctx: CanvasRenderingContext2D, o: DfBox & { amount?: number; ink?: string }): void;
   vignette(ctx: CanvasRenderingContext2D, o: DfBox & { amount?: number }): void;
   world(ctx: CanvasRenderingContext2D, o: DfBox & { par?: number; sunX?: number; sunY?: number; vignette?: boolean }): void;
+  /** Added in 2.4 (family task F9): draws src centred at (x, y) at o.w × o.h, lit by a moonlit rim on the side facing (o.lx, o.ly), with a contact shadow at o.ground. High contrast draws a plain keyline. */
+  rim(ctx: CanvasRenderingContext2D, src: CanvasImageSource, x: number, y: number, o?: DfRimOptions): void;
+}
+interface DfRimOptions {
+  /** drawn size; defaults to the source's own */
+  w?: number; h?: number;
+  /** where the light is, in the same coordinates as x and y; defaults to above and to the left */
+  lx?: number; ly?: number;
+  /** the rim's ink comes from this weather (an id, 0 to 3, or four weights); defaults to the look's */
+  weather?: DfWeather;
+  /** the ground's y, for a contact shadow (or, in high contrast, a ground line) */
+  ground?: number;
+  /** 0 to 1, how strong the rim is (default 1) */
+  amount?: number;
+  /** 0 to 1, the whole drawing (default 1) */
+  alpha?: number;
 }
 interface DepthfieldPenAddOn { looks: DfLook[]; pen(look?: DfLookId | Element, opts?: { still?: boolean }): DfPen; penVersion: string; }
+
+/** Added in 2.4: the night pets and the family's pets contract (components/pets.js, an add-on that also works alone). Family task F9.
+    Storeybrook (`sb:`, seven day pets) and Hypermetapunk (`hmp:`, five dusk pets) offer the same shape. */
+type DfPetId = 'glass-bloom' | 'mint-spore' | 'frost-seed' | 'winkle' | 'firefly';
+interface DfPet { id: DfPetId; name: string; line: string; how: string; /** the address on Depthfield's site where it is found */ where: string; }
+/** localStorage['crossing:pets'] on stevoblevo.github.io, shared by the three kits */
+interface DfCrossingPets { found: Record<string, number>; active?: { sb?: string; [kit: string]: string | undefined }; }
+interface DfPetDraw {
+  x: number; y: number;
+  /** about the pet's height in CSS pixels; 24 to 160 (default 40) */
+  size?: number;
+  /** seconds */
+  t?: number;
+  /** jumps to 1 on each beat and falls away; 0 or missing means no music */
+  beat?: number;
+  /** a Depthfield look id (default 'night') */
+  look?: DfLookId;
+  /** the rest pose, no motion (reduced motion holds it too) */
+  still?: boolean;
+  alpha?: number;
+  /** where Winkle looks, in the same coordinates as x and y */
+  lookX?: number; lookY?: number;
+}
+interface DfPets {
+  kit: 'df'; key: 'crossing:pets'; version: string;
+  list: DfPet[];
+  /** 'winkle' or 'df:winkle'; another kit's id ('sb:saelion') is looked up as given */
+  has(id: string): boolean;
+  /** records a find; true only the first time */
+  find(id: string): boolean;
+  /** Depthfield's five found */
+  count(): number;
+  /** found across the family: sb of 7, df of 5, hmp of 5, all of 17 */
+  total(): { sb: number; df: number; hmp: number; all: number };
+  draw(ctx: CanvasRenderingContext2D, id: string, o: DfPetDraw): void;
+}
+interface DepthfieldPetsAddOn { pets: DfPets; }

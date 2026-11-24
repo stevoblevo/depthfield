@@ -103,6 +103,7 @@ html { scroll-behavior: smooth; scroll-padding-top: calc(54px + env(safe-area-in
 @media (min-width: 600px) { .sc-hide-md { display: none !important; } }
 .sc-petitem { width: 100%; border: 0; background: none; font: inherit; text-align: left; cursor: pointer; }
 .sc-petitem .df-n { display: grid; place-items: center; color: var(--ink-muted); }
+.sc-petcv { display: block; width: 40px; height: 40px; }
 .sc-petitem:focus-visible { outline: var(--border-focus) solid var(--focus); outline-offset: 2px; }
 #petbook .sc-note a, .sc-cross a { color: var(--link); }
 .sc-cross { margin: var(--space-3) 0; font-size: 14px; line-height: 20px; color: var(--ink-muted); }

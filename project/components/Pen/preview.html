@@ -1,23 +1,57 @@
-<!-- @dsCard group="World" height=360 -->
+<!-- @dsCard group="World" height=700 -->
 <!doctype html>
 <html><head><meta charset="utf-8"><title>Pen</title>
-<style>body{margin:0;background:var(--void);color:var(--ink);font-family:var(--font-sans)}.pv-pen{padding:16px 20px;display:grid;gap:10px}.pv-pen canvas{display:block;width:100%;height:270px;border-radius:var(--radius-md,12px);border:1px solid var(--line)}.pv-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;font-size:13px;color:var(--ink-muted)}.pv-row button{font:inherit;color:var(--ink);background:var(--surface-raised);border:1px solid var(--line);border-radius:999px;padding:6px 12px;min-height:32px;cursor:pointer}.pv-row button[aria-pressed="true"]{border-color:var(--accent);color:var(--accent)}.pv-row button:focus-visible{outline:2px solid var(--focus);outline-offset:2px}</style></head>
+<style>body{margin:0;background:var(--void);color:var(--ink);font-family:var(--font-sans)}.pv-pen{padding:16px 20px;display:grid;gap:10px}.pv-pen canvas{display:block;width:100%;height:270px;border-radius:var(--radius-md,12px);border:1px solid var(--line)}.pv-pen #pv-pen-rim{height:300px}.pv-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;font-size:13px;color:var(--ink-muted)}.pv-row code{font-family:var(--font-mono);font-size:12px;color:var(--ink-muted)}.pv-row button{font:inherit;color:var(--ink);background:var(--surface-raised);border:1px solid var(--line);border-radius:999px;padding:6px 12px;min-height:32px;cursor:pointer}.pv-row button[aria-pressed="true"]{border-color:var(--accent);color:var(--accent)}.pv-row button:focus-visible{outline:2px solid var(--focus);outline-offset:2px}</style></head>
 <body>
 <div class="pv-pen">
 <canvas id="pv-pen-c" role="img" aria-label="The world drawn on canvas by the pen: a sky in the chosen weather, a low sun or moon, stars at night, and three ridges lit along their edges."></canvas>
 <div class="pv-row" role="group" aria-label="Weather"><span>Depthfield.pen(look).world(ctx, { weather })</span><button type="button" data-wx="peach">peach fall</button><button type="button" data-wx="rain">red rain</button><button type="button" data-wx="mint">mint clearing</button><button type="button" data-wx="night">night garden</button></div>
+<canvas id="pv-pen-rim" role="img" aria-label="One small creature drawn six times, lit by the pen's rim light: in the top row at night with the moon to its left, above it and to its right, so the moonlit edge moves round it; in the bottom row in high contrast, where the rim is a plain white keyline and the ground a line."></canvas>
+<div class="pv-row"><code>P.rim(ctx, creature, x, y, { w, h, lx, ly, ground })</code><span>night, then high contrast; the moon is the light</span></div>
 </div>
 <script src="../pen.js"></script>
 <script>
 (function () {
-  var c = document.getElementById('pv-pen-c'), D = window.Depthfield, wx = null, t0 = performance.now(), raf = 0;
+  var c = document.getElementById('pv-pen-c'), r = document.getElementById('pv-pen-rim'), D = window.Depthfield, wx = null, t0 = performance.now(), raf = 0;
   if (!c || !D || !D.pen) return;
   var buttons = [].slice.call(document.querySelectorAll('[data-wx]'));
+  /* a creature drawn on its own canvas, the way a game would hand one to the pen: a small night hare of moss and felt */
+  var critter = document.createElement('canvas'), CW = 90, CH = 110, CK = 3;
+  critter.width = CW * CK; critter.height = CH * CK;
+  function drawCritter(P, t) {
+    var x = critter.getContext('2d'), b = Math.sin(t * 2.2) * 0.015, fur = P.inks['wx-night-ridge-3'], belly = P.inks['frost-soft'], g;
+    x.setTransform(CK, 0, 0, CK, 0, 0); x.clearRect(0, 0, CW, CH); x.translate(45, 58); x.scale(1 - b * 0.5, 1 + b);
+    x.fillStyle = P.rgb(fur); x.beginPath(); x.ellipse(-12, -34, 6.5, 19, -0.22, 0, 7); x.ellipse(12, -33, 6.5, 19, 0.3, 0, 7); x.fill();   /* ears */
+    x.fillStyle = P.rgb(belly, 0.9); x.beginPath(); x.ellipse(-12, -32, 3, 13, -0.22, 0, 7); x.ellipse(12, -31, 3, 13, 0.3, 0, 7); x.fill();
+    x.beginPath(); x.ellipse(31, 26, 9, 8, 0, 0, 7); x.fillStyle = P.rgb(fur); x.fill();   /* tail */
+    g = x.createRadialGradient(-10, -10, 4, 0, 6, 40); g.addColorStop(0, P.rgb(fur.map(function (v) { return Math.min(255, v + 34); }))); g.addColorStop(1, P.rgb(fur));
+    x.fillStyle = g; x.beginPath(); x.ellipse(0, 8, 30, 36, 0, 0, 7); x.fill();   /* body */
+    x.fillStyle = P.rgb(belly, 0.85); x.beginPath(); x.ellipse(0, 20, 17, 19, 0, 0, 7); x.fill();
+    x.fillStyle = P.rgb(fur); x.beginPath(); x.ellipse(-13, 44, 9, 5, 0, 0, 7); x.ellipse(13, 44, 9, 5, 0, 0, 7); x.fill();   /* feet */
+    [-10, 10].forEach(function (ex) { x.fillStyle = P.rgb('eye-white'); x.beginPath(); x.ellipse(ex, -6, 5, 6, 0, 0, 7); x.fill(); x.fillStyle = P.rgb('eye-pupil'); x.beginPath(); x.arc(ex + 1, -5, 3.2, 0, 7); x.fill(); x.fillStyle = P.rgb('eye-glint'); x.beginPath(); x.arc(ex - 0.5, -7, 1.2, 0, 7); x.fill(); });
+  }
+  var LIGHTS = [[0.14, 0.2], [0.5, 0.13], [0.86, 0.22]];
+  function drawRim(t) {
+    var dpr = Math.min(2, window.devicePixelRatio || 1), w = r.clientWidth, h = r.clientHeight, x = r.getContext('2d'), rows = ['night', 'contrast'], pw = w / 3, ph = h / 2, s = Math.min(1, ph / 150);
+    if (r.width !== Math.round(w * dpr)) { r.width = Math.round(w * dpr); r.height = Math.round(h * dpr); }
+    x.setTransform(dpr, 0, 0, dpr, 0, 0); x.clearRect(0, 0, w, h);
+    rows.forEach(function (look, j) {
+      var P = D.pen(look); drawCritter(P, t + j);
+      LIGHTS.forEach(function (L, i) {
+        var bx = i * pw, by = j * ph, cx = bx + pw / 2, cy = by + ph * 0.6, ground = cy + 52 * s;
+        x.save(); x.beginPath(); x.rect(bx, by, pw, ph); x.clip();
+        P.world(x, { x: bx, y: by, w: pw, h: ph, weather: 'night', sunX: L[0], sunY: L[1], t: 0, vignette: false });
+        P.rim(x, critter, cx, cy, { w: CW * s, h: CH * s, lx: bx + pw * L[0], ly: by + ph * L[1], ground: ground, weather: 'night' });
+        x.restore();
+      });
+    });
+  }
   function draw(now) {
-    var dpr = Math.min(2, window.devicePixelRatio || 1), w = c.clientWidth, h = c.clientHeight, x = c.getContext('2d'), P = D.pen(c);
+    var dpr = Math.min(2, window.devicePixelRatio || 1), w = c.clientWidth, h = c.clientHeight, x = c.getContext('2d'), P = D.pen(c), t = (now - t0) / 1000;
     if (c.width !== Math.round(w * dpr)) { c.width = Math.round(w * dpr); c.height = Math.round(h * dpr); }
     x.setTransform(dpr, 0, 0, dpr, 0, 0);
-    P.world(x, { w: w, h: h, weather: wx, t: (now - t0) / 1000 });
+    P.world(x, { w: w, h: h, weather: wx, t: t });
+    drawRim(t);
     if (!(D.reducedMotion && D.reducedMotion()) && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) raf = requestAnimationFrame(draw);
   }
   function again() { cancelAnimationFrame(raf); raf = requestAnimationFrame(draw); }
