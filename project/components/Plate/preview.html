@@ -1,0 +1,16 @@
+<!-- @dsCard group="World" height=300 -->
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Plate</title>
+<style>body{margin:0;background:var(--void);color:var(--ink);font-family:var(--font-sans);}.wrap{padding:24px 28px;display:flex;gap:18px;flex-wrap:wrap;align-items:flex-start}figure{margin:0;flex:1 1 220px;max-width:320px}canvas{display:block;width:100%;height:auto;border-radius:var(--radius-md,8px);border:1px solid var(--line)}figcaption{font:12px var(--font-mono,monospace);color:var(--ink-muted);margin-top:8px}</style></head>
+<body>
+<div class="wrap"><figure><canvas id="src" width="360" height="270" role="img" aria-label="A heron drawn in flat fills: the source"></canvas><figcaption>source</figcaption></figure><figure id="scan"><figcaption>plate('scan')</figcaption></figure><figure id="stage"><figcaption>plate('stage')</figcaption></figure></div>
+<script>(function(){var done=false;function go(){if(done||!window.Depthfield||!Depthfield.plate)return;done=true;
+var s=document.getElementById('src'),g=s.getContext('2d');function p(c,a){g.fillStyle=c;g.beginPath();for(var i=0;i<a.length;i+=2)g.lineTo(a[i],a[i+1]);g.closePath();g.fill();}
+/* a heron in flat fills */
+g.strokeStyle='#7a6e5a';g.lineWidth=4;g.beginPath();g.moveTo(176,150);g.lineTo(180,236);g.moveTo(192,150);g.lineTo(200,236);g.stroke();
+p('#9aa3ad',[110,140,148,96,208,104,224,132,176,152,124,156]);p('#5e6670',[110,140,84,150,122,154]);
+p('#e9e9ec',[204,106,220,110,218,80,224,44,212,42,208,80]);g.fillStyle='#eeeeef';g.beginPath();g.ellipse(218,40,12,8,0,0,7);g.fill();p('#d9a33a',[226,36,268,44,226,46]);g.fillStyle='#1b1b1b';g.beginPath();g.arc(221,38,2.4,0,7);g.fill();
+function put(id,c,label){c.setAttribute('role','img');c.setAttribute('aria-label',label);var f=document.getElementById(id);f.insertBefore(c,f.firstChild);}
+put('scan',Depthfield.plate('scan',s,{label:'grey heron',readout:'x 0.42  z 3  t 0.07'}),'A heron as a mint contour scan');
+put('stage',Depthfield.plate('stage',s),'A heron as a footlit shadow puppet');}
+if(document.readyState!=='loading')go();else addEventListener('DOMContentLoaded',go);addEventListener('load',go,{once:true});})();</script></body></html>

@@ -1,4 +1,4 @@
-/* Depthfield 2.2 — types as documentation. Components are HTML + bundle.css classes; behaviors are window.Depthfield.
+/* Depthfield 2.3 — types as documentation. Components are HTML + bundle.css classes; behaviors are window.Depthfield.
    Each <Comp>Props names the markup contract a page provides (classes, attributes, data); the functions are the JS API. */
 
 export type Face = 'night' | 'day';
@@ -68,6 +68,10 @@ export interface DepthfieldApi {
   weathers: { id: WeatherId; name: string; accent: string }[];
   hotspots(spots: HotspotProps[], o?: { world?: WorldApi; caption?: HTMLElement; host?: HTMLElement; visible?: boolean; onFound?(spot: HotspotProps, found: number, total: number): void }): { buttons: HTMLButtonElement[]; place(): void; found(): number; destroy(): void };
   eye(el: HTMLElement): { wink(): void; destroy(): void } | null;
+  /** 2.3, family task F9. A new canvas of the same size: the source drawing made in a night material. */
+  plate(mode: 'scan' | 'stage', source: HTMLCanvasElement, o?: { label?: string | false; readout?: string; gain?: number; warm?: string; rods?: boolean; el?: Element }): HTMLCanvasElement;
+  tint(source: HTMLCanvasElement, colour: string): HTMLCanvasElement;
+  edges(source: HTMLCanvasElement, rgb: [number, number, number], gain?: number): HTMLCanvasElement;
   tilt(o?: { chip?: HTMLElement; world?: WorldApi; onTilt?(x: number, y: number): void; off?: boolean }): { ask(): Promise<string>; level(): void; off(v?: boolean): void };
   sound(btn: HTMLElement, o?: { onChange?(on: boolean): void }): { readonly on: boolean };
   lens(btn: HTMLElement, banner?: HTMLElement | null): { set(on: boolean): void };

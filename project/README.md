@@ -24,6 +24,8 @@ Added in 2.1:
 - **Count what it costs.** The Field draws surfaces that hold state at zero power, and its readout counts only the changes.
 - **Stories can pop up.** A PopUp spread stands its pieces up as the book opens.
 
+Added in 2.3: **Plate** (`Depthfield.plate('scan' | 'stage', canvas)`), which makes one drawing in a night material, with the shared helpers `tint` and `edges` (family task F9).
+
 Added in 2.2:
 
 - **Use the owner's words.** A line someone actually said beats a slogan written for them. Check every page with `?df-taste` (Taste) before anyone reviews it.

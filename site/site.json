@@ -378,6 +378,14 @@
    "summary": "One warm light that follows the hand, and a room light that dims everything reflective while cues that make their own light stay bright."
   },
   {
+   "name": "Plate",
+   "group": "World",
+   "height": 300,
+   "preview": "project/components/Plate/preview.html",
+   "readme": "project/components/Plate/README.md",
+   "summary": "One drawing, made in a night material."
+  },
+  {
    "name": "Weather",
    "group": "World",
    "height": 200,
