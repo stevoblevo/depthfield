@@ -1,14 +1,15 @@
-/* Depthfield 2.3.0 · the pen: a look's inks and its world, for games that draw on canvas (family task F4).
+/* Depthfield 2.4.0 · the pen: a look's inks and its world, for games that draw on canvas (family task F4).
    Depthfield.looks          the seven looks as data (id, name, light, motion, print)
    Depthfield.pen(look)      resolved inks, the four weathers, and a pen that draws the world: sky, sun, stars, three
-                             ridges with their rim light, haze and vignette
+                             ridges with their rim light, haze and vignette; and since 2.4.0 (family task F9) rim(), which
+                             lights any creature drawn elsewhere as if it stood in that night
    An add-on: load it after bundle.js, or alone (a single-file game needs nothing else). It reads no CSS. The numbers
    are project/tokens.json resolved to RGB; tools/pen-inks.py fails when they drift. */
 (function (w, d) {
   'use strict';
   var D = w.Depthfield = w.Depthfield || {};
   if (D.pen) return;
-  var VERSION = '2.3.0';
+  var VERSION = '2.4.0';
   var LOOKS = [
     { id: 'night', name: 'Night · mint', light: false, motion: true, print: false, weather: 'night' },
     { id: 'day', name: 'Day · mint', light: true, motion: true, print: true, weather: 'mint' },
@@ -34,6 +35,16 @@
   function noise(x) { var n = Math.floor(x), f = x - n, u = f * f * (3 - 2 * f); return P[n & 511] * (1 - u) + P[(n + 1) & 511] * u; }
   function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
   function mixc(a, b, k) { return [Math.round(a[0] + (b[0] - a[0]) * k), Math.round(a[1] + (b[1] - a[1]) * k), Math.round(a[2] + (b[2] - a[2]) * k)]; }
+  /* plan F9: offscreen canvases for rim(), one per size, shared by every pen and reused frame after frame */
+  var POOL = {}, POOLED = 0;
+  function surface(W, H, n) {
+    var k = W + 'x' + H + n, c = POOL[k];
+    if (c) return c;
+    if (POOLED > 16) { POOL = {}; POOLED = 0; }   /* a page that keeps changing sizes starts the pool again */
+    c = typeof OffscreenCanvas !== 'undefined' ? new OffscreenCanvas(W, H) : d.createElement('canvas');
+    c.width = W; c.height = H; POOLED++;
+    return (POOL[k] = { el: c, ctx: c.getContext('2d') });
+  }
   function still() { try { return !!(D.reducedMotion ? D.reducedMotion() : w.matchMedia('(prefers-reduced-motion: reduce)').matches); } catch (e) { return false; } }
   function lookId(look) {
     var id = typeof look === 'string' ? look : look && look.closest ? ((look.closest('[data-theme]') || d.documentElement).getAttribute('data-theme')) : d.documentElement.getAttribute('data-theme');
@@ -113,7 +124,61 @@
       if (night || bare) stars(ctx, o);
       ridges(ctx, o); if (o.vignette !== false) vignette(ctx, o);
     }
-    return { look: id, name: L.name, light: L.light, inks: I, rgb: rgb, weathers: WEATHER.slice(), weather: weather, sky: sky, sun: sun, stars: stars, ridgeY: ridgeY, ridges: ridges, haze: haze, vignette: vignette, world: world };
+    /* plan F9: rim light. Draws src (a canvas or an image) centred at (x, y) at o.w × o.h and lights it as if it stood in
+       this night: a moonlit rim on the side facing the light (o.lx, o.ly, in the same coordinates as x and y; the
+       default is above and to the left), a thin highlight just inside that edge, and a soft contact shadow on the ground
+       at o.ground when it is given. The rim takes the weather's rim ink (o.weather as weather() takes it). o.amount 0..1
+       sets how strong the rim is, o.alpha the whole. How: the silhouette is stamped a few pixels toward the light into a
+       pooled offscreen canvas and tinted with 'source-in', src is drawn over it so only the lit edge shows; then the
+       silhouette minus itself shifted away from the light leaves the inner highlight. High contrast draws a plain
+       keyline round the silhouette and a ground line instead. */
+    function rim(ctx, src, x, y, o) {
+      o = o || {};
+      var sw = src && (src.naturalWidth || src.videoWidth || src.width), sh = src && (src.naturalHeight || src.videoHeight || src.height);
+      if (!sw || !sh) return;
+      var dw = o.w || sw, dh = o.h || sh, amt = clamp(o.amount == null ? 1 : +o.amount, 0, 1), al = clamp(o.alpha == null ? 1 : +o.alpha, 0, 1);
+      var R = bare ? ink('art-ink') : weather(o.weather).rim, lx = o.lx == null ? x - dw : o.lx, ly = o.ly == null ? y - dh * 1.5 : o.ly;
+      var dx = lx - x, dy = ly - y, dl = Math.sqrt(dx * dx + dy * dy) || 1, m = ctx.getTransform ? ctx.getTransform() : null;
+      var k = m ? clamp(Math.sqrt(m.a * m.a + m.b * m.b), 1, 3) : 1, pad = Math.ceil(Math.max(dw, dh) * 0.08) + 4;
+      var W = Math.ceil((dw + pad * 2) * k), H = Math.ceil((dh + pad * 2) * k), S, c, n, step, ox = x - dw / 2 - pad, oy = y - dh / 2 - pad;
+      dx /= dl; dy /= dl;
+      ctx.save(); ctx.globalAlpha *= al;
+      if (o.ground != null) {   /* the contact shadow (and moonlight on the ground on the lit side), or a ground line */
+        var gw = dw * 0.42, gx = x - dx * dw * 0.12, g;
+        if (bare) { ctx.strokeStyle = rgb('art-ink', 0.9); ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(x - gw, o.ground); ctx.lineTo(x + gw, o.ground); ctx.stroke(); }
+        else {
+          ctx.save(); ctx.translate(gx, o.ground); ctx.scale(1, 0.16);
+          g = ctx.createRadialGradient(0, 0, 0, 0, 0, gw); g.addColorStop(0, rgb('art-void', 0.6)); g.addColorStop(0.6, rgb('art-void', 0.25)); g.addColorStop(1, rgb('art-void', 0));
+          ctx.fillStyle = g; ctx.beginPath(); ctx.arc(0, 0, gw, 0, 7); ctx.fill();
+          ctx.translate(dx * gw * 0.9, 0); ctx.globalCompositeOperation = L.light ? 'source-over' : 'lighter';
+          g = ctx.createRadialGradient(0, 0, 0, 0, 0, gw * 0.7); g.addColorStop(0, rgb(R, 0.1 * amt)); g.addColorStop(1, rgb(R, 0));
+          ctx.fillStyle = g; ctx.beginPath(); ctx.arc(0, 0, gw * 0.7, 0, 7); ctx.fill();
+          ctx.restore();
+        }
+      }
+      S = surface(W, H, 0); c = S.ctx;
+      function stamp(px, py) { c.drawImage(src, (pad + px) * k, (pad + py) * k, dw * k, dh * k); }
+      function tint(a) { c.globalAlpha = 1; c.globalCompositeOperation = 'source-in'; c.fillStyle = rgb(R, a); c.fillRect(0, 0, W, H); c.globalCompositeOperation = 'source-over'; }
+      function fresh() { c.setTransform(1, 0, 0, 1, 0, 0); c.globalAlpha = 1; c.globalCompositeOperation = 'source-over'; c.clearRect(0, 0, W, H); }
+      fresh();
+      if (bare) { for (n = 0; n < 8; n++) stamp(Math.cos(n * Math.PI / 4) * 1.5, Math.sin(n * Math.PI / 4) * 1.5); tint(1); ctx.drawImage(S.el, ox, oy, W / k, H / k); ctx.drawImage(src, x - dw / 2, y - dh / 2, dw, dh); ctx.restore(); return; }
+      step = Math.max(0.6, Math.min(dw, dh) * 0.014) * (0.45 + 0.55 * amt);
+      for (n = 4; n >= 1; n--) { c.globalAlpha = 0.62 - (n - 1) * 0.15; stamp(dx * step * n * 1.5, dy * step * n * 1.5); }   /* a smear toward the light, fading out */
+      tint(1);
+      ctx.globalCompositeOperation = L.light ? 'source-over' : 'lighter'; ctx.globalAlpha = al * (0.3 + 0.5 * amt);
+      ctx.drawImage(S.el, ox, oy, W / k, H / k);
+      ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = al;
+      ctx.drawImage(src, x - dw / 2, y - dh / 2, dw, dh);
+      /* inside the lit edge: the silhouette less itself shifted away from the light, a thin full-strength line on the edge
+         and a fainter wash behind it, in one pass */
+      S = surface(W, H, 1); c = S.ctx;
+      fresh(); stamp(0, 0); c.globalCompositeOperation = 'destination-out';
+      c.globalAlpha = 0.78; stamp(-dx * Math.max(0.7, step), -dy * Math.max(0.7, step));
+      c.globalAlpha = 1; stamp(-dx * step * 3.2, -dy * step * 3.2); tint(1);
+      ctx.globalCompositeOperation = L.light ? 'source-over' : 'lighter'; ctx.globalAlpha = al * 0.9 * amt; ctx.drawImage(S.el, ox, oy, W / k, H / k);
+      ctx.restore();
+    }
+    return { look: id, name: L.name, light: L.light, inks: I, rgb: rgb, weathers: WEATHER.slice(), weather: weather, sky: sky, sun: sun, stars: stars, ridgeY: ridgeY, ridges: ridges, haze: haze, vignette: vignette, world: world, rim: rim };
   }
   D.looks = D.looks || LOOKS; D.pen = pen; D.penVersion = VERSION;
 })(window, document);
