@@ -306,9 +306,9 @@
   ],
   "lastChange": {
     "by": "Bleve",
-    "at": "2026-11-02T19:40:00Z",
+    "at": "2026-11-25T22:30:00Z",
     "via": "Claude",
-    "note": "Depthfield 2.2, threads, light, companions and taste: Cloth, Guardian, Lamp, Stretch, Sense, Guide and Taste (to forty-three components), tone, nine tokens, the stretch family, three chapters; reconciled with the stevoblevo/depthfield export."
+    "note": "Depthfield 2.5: one build with the plate (Depthfield.plate, tint, edges; 2.3), the pen (components/pen.js; 2.3.0) and the night pets (components/pets.js; 2.4.0) together, and a mood on every look (lit or still; family F10)."
   },
   "layout": "files",
   "libraries": [],

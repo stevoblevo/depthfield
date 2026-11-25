@@ -1,8 +1,13 @@
 <img src="site/icons/icon-192.png" alt="Depthfield mark" width="84">
 
+
+**Patch 2.5.1:** Newly found night pets stay visible when browser storage is full or temporarily unwritable. Pending discoveries are saved alongside other kits’ progress on the next successful find. [Open the 2.5.1 showcase](https://stevoblevo.github.io/depthfield/v/2.5.1/).
+
 # Depthfield
 
 A dark-first design system for scroll stories. The content stays in front; generated mountains, weather and a quiet HUD give it depth.
+
+It is the night half of Bleve's toolkit family, beside Storeybrook (day) and Hypermetapunk (dusk): seven looks, a component bundle exposed as `window.Depthfield`, and for canvas a plate, a pen and the night pets.
 
 **Mint, peach and thread in night and day, plus high contrast**
 
@@ -23,9 +28,9 @@ From the repository root, save this as `scratch.html` and run `python3 -m http.s
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Depthfield example</title>
-  <link rel="stylesheet" href="project/tokens.css">
-  <link rel="stylesheet" href="project/components/bundle.css">
-  <script src="project/components/bundle.js"></script>
+  <link rel="stylesheet" href="v/2.5.0/tokens.css">
+  <link rel="stylesheet" href="v/2.5.0/bundle.css">
+  <script src="v/2.5.0/bundle.js"></script>
 </head>
 <body class="df-page">
   <a class="df-btn df-btn--primary" href="#chapter">Keep scrolling</a>
@@ -34,7 +39,14 @@ From the repository root, save this as `scratch.html` and run `python3 -m http.s
 </html>
 ```
 
-The checked-in 2.3 kit adds the [Plate](project/components/Plate/README.md) for staging flat fills as night materials. Keep all three runtime files on the same commit; this repository does not currently expose a `v/index.json` release manifest. The **2.3** working runtime is distinct from the standalone Pen proposal ([PR #2](https://github.com/stevoblevo/depthfield/pull/2)). See the [Button](project/components/Button/README.md) for markup.
+Use the three files from the same [2.5.0 runtime](v/2.5.0/), the first versioned build that holds the plate, the pen and the pets together; every earlier one stays where it was, byte for byte, and each version keeps its own showcase (`v/2.5.0/`, `v/2.4.0/`, `v/2.3.0/`). The [version manifest](v/index.json) records SHA-256 hashes. See the [Button](project/components/Button/README.md) for markup.
+
+## Draw with it on canvas
+
+- **The plate** (in `bundle.js`): `Depthfield.plate('scan' | 'stage', source)` takes one canvas of flat fills and returns it as a contour scan or a footlit stage. Storeybrook and Hypermetapunk make plates from the same source canvas. See [Plate](project/components/Plate/README.md).
+- **The pen** (`v/2.5.0/pen.js`, after `bundle.js` or alone): `Depthfield.looks` lists the seven looks as data, each with the mood it rewards in play, and `Depthfield.pen(look)` draws the world: sky, sun, stars, three ridges, haze and four weathers. See [Pen](project/components/Pen/README.md).
+- **The night pets** (`v/2.5.0/pets.js`): `Depthfield.pets` holds the five pets found in the showcase, their place in the family's shared save, and `draw(ctx, id, o)`. See [Pets](project/components/Pets/README.md).
+- **The family's page**: [`family/`](family/index.html) makes one drawing in every look of all three kits.
 
 ## Project notes
 
@@ -106,7 +118,7 @@ project/
 
 - **Night pets.** Five are hidden in the showcase: three spores in the glasshouse (chapter 01), Winkle, who comes off the ridge when you wink at the eye (chapter 04), and a firefly drifting over the night garden (chapter 07). Whatever you find follows your pointer through the art; without a pointer, the pets take a slow loop over the near ridge. The **pets** chip in the HUD opens the list, with a hint for each one still out there.
 - **The reel.** "Watch the reel" (in chapter 01, the ribbon, the pets list and the footer) plays the whole story in seven shots, about 47 seconds: it catches the spores, flips a setting, scrubs the weather, winks the eye, turns the lens on and off, and catches the firefly. Any key, wheel or touch hands control back, with every setting as it was. `?autoplay` starts it from a link, which is how the home-screen shortcut works. It never starts on its own.
-- **Shared with Storeybrook.** Both sites save to one `localStorage` key, `crossing:pets` (`df:` and `sb:` ids), on the same origin. Each site counts the other's pets, and finding all seven of Storeybrook's day pets puts Saelion in Depthfield's night sky as a constellation.
+- **Shared with Storeybrook and Hypermetapunk.** The three sites save to one `localStorage` key, `crossing:pets` (`sb:`, `df:` and `hmp:` ids), on the same origin. The pets list counts Storeybrook's seven day pets and Hypermetapunk's five dusk pets beside the five night pets; finding all seven of Storeybrook's puts Saelion in Depthfield's night sky as a constellation, and all seventeen open the lattice in AND SO.
 - Reduced motion keeps the reel's cuts but drops the camera moves, and the pets wait in a row instead of following.
 
 ### Taste
@@ -114,5 +126,25 @@ project/
 Open any page with `?df-taste` in its address and the bundle lists the tells that make a page read as generated (see `project/19-taste.md`). The showcase passes its own check.
 
 After changing anything under `project/`, run `python3 site/build.py` and commit the output.
+
+## 2.3.0: the pen
+
+`project/components/pen.js` adds `Depthfield.looks` (the seven looks as data) and `Depthfield.pen(look)`: a look's inks resolved to RGB and the world drawn on canvas (sky, sun, stars, three ridges, haze, vignette) in any of the four weathers. It works after `bundle.js` or alone, so a single-file game can use it. Versioned builds start here: pin `v/2.3.0/` (`tokens.css`, `bundle.css`, `bundle.js`, `index.d.ts`, `pen.js`); `tools/release.py` never rewrites a published version. Family tasks F2 and F4.
+
+## 2.4.0: the night pets in the kit, and the rim light
+
+`project/components/pets.js` adds `Depthfield.pets`: the five night pets as data (`list`), the shared save (`has`, `find`, `count`, and `total()` across Storeybrook, Depthfield and Hypermetapunk) and `draw(ctx, id, o)`, which draws each pet on canvas, lit like the art, from 24 to 160 px, dancing to a beat with a swing. Storeybrook and Hypermetapunk offer the same object for their pets (family task F9). The showcase now takes its pets, their save and their drawing from it. The pen gains `rim()`, which lights any creature drawn elsewhere as if it stood in the Depthfield night. Pin `v/2.4.0/` (`tokens.css`, `bundle.css`, `bundle.js`, `index.d.ts`, `pen.js`, `pets.js`); `v/2.3.0/` is unchanged.
+
+## 2.5.0: one build with the plate, the pen and the pets
+
+Two lines of work met here. The plate (`Depthfield.plate`, `tint`, `edges`; family task F9a) reached `main` on 23 Nov as "2.3" and was served from `project/`, but was never cut to `v/`. The pen (2.3.0) and the pets (2.4.0) were cut to `v/` on a branch without the plate, and AND SO pins those two folders. 2.5.0 is the first versioned build that holds all three: pin `v/2.5.0/` (`tokens.css`, `bundle.css`, `bundle.js`, `index.d.ts`, `pen.js`, `pets.js`). `v/2.3.0/` and `v/2.4.0/` are unchanged, byte for byte, and `pets.js` in 2.5.0 is the 2.4.0 file.
+
+Each version keeps its own showcase too: open `v/2.5.0/` for the page as it shipped, running on that version's runtime, and `v/2.4.0/` or `v/2.3.0/` for the ones before it (back-filled from their branches). `tools/release.py` freezes the page with the release and refuses to rewrite it; `tools/landing.py` does the back-filling.
+
+2.5.0 also gives every look a mood (`Depthfield.looks[i].mood`; family task F10): `lit` for the night faces and High contrast, `still` for the day faces. A game reads it to choose what a look rewards.
+
+## The family's page
+
+`family/index.html` ("One drawing, sixteen looks") makes one drawing in every look of Storeybrook, Hypermetapunk and Depthfield, from the three kits' versioned builds. It lives here because the family plan does (`docs/family.md`). It needs `/storeybrook/v/1.5.0/`, `/depthfield/v/2.5.0/` and `/hypermetapunk/v/0.5.0/` on the same origin, as on GitHub Pages.
 
 </details>

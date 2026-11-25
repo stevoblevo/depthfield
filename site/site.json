@@ -378,6 +378,22 @@
    "summary": "One warm light that follows the hand, and a room light that dims everything reflective while cues that make their own light stay bright."
   },
   {
+   "name": "Pen",
+   "group": "World",
+   "height": 700,
+   "preview": "project/components/Pen/preview.html",
+   "readme": "project/components/Pen/README.md",
+   "summary": "A look's inks and its world for canvas: `Depthfield.pen(look)` resolves the look's colours to RGB and draws the sky, the sun, the stars and the three ridges, so a game drawn on canvas stands in the same world as the page around it."
+  },
+  {
+   "name": "Pets",
+   "group": "World",
+   "height": 580,
+   "preview": "project/components/Pets/preview.html",
+   "readme": "project/components/Pets/README.md",
+   "summary": "The five night pets as data and as drawings: `Depthfield.pets` lists them, keeps the family's shared record of who found what, and draws each one on canvas, lit like the art and dancing to a beat with a swing."
+  },
+  {
    "name": "Plate",
    "group": "World",
    "height": 300,

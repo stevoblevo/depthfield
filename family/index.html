@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>One drawing, sixteen looks</title>
+<meta name="description" content="Storeybrook, Hypermetapunk and Depthfield take one drawing of flat fills and make it in sixteen looks. Draw on it and every plate follows.">
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&family=Alegreya:ital,wght@0,400..700;1,400..700&family=Andika:wght@400;700&family=Bangers&family=Archivo+Black&family=Archivo:wght@400..700&family=Space+Mono:wght@400;700&family=Fraunces:opsz,wght@9..144,300..600&family=Hanken+Grotesk:wght@400..700&family=JetBrains+Mono:wght@400;500&display=swap">
+<!-- The kits, pinned by version. Storeybrook's tokens first, Depthfield's second; Hypermetapunk's pen and plate read no CSS. -->
+<link rel="stylesheet" href="/storeybrook/v/1.5.0/tokens.css">
+<link rel="stylesheet" href="/depthfield/v/2.5.0/tokens.css">
+<style>
+/* One page that passes through the family's day: it opens on Storeybrook's paper, crosses Hypermetapunk's dusk and ends in
+   Depthfield's night. Each band takes its ground, ink and type from its own kit, so the page is built from the three systems. */
+:root {
+  --fam-ground: #f4f6f2; --fam-ink: #26323f; --fam-muted: #55616c; --fam-line: #cdd5ca; --fam-accent: #b3264f; --fam-card: #ffffff;
+  --fam-display: "DynaPuff", "Arial Rounded MT Bold", "Trebuchet MS", system-ui, sans-serif;
+  --fam-text: "Alegreya", "Iowan Old Style", Georgia, serif;
+  --fam-label: "Andika", "Segoe UI", system-ui, sans-serif;
+  color-scheme: light;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: #f4f6f2; color: #26323f; font-family: var(--fam-text); font-size: 18px; line-height: 1.5; }
+.fam-day { --fam-ground: var(--paper, #f4f6f2); --fam-ink: var(--ink, #26323f); --fam-muted: var(--ink-muted, #55616c); --fam-line: var(--line, #cdd5ca); --fam-accent: var(--accent, #b3264f); --fam-card: var(--page, #ffffff); color-scheme: light; }
+.fam-dusk { --fam-ground: #0b0618; --fam-ink: #f7f2ff; --fam-muted: #c9bdf0; --fam-line: #3d2c70; --fam-accent: #ff6fb5; --fam-card: #160d2e;
+  --fam-display: "Archivo Black", "Arial Black", Impact, sans-serif; --fam-text: Archivo, "Helvetica Neue", Arial, sans-serif; --fam-label: "Space Mono", ui-monospace, Menlo, monospace; color-scheme: dark; }
+.fam-night { --fam-ground: var(--void, #07110f); --fam-ink: var(--ink, #e9f5ef); --fam-muted: var(--ink-muted, #93aaa1); --fam-line: var(--line, #23352f); --fam-accent: var(--accent, #5ef2b8); --fam-card: var(--surface, #0d1a17);
+  --fam-display: "Fraunces", "Iowan Old Style", Georgia, serif; --fam-text: "Hanken Grotesk", ui-sans-serif, system-ui, sans-serif; --fam-label: "JetBrains Mono", ui-monospace, Menlo, monospace; color-scheme: dark; }
+.fam-band { background: var(--fam-ground); color: var(--fam-ink); font-family: var(--fam-text); padding: 44px 20px 52px; }
+.fam-in { max-width: 1120px; margin: 0 auto; }
+main .fam-band { scroll-margin-top: 150px; }
+.fam-top { padding-bottom: 20px; }
+.fam-top h1 { font-family: var(--fam-display); font-weight: 600; font-size: clamp(34px, 7.4vw, 76px); line-height: 0.98; letter-spacing: -0.015em; margin: 0 0 16px; text-wrap: balance; }
+.fam-top p { max-width: 62ch; margin: 0; font-size: clamp(17px, 2.2vw, 21px); }
+.fam-filters { display: grid; gap: 9px; margin-top: 22px; font-family: var(--fam-label); }
+.fam-top .fam-hint { font-size: 14px; }
+.fam-kit { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 16px; margin: 0 0 6px; }
+.fam-kit h2 { font-family: var(--fam-display); font-size: clamp(30px, 5.4vw, 54px); line-height: 1; margin: 0; text-wrap: balance; }
+.fam-day .fam-kit h2 { font-weight: 600; letter-spacing: -0.01em; }
+.fam-dusk .fam-kit h2 { text-transform: uppercase; letter-spacing: -0.01em; text-shadow: 3px 2px 0 #ff00a8; }
+.fam-night .fam-kit h2 { font-weight: 300; letter-spacing: -0.02em; }
+.fam-tag { font-family: var(--fam-label); font-size: 13px; color: var(--fam-muted); }
+.fam-dusk .fam-tag, .fam-night .fam-tag { letter-spacing: 0.06em; }
+.fam-say { max-width: 60ch; margin: 0 0 22px; color: var(--fam-muted); font-size: 18px; }
+.fam-grid { display: grid; gap: 14px; grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 0; padding: 0; list-style: none; }
+@media (min-width: 720px) { .fam-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; } .fam-grid--4 { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.fam-tile { display: block; width: 100%; padding: 0; border: 1px solid var(--fam-line); background: var(--fam-card); color: inherit; font: inherit; text-align: left; cursor: pointer; border-radius: 6px; overflow: hidden; transition: opacity 0.2s, transform 0.2s; }
+.fam-dusk .fam-tile { border-radius: 0; border-width: 3px; box-shadow: 5px 5px 0 #ff2e88; }
+.fam-night .fam-tile { border-radius: 14px; }
+.fam-tile:hover { transform: translateY(-2px); }
+.fam-tile:focus-visible, .fam-btn:focus-visible, .fam-sw:focus-visible, .fam-word:focus-visible, .fam-link:focus-visible { outline: 3px solid var(--fam-accent); outline-offset: 3px; }
+.fam-tile canvas { display: block; width: 100%; height: auto; aspect-ratio: 1; }
+.fam-cap { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 2px 10px; padding: 9px 12px 11px; }
+.fam-cap b { font-family: var(--fam-label); font-size: 15px; font-weight: 700; }
+.fam-cap span { font-family: var(--fam-label); font-size: 13px; color: var(--fam-muted); }
+.fam-mood { font-family: var(--fam-label); font-size: 12px; border: 1px solid var(--fam-line); border-radius: 99px; padding: 1px 9px; color: var(--fam-muted); white-space: nowrap; }
+.fam-dusk .fam-mood { border-radius: 0; }
+.fam-tile[data-dim="true"] { opacity: 0.28; }
+/* the bench: the one drawing, pinned while the plates scroll under it */
+.fam-bench { position: sticky; top: 0; z-index: 5; background: var(--fam-ground); color: var(--fam-ink); border-bottom: 1px solid var(--fam-line); padding: 12px 20px; transition: background 0.35s, color 0.35s, border-color 0.35s; font-family: var(--fam-label); }
+.fam-bench .fam-in { display: grid; grid-template-columns: clamp(128px, 26vw, 208px) minmax(0, 1fr); gap: 14px 18px; align-items: center; }
+#fam-src { display: block; width: 100%; height: auto; aspect-ratio: 1; border: 3px dashed var(--fam-line); border-radius: 6px; background: #ffffff; touch-action: none; cursor: crosshair; }
+.fam-tools { display: grid; gap: 9px; min-width: 0; }
+.fam-row { display: flex; flex-wrap: wrap; gap: 7px; align-items: center; }
+.fam-row > span, .fam-row > label { font-size: 13px; color: var(--fam-muted); margin-right: 2px; }
+.fam-btn { font: 600 14px/1 var(--fam-label); min-height: 40px; padding: 0 13px; border: 1.5px solid var(--fam-line); border-radius: 99px; background: transparent; color: var(--fam-ink); cursor: pointer; }
+.fam-btn[aria-pressed="true"] { background: var(--fam-ink); color: var(--fam-ground); border-color: var(--fam-ink); }
+.fam-sw { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--fam-line); padding: 0; cursor: pointer; }
+.fam-sw[aria-pressed="true"] { box-shadow: 0 0 0 2px var(--fam-ground), 0 0 0 4px var(--fam-ink); }
+.fam-word { font: 600 14px/1 var(--fam-label); width: 7.5em; min-height: 40px; padding: 0 11px; border: 1.5px solid var(--fam-line); border-radius: 99px; background: transparent; color: var(--fam-ink); text-transform: uppercase; }
+.fam-hint { margin: 0; font-size: 13px; color: var(--fam-muted); }
+@media (max-width: 520px) { .fam-bench { padding: 10px 14px; } .fam-btn { min-height: 36px; padding: 0 10px; font-size: 13px; } .fam-sw { width: 34px; height: 34px; } .fam-word { min-height: 36px; } .fam-hint:not(.fam-hint--keep) { display: none; } .fam-bench .fam-in { grid-template-columns: 108px minmax(0, 1fr); gap: 10px 12px; } .fam-bench .fam-row > span { display: none; } .fam-band { padding: 36px 16px 44px; } }
+/* the ledger */
+.fam-ledger h2 { font-family: var(--fam-display); font-weight: 300; font-size: clamp(28px, 4.6vw, 44px); line-height: 1.05; margin: 0 0 18px; text-wrap: balance; }
+.fam-scroll { overflow-x: auto; margin: 0 0 30px; }
+.fam-table { border-collapse: collapse; width: 100%; min-width: 620px; font-size: 16px; }
+.fam-table th, .fam-table td { text-align: left; vertical-align: top; padding: 11px 14px 11px 0; border-bottom: 1px solid var(--fam-line); }
+.fam-table thead th { font: 500 12px/1.3 var(--fam-label); letter-spacing: 0.08em; color: var(--fam-muted); }
+.fam-table tbody th { font-weight: 600; white-space: nowrap; }
+.fam-table code, .fam-code { font-family: var(--fam-label); font-size: 13px; color: var(--fam-accent); }
+.fam-cards { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); margin: 0 0 28px; padding: 0; list-style: none; }
+.fam-card { border: 1px solid var(--fam-line); border-radius: 14px; padding: 16px 18px 18px; background: var(--fam-card); }
+.fam-card h3 { font-family: var(--fam-display); font-weight: 400; font-size: 26px; margin: 0 0 2px; }
+.fam-card p { margin: 0 0 12px; color: var(--fam-muted); font-size: 15px; }
+.fam-links { display: flex; flex-wrap: wrap; gap: 6px 16px; }
+.fam-link { color: var(--fam-accent); font-size: 15px; text-underline-offset: 3px; }
+.fam-note { max-width: 68ch; color: var(--fam-muted); font-size: 15px; margin: 0; }
+/* the large view */
+.fam-view { border: 1px solid var(--fam-line); border-radius: 14px; padding: 0; width: min(94vw, 760px); max-height: 92vh; background: var(--fam-ground); color: var(--fam-ink); font-family: var(--fam-text); overflow: auto; }
+.fam-view::backdrop { background: rgba(4, 6, 10, 0.72); }
+.fam-view canvas { display: block; width: min(100%, 60vh); height: auto; margin: 0 auto; }
+.fam-view-body { padding: 16px 20px 20px; display: grid; gap: 10px; }
+.fam-view h3 { font-family: var(--fam-display); font-size: 28px; line-height: 1.1; margin: 0; }
+.fam-facts { margin: 0; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 14px; font-size: 15px; }
+.fam-facts dt { font-family: var(--fam-label); font-size: 13px; color: var(--fam-muted); padding-top: 2px; }
+.fam-facts dd { margin: 0; overflow-wrap: anywhere; }
+.fam-view-foot { display: flex; flex-wrap: wrap; gap: 8px; justify-content: space-between; align-items: center; }
+@media (prefers-reduced-motion: reduce) { .fam-tile, .fam-bench { transition: none; } .fam-tile:hover { transform: none; } }
+</style>
+</head>
+<body>
+
+<header class="fam-band fam-day fam-top" data-theme="daylight">
+  <div class="fam-in">
+    <h1>One drawing, sixteen looks</h1>
+    <p>Storeybrook, Hypermetapunk and Depthfield are three design systems that keep one contract. Each takes the same canvas of flat fills and makes it in its own material, by a process and never by redrawing. Pick a brush, paint on the picture below, and every plate follows.</p>
+    <div class="fam-filters">
+      <div class="fam-row" role="group" aria-label="Show looks by mood"><span>Mood</span>
+        <button class="fam-btn" type="button" data-mood="" aria-pressed="true">All 16</button>
+        <button class="fam-btn" type="button" data-mood="still" aria-pressed="false">Still</button>
+        <button class="fam-btn" type="button" data-mood="impact" aria-pressed="false">Impact</button>
+        <button class="fam-btn" type="button" data-mood="lit" aria-pressed="false">Lit</button>
+      </div>
+      <div class="fam-row"><label for="fam-word">Sound word</label><input class="fam-word" id="fam-word" type="text" maxlength="8" value="SLAP" autocomplete="off" spellcheck="false"></div>
+      <p class="fam-hint fam-hint--keep" id="fam-hint" aria-live="polite">A mood is what a look rewards in play: stillness by day, impact in print, a light source at night.</p>
+    </div>
+  </div>
+</header>
+
+<div class="fam-bench fam-day" id="fam-bench" data-theme="daylight">
+  <div class="fam-in">
+    <canvas id="fam-src" width="480" height="480" role="img" aria-label="The drawing, in flat colours. Tap or drag on it to add to the drawing."></canvas>
+    <div class="fam-tools">
+      <div class="fam-row" role="group" aria-label="Start from a drawing"><span>Start from</span>
+        <button class="fam-btn" type="button" data-subject="seal" aria-pressed="true">Seal</button>
+        <button class="fam-btn" type="button" data-subject="lighthouse" aria-pressed="false">Lighthouse</button>
+        <button class="fam-btn" type="button" data-subject="kite" aria-pressed="false">Kite</button>
+      </div>
+      <div class="fam-row" role="group" aria-label="Brush colour"><span>Brush</span>
+        <button class="fam-sw" type="button" style="background:#f2c14e" data-c="#f2c14e" aria-pressed="true" aria-label="Yellow"></button>
+        <button class="fam-sw" type="button" style="background:#d95f6a" data-c="#d95f6a" aria-pressed="false" aria-label="Red"></button>
+        <button class="fam-sw" type="button" style="background:#6b8fae" data-c="#6b8fae" aria-pressed="false" aria-label="Blue"></button>
+        <button class="fam-sw" type="button" style="background:#1f2a37" data-c="#1f2a37" aria-pressed="false" aria-label="Dark"></button>
+      </div>
+      <p class="fam-hint fam-hint--keep" id="fam-brush-hint" aria-live="polite">Pick a brush, then tap or drag on the drawing. Every plate follows.</p>
+    </div>
+  </div>
+</div>
+
+<main>
+<section class="fam-band fam-day" id="day" data-theme="daylight" data-band="day" aria-labelledby="h-day">
+  <div class="fam-in">
+    <div class="fam-kit"><h2 id="h-day">Storeybrook</h2><span class="fam-tag">Day · 1.5.0 · six looks</span></div>
+    <p class="fam-say">Paper first. Each look makes a picture the way a hand would: a wash, lamplight, brush ink, print, cut paper, cross-stitch. Each keeps one accent, in the emptiest corner.</p>
+    <ul class="fam-grid" id="g-sb"></ul>
+  </div>
+</section>
+
+<section class="fam-band fam-dusk" id="dusk" data-band="dusk" aria-labelledby="h-dusk">
+  <div class="fam-in">
+    <div class="fam-kit"><h2 id="h-dusk">Hypermetapunk</h2><span class="fam-tag">DUSK · 0.5.0 · THREE THEMES</span></div>
+    <p class="fam-say">Printed in a hurry and lit by neon. A dot screen in Dusk, a photocopy with one red in Zine, a solid cut in High contrast. The accent is always the sound word.</p>
+    <ul class="fam-grid" id="g-hmp"></ul>
+  </div>
+</section>
+
+<section class="fam-band fam-night" id="night" data-theme="night" data-band="night" aria-labelledby="h-night">
+  <div class="fam-in">
+    <div class="fam-kit"><h2 id="h-night">Depthfield</h2><span class="fam-tag">NIGHT · 2.5.0 · SEVEN LOOKS</span></div>
+    <p class="fam-say">The world behind the words. A scan for anything measured, with a readout as its accent; a stage for stories told at night, with a hanging star. Here the night faces scan and the day faces take the stage, footlit in their own accent.</p>
+    <div class="fam-row" role="group" aria-label="Depthfield material" style="margin-bottom:18px"><span>Material</span>
+      <button class="fam-btn" type="button" data-df="" aria-pressed="true">By look</button>
+      <button class="fam-btn" type="button" data-df="scan" aria-pressed="false">All scan</button>
+      <button class="fam-btn" type="button" data-df="stage" aria-pressed="false">All stage</button>
+    </div>
+    <ul class="fam-grid fam-grid--4" id="g-df"></ul>
+  </div>
+</section>
+
+<section class="fam-band fam-night fam-ledger" data-theme="night" data-band="night" aria-labelledby="h-ledger">
+  <div class="fam-in">
+    <h2 id="h-ledger">What each kit hands a game</h2>
+    <div class="fam-scroll">
+      <table class="fam-table">
+        <thead><tr><th scope="col">THE SAME FOUR THINGS</th><th scope="col">STOREYBROOK 1.5.0</th><th scope="col">HYPERMETAPUNK 0.5.0</th><th scope="col">DEPTHFIELD 2.5.0</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Looks, as data</th><td>Six, each with a mood<br><code>Storeybrook.looks</code></td><td>Three, each with a mood<br><code>Hypermetapunk.looks</code></td><td>Seven, each with a mood<br><code>Depthfield.looks</code></td></tr>
+          <tr><th scope="row">A pen</th><td>Inks, paper stocks, folds, a sun<br><code>paper.js</code></td><td>The horizon, chrome type, stickers<br><code>pen.js</code></td><td>Sky, ridges, four weathers, a rim light<br><code>pen.js</code></td></tr>
+          <tr><th scope="row">A plate</th><td>Six materials<br><code>plate.js</code></td><td>Three materials<br><code>plate.js</code></td><td>Scan and stage<br><code>bundle.js</code></td></tr>
+          <tr><th scope="row">Pets</th><td>Seven day pets<br><code>pets.js</code></td><td>Five dusk pets<br><code>pets.js</code></td><td>Five night pets<br><code>pets.js</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <ul class="fam-cards">
+      <li class="fam-card"><h3>Storeybrook</h3><p>Storybook pages and small games, in six looks.</p><div class="fam-links"><a class="fam-link" href="https://stevoblevo.github.io/storeybrook/">Showcase</a><a class="fam-link" href="https://stevoblevo.github.io/storeybrook/docs.html">Docs</a><a class="fam-link" href="https://github.com/stevoblevo/storeybrook">Source</a></div></li>
+      <li class="fam-card"><h3>Hypermetapunk</h3><p>Gig boards, zines and game hubs after dark.</p><div class="fam-links"><a class="fam-link" href="https://stevoblevo.github.io/hypermetapunk/">Showcase</a><a class="fam-link" href="https://stevoblevo.github.io/hypermetapunk/docs.html">Docs</a><a class="fam-link" href="https://github.com/stevoblevo/hypermetapunk">Source</a></div></li>
+      <li class="fam-card"><h3>Depthfield</h3><p>Scroll stories with a world behind the words.</p><div class="fam-links"><a class="fam-link" href="https://stevoblevo.github.io/depthfield/">Showcase</a><a class="fam-link" href="https://stevoblevo.github.io/depthfield/docs.html">Docs</a><a class="fam-link" href="https://github.com/stevoblevo/depthfield">Source</a></div></li>
+    </ul>
+    <p class="fam-note">Every plate on this page is made in your browser by the kits themselves, pinned by version: Storeybrook 1.5.0, Hypermetapunk 0.5.0 and Depthfield 2.5.0. The pets share one save across the three sites, seventeen in all. The family's contracts and open tasks are in <a class="fam-link" href="https://github.com/stevoblevo/depthfield/blob/main/docs/family.md">the family plan</a>.</p>
+  </div>
+</section>
+</main>
+
+<dialog class="fam-view" id="fam-view" aria-labelledby="fam-view-title">
+  <div id="fam-view-art"></div>
+  <div class="fam-view-body">
+    <h3 id="fam-view-title"></h3>
+    <dl class="fam-facts" id="fam-view-facts"></dl>
+    <div class="fam-view-foot"><button class="fam-btn" type="button" id="fam-copy">Copy the call</button><button class="fam-btn" type="button" id="fam-close">Close</button></div>
+  </div>
+</dialog>
+
+<i id="fam-probes" aria-hidden="true" hidden></i>
+
+<script src="/storeybrook/v/1.5.0/bundle.js"></script>
+<script src="/storeybrook/v/1.5.0/paper.js"></script>
+<script src="/storeybrook/v/1.5.0/plate.js"></script>
+<script src="/depthfield/v/2.5.0/bundle.js"></script>
+<script src="/hypermetapunk/v/0.5.0/pen.js"></script>
+<script src="/hypermetapunk/v/0.5.0/plate.js"></script>
+<script>
+(function () {
+  'use strict';
+  var SB = window.Storeybrook, DF = window.Depthfield, HMP = window.Hypermetapunk, doc = document;
+  var $ = function (s, r) { return (r || doc).querySelector(s); }, $$ = function (s, r) { return Array.prototype.slice.call((r || doc).querySelectorAll(s)); };
+
+  /* ---------- three drawings to start from: flat fills on transparency, nothing else ---------- */
+  var SUBJECTS = {
+    seal: { name: 'Seal', label: 'a seal on a rock balancing a star', draw: function (g, W, H) {
+      var s = Math.min(W, H), ox = (W - s) / 2, oy = (H - s) / 2, X = function (v) { return ox + v * s; }, Y = function (v) { return oy + v * s; }, i;
+      g.fillStyle = '#3f4a5a'; g.beginPath(); g.moveTo(X(.2), Y(.93)); g.quadraticCurveTo(X(.24), Y(.8), X(.4), Y(.8)); g.lineTo(X(.78), Y(.79)); g.quadraticCurveTo(X(.9), Y(.82), X(.9), Y(.93)); g.closePath(); g.fill();
+      g.fillStyle = '#4d6f8c'; g.beginPath(); g.moveTo(X(.72), Y(.76)); g.quadraticCurveTo(X(.86), Y(.7), X(.9), Y(.6)); g.quadraticCurveTo(X(.86), Y(.7), X(.94), Y(.74)); g.quadraticCurveTo(X(.86), Y(.8), X(.74), Y(.82)); g.closePath(); g.fill();
+      g.beginPath(); g.moveTo(X(.74), Y(.74)); g.quadraticCurveTo(X(.84), Y(.66), X(.88), Y(.56)); g.quadraticCurveTo(X(.92), Y(.68), X(.8), Y(.8)); g.closePath(); g.fill();
+      g.fillStyle = '#6b8fae'; g.beginPath(); g.moveTo(X(.8), Y(.81)); g.bezierCurveTo(X(.72), Y(.58), X(.66), Y(.36), X(.52), Y(.25)); g.bezierCurveTo(X(.44), Y(.19), X(.36), Y(.2), X(.3), Y(.25)); g.bezierCurveTo(X(.26), Y(.29), X(.28), Y(.34), X(.34), Y(.36)); g.bezierCurveTo(X(.38), Y(.5), X(.36), Y(.7), X(.42), Y(.82)); g.closePath(); g.fill();
+      g.fillStyle = '#c9dbe8'; g.beginPath(); g.moveTo(X(.36), Y(.38)); g.bezierCurveTo(X(.48), Y(.46), X(.56), Y(.64), X(.58), Y(.81)); g.lineTo(X(.42), Y(.82)); g.bezierCurveTo(X(.36), Y(.7), X(.39), Y(.5), X(.36), Y(.38)); g.closePath(); g.fill();
+      g.fillStyle = '#4d6f8c'; g.beginPath(); g.moveTo(X(.42), Y(.56)); g.quadraticCurveTo(X(.3), Y(.62), X(.22), Y(.76)); g.quadraticCurveTo(X(.34), Y(.74), X(.46), Y(.66)); g.closePath(); g.fill();
+      g.fillStyle = '#1f2a37'; g.beginPath(); g.arc(X(.295), Y(.262), s * .017, 0, 7); g.fill(); g.beginPath(); g.arc(X(.42), Y(.265), s * .014, 0, 7); g.fill();
+      g.fillStyle = '#f2c14e'; g.beginPath(); for (i = 0; i < 10; i++) { var a = -Math.PI / 2 + i * Math.PI / 5 + .2, r = (i % 2 ? .034 : .078) * s; g.lineTo(X(.25) + Math.cos(a) * r, Y(.135) + Math.sin(a) * r); } g.closePath(); g.fill();
+    } },
+    lighthouse: { name: 'Lighthouse', label: 'a striped lighthouse on a rock with its beam lit', draw: function (g, W, H) {
+      var s = Math.min(W, H), ox = (W - s) / 2, oy = (H - s) / 2, X = function (v) { return ox + v * s; }, Y = function (v) { return oy + v * s; };
+      function tx(y, side) { var t = (y - .34) / (.8 - .34); return .5 + side * (.055 + t * .035); }   /* the tower's edge at height y */
+      function slab(y0, y1, col) { g.fillStyle = col; g.beginPath(); g.moveTo(X(tx(y0, -1)), Y(y0)); g.lineTo(X(tx(y0, 1)), Y(y0)); g.lineTo(X(tx(y1, 1)), Y(y1)); g.lineTo(X(tx(y1, -1)), Y(y1)); g.closePath(); g.fill(); }
+      g.fillStyle = '#f7e3a1'; g.beginPath(); g.moveTo(X(.54), Y(.27)); g.lineTo(X(.97), Y(.13)); g.lineTo(X(.97), Y(.37)); g.closePath(); g.fill();
+      g.fillStyle = '#6b8fae'; g.beginPath(); g.moveTo(X(.04), Y(.96)); g.quadraticCurveTo(X(.2), Y(.86), X(.36), Y(.92)); g.quadraticCurveTo(X(.52), Y(.98), X(.68), Y(.91)); g.quadraticCurveTo(X(.84), Y(.85), X(.96), Y(.96)); g.closePath(); g.fill();
+      g.fillStyle = '#3f4a5a'; g.beginPath(); g.moveTo(X(.24), Y(.93)); g.quadraticCurveTo(X(.3), Y(.78), X(.44), Y(.79)); g.lineTo(X(.6), Y(.79)); g.quadraticCurveTo(X(.74), Y(.8), X(.78), Y(.93)); g.closePath(); g.fill();
+      slab(.34, .8, '#e9e2d0'); slab(.44, .54, '#c8553d'); slab(.64, .74, '#c8553d');
+      g.fillStyle = '#1f2a37'; g.fillRect(X(.425), Y(.315), s * .15, s * .032);
+      g.fillStyle = '#f2c14e'; g.fillRect(X(.455), Y(.225), s * .09, s * .09);
+      g.fillStyle = '#c8553d'; g.beginPath(); g.moveTo(X(.435), Y(.228)); g.lineTo(X(.565), Y(.228)); g.lineTo(X(.5), Y(.14)); g.closePath(); g.fill();
+      g.fillStyle = '#1f2a37'; g.fillRect(X(.482), Y(.68), s * .036, s * .12);
+    } },
+    kite: { name: 'Kite', label: 'a four-colour kite over a hill and a cloud', draw: function (g, W, H) {
+      var s = Math.min(W, H), ox = (W - s) / 2, oy = (H - s) / 2, X = function (v) { return ox + v * s; }, Y = function (v) { return oy + v * s; }, i;
+      function tri(a, b, c, col) { g.fillStyle = col; g.beginPath(); g.moveTo(X(a[0]), Y(a[1])); g.lineTo(X(b[0]), Y(b[1])); g.lineTo(X(c[0]), Y(c[1])); g.closePath(); g.fill(); }
+      g.fillStyle = '#3f4a5a'; g.beginPath(); g.moveTo(X(.04), Y(.95)); g.quadraticCurveTo(X(.34), Y(.72), X(.62), Y(.86)); g.quadraticCurveTo(X(.82), Y(.94), X(.96), Y(.9)); g.lineTo(X(.96), Y(.95)); g.closePath(); g.fill();
+      g.fillStyle = '#c9dbe8'; [[.74, .2, .07], [.83, .22, .055], [.66, .23, .05]].forEach(function (c) { g.beginPath(); g.arc(X(c[0]), Y(c[1]), s * c[2], 0, 7); g.fill(); });
+      var T = [.4, .08], R = [.63, .33], B = [.4, .64], L = [.18, .33], C = [.4, .33];
+      tri(T, C, L, '#d95f6a'); tri(T, R, C, '#f2c14e'); tri(L, C, B, '#6b8fae'); tri(C, R, B, '#4d6f8c');
+      g.strokeStyle = '#1f2a37'; g.lineWidth = s * .012; g.lineCap = 'round'; g.beginPath(); g.moveTo(X(.4), Y(.64)); g.bezierCurveTo(X(.48), Y(.74), X(.36), Y(.8), X(.5), Y(.86)); g.stroke();
+      for (i = 0; i < 3; i++) { var bx = [.455, .405, .46][i], by = [.705, .775, .84][i]; tri([bx - .04, by - .03], [bx, by], [bx - .04, by + .03], i % 2 ? '#f2c14e' : '#d95f6a'); tri([bx + .04, by - .03], [bx, by], [bx + .04, by + .03], i % 2 ? '#f2c14e' : '#d95f6a'); }
+    } }
+  };
+
+  /* ---------- the sixteen looks, from the kits' own data ---------- */
+  var probes = $('#fam-probes'), state = { subject: 'seal', colour: '#f2c14e', word: 'SLAP', mood: '', df: '' }, tiles = [];
+  function probe(id) { var e = doc.createElement('i'); e.setAttribute('data-theme', id); probes.appendChild(e); return e; }
+  /* the footlight a stage takes: the look's own accent, resolved to a colour the canvas can use */
+  function footlight(el) { var i = doc.createElement('i'); i.style.color = 'var(--accent)'; el.appendChild(i); var c = getComputedStyle(i).color; i.remove(); return c || undefined; }
+  var KITS = [
+    { key: 'sb', name: 'Storeybrook', version: '1.5.0', host: '#g-sb', ok: !!(SB && SB.plate && SB.looks), looks: function () { return SB.looks; },
+      medium: function (l) { return SB.plate.media[l.id]; },
+      make: function (l, src) { return SB.plate(l.id, src, { word: state.word ? state.word + '!' : '' }); },
+      call: function (l) { return "Storeybrook.plate('" + l.id + "', source)"; } },
+    { key: 'hmp', name: 'Hypermetapunk', version: '0.5.0', host: '#g-hmp', ok: !!(HMP && HMP.plate && HMP.looks), looks: function () { return HMP.looks; },
+      medium: function (l) { return HMP.plate.media[l.id]; },
+      make: function (l, src) { return HMP.plate(l.id, src, { word: state.word }); },
+      call: function (l) { return "Hypermetapunk.plate('" + l.id + "', source)"; } },
+    { key: 'df', name: 'Depthfield', version: '2.5.0', host: '#g-df', ok: !!(DF && DF.plate), looks: function () { return DF.looks || []; },
+      mode: function (l) { return state.df || (l.mood === 'still' ? 'stage' : 'scan'); },   /* by look: the night faces scan, the day faces take the stage */
+      medium: function (l) { return this.mode(l) === 'stage' ? { name: 'Stage', accent: 'a hanging star' } : { name: 'Scan', accent: 'a readout' }; },
+      make: function (l, src, t) { t.el = t.el || probe(l.id); return DF.plate(this.mode(l), src, { el: t.el, label: SUBJECTS[state.subject].name, readout: l.name.toLowerCase(), warm: footlight(t.el) }); },
+      call: function (l) { return this.mode(l) === 'stage' ? "Depthfield.plate('stage', source, { el, warm })" : "Depthfield.plate('scan', source, { el, label, readout })"; } }
+  ];
+  /* Depthfield's pen is not needed here; without it the looks come from the tokens' own theme list */
+  if (DF && !DF.looks) DF.looks = [['night', 'Night · mint', 'lit'], ['day', 'Day · mint', 'still'], ['peach-night', 'Night · peach', 'lit'], ['peach-day', 'Day · peach', 'still'], ['thread-night', 'Night · thread', 'lit'], ['thread-day', 'Day · thread', 'still'], ['contrast', 'High contrast', 'lit']].map(function (r) { return { id: r[0], name: r[1], mood: r[2] }; });
+
+  var src = $('#fam-src'), sg = src.getContext('2d'), small = doc.createElement('canvas'); small.width = small.height = 300;
+  function label(t) { var m = t.kit.medium(t.look); return 'The drawing (' + SUBJECTS[state.subject].label + ') as ' + m.name.toLowerCase() + ', in ' + t.look.name + ' by ' + t.kit.name; }
+  KITS.forEach(function (kit) {
+    var host = $(kit.host);
+    if (!kit.ok) { host.insertAdjacentHTML('beforebegin', '<p class="fam-say">' + kit.name + ' ' + kit.version + ' did not load here, so its plates are missing.</p>'); return; }
+    kit.looks().forEach(function (look) {
+      var li = doc.createElement('li'), b = doc.createElement('button'), art = doc.createElement('div'), cap = doc.createElement('div');
+      b.type = 'button'; b.className = 'fam-tile'; cap.className = 'fam-cap';
+      cap.innerHTML = '<b></b><span class="fam-mood"></span><span class="fam-med" style="flex-basis:100%"></span>';
+      cap.children[0].textContent = look.name; cap.children[1].textContent = look.mood || '';
+      b.appendChild(art); b.appendChild(cap); li.appendChild(b); host.appendChild(li);
+      var t = { kit: kit, look: look, btn: b, art: art, med: cap.children[2] };
+      b.addEventListener('click', function () { open(t); });
+      tiles.push(t);
+    });
+  });
+
+  function reset() { sg.clearRect(0, 0, src.width, src.height); SUBJECTS[state.subject].draw(sg, src.width, src.height); src.setAttribute('aria-label', 'The drawing: ' + SUBJECTS[state.subject].label + ', in flat colours. Tap or drag on it to add to the drawing.'); }
+  function put(host, c, text) { c.setAttribute('role', 'img'); c.setAttribute('aria-label', text); host.textContent = ''; host.appendChild(c); }
+  function render() {
+    var k = small.getContext('2d'); k.clearRect(0, 0, 300, 300); k.drawImage(src, 0, 0, 300, 300);
+    tiles.forEach(function (t) {
+      try { put(t.art, t.kit.make(t.look, small, t), label(t)); } catch (e) { t.art.textContent = 'This plate could not be made here.'; }
+      t.med.textContent = t.kit.medium(t.look).name; t.btn.setAttribute('data-dim', String(!!state.mood && t.look.mood !== state.mood));
+    });
+    if (shown) fill(shown);
+  }
+  var timer = 0; function soon() { clearTimeout(timer); timer = setTimeout(render, 110); }
+
+  /* ---------- the bench ---------- */
+  var last = null;
+  function at(e) { var r = src.getBoundingClientRect(); return [(e.clientX - r.left) * src.width / r.width, (e.clientY - r.top) * src.height / r.height]; }
+  function dab(a, b) {   /* a tap paints a dot: a stroke of no length paints nothing */
+    sg.strokeStyle = sg.fillStyle = state.colour; sg.lineWidth = 28; sg.lineCap = 'round';
+    sg.beginPath(); sg.arc(b[0], b[1], 14, 0, 7); sg.fill();
+    if (a[0] !== b[0] || a[1] !== b[1]) { sg.beginPath(); sg.moveTo(a[0], a[1]); sg.lineTo(b[0], b[1]); sg.stroke(); }
+  }
+  src.addEventListener('pointerdown', function (e) { try { src.setPointerCapture(e.pointerId); } catch (x) {} last = at(e); dab(last, last); soon(); e.preventDefault(); });
+  src.addEventListener('pointermove', function (e) { if (!last) return; var p = at(e); dab(last, p); last = p; soon(); });
+  ['pointerup', 'pointercancel'].forEach(function (n) { src.addEventListener(n, function () { last = null; }); });
+  function group(sel, attr, fn) { var all = $$(sel); all.forEach(function (b) { b.addEventListener('click', function () { all.forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); }); fn(b.getAttribute(attr)); }); }); }
+  group('[data-subject]', 'data-subject', function (v) { state.subject = v; reset(); render(); });
+  function brush(v, say) {   /* picking a colour shows at once: the drawing's frame takes it, and the hint says what to do with it */
+    state.colour = v; src.style.borderColor = v; src.style.borderStyle = 'solid';
+    var b = $('.fam-sw[data-c="' + v + '"]'), name = b ? b.getAttribute('aria-label') : '';
+    if (say) $('#fam-brush-hint').textContent = name + ' brush. Tap or drag on the drawing to paint with it.';
+  }
+  group('.fam-sw', 'data-c', function (v) { brush(v, true); });
+  group('[data-mood]', 'data-mood', function (v) { state.mood = v; render(); var n = tiles.filter(function (t) { return !v || t.look.mood === v; }).length; $('#fam-hint').textContent = v ? n + ' of ' + tiles.length + ' looks reward ' + ({ still: 'stillness', impact: 'impact and tempo', lit: 'a light source' })[v] + '.' : 'A mood is what a look rewards in play: stillness by day, impact in print, a light source at night.'; });
+  group('[data-df]', 'data-df', function (v) { state.df = v; render(); });
+  $('#fam-word').addEventListener('input', function (e) { state.word = e.target.value.replace(/[^a-z0-9 ?]/gi, '').toUpperCase().slice(0, 8); soon(); });
+
+  /* the bench wears the ground of the band under it */
+  var bench = $('#fam-bench'), BAND = { day: ['fam-day', 'daylight'], dusk: ['fam-dusk', null], night: ['fam-night', 'night'] };
+  function wear() {
+    var y = bench.getBoundingClientRect().bottom + 2, now = 'day';
+    $$('[data-band]').forEach(function (s) { var r = s.getBoundingClientRect(); if (r.top <= y && r.bottom > y) now = s.getAttribute('data-band'); });
+    if (bench.getAttribute('data-wears') === now) return; bench.setAttribute('data-wears', now);
+    bench.className = 'fam-bench ' + BAND[now][0]; if (BAND[now][1]) bench.setAttribute('data-theme', BAND[now][1]); else bench.removeAttribute('data-theme');
+  }
+  addEventListener('scroll', wear, { passive: true }); addEventListener('resize', wear);
+
+  /* ---------- the large view ---------- */
+  var view = $('#fam-view'), shown = null;
+  function fill(t) {
+    var big = doc.createElement('canvas'); big.width = big.height = 640; big.getContext('2d').drawImage(src, 0, 0, 640, 640);
+    var m = t.kit.medium(t.look), wear = t.kit.key === 'sb' ? BAND.day : t.kit.key === 'hmp' ? BAND.dusk : BAND.night;
+    view.className = 'fam-view ' + wear[0]; if (wear[1]) view.setAttribute('data-theme', wear[1]); else view.removeAttribute('data-theme');
+    try { put($('#fam-view-art'), t.kit.make(t.look, big, t), label(t)); } catch (e) { $('#fam-view-art').textContent = 'This plate could not be made here.'; }
+    $('#fam-view-title').textContent = t.look.name + ', ' + m.name.toLowerCase();
+    var facts = [['Kit', t.kit.name + ' ' + t.kit.version], ['Material', m.name], ['Its one accent', m.accent], ['Mood', (t.look.mood || '') + ({ still: ': rewards stillness', impact: ': rewards impact and tempo', lit: ': rewards a light source' })[t.look.mood] || ''], ['The call', t.kit.call(t.look)]];
+    var dl = $('#fam-view-facts'); dl.textContent = '';
+    facts.forEach(function (f, i) { var dt = doc.createElement('dt'), dd = doc.createElement('dd'); dt.textContent = f[0]; dd.textContent = f[1]; if (i === 4) dd.className = 'fam-code'; dl.appendChild(dt); dl.appendChild(dd); });
+    $('#fam-copy').textContent = 'Copy the call';
+  }
+  function open(t) { shown = t; fill(t); if (view.showModal) view.showModal(); else view.setAttribute('open', ''); }
+  function close() { shown = null; if (view.close) view.close(); else view.removeAttribute('open'); }
+  $('#fam-close').addEventListener('click', close);
+  view.addEventListener('close', function () { shown = null; });
+  view.addEventListener('click', function (e) { if (e.target === view) close(); });
+  $('#fam-copy').addEventListener('click', function () {
+    var b = $('#fam-copy'), text = shown ? shown.kit.call(shown.look) : '';
+    try { navigator.clipboard.writeText(text).then(function () { b.textContent = 'Copied'; }, function () { b.textContent = 'Select the call above to copy it'; }); } catch (e) { b.textContent = 'Select the call above to copy it'; }
+  });
+
+  brush(state.colour, false); reset(); render(); wear();
+  if (doc.fonts && doc.fonts.ready) doc.fonts.ready.then(render);
+})();
+</script>
+</body>
+</html>
