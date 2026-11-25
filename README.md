@@ -89,3 +89,6 @@ Two lines of work met here. The plate (`Depthfield.plate`, `tint`, `edges`; fami
 
 2.5.0 also gives every look a mood (`Depthfield.looks[i].mood`; family task F10): `lit` for the night faces and High contrast, `still` for the day faces. A game reads it to choose what a look rewards.
 
+## The family's page
+
+`family/index.html` ("One drawing, sixteen looks") makes one drawing in every look of Storeybrook, Hypermetapunk and Depthfield, from the three kits' versioned builds. It lives here because the family plan does (`docs/family.md`). It needs `/storeybrook/v/1.5.0/`, `/depthfield/v/2.5.0/` and `/hypermetapunk/v/0.5.0/` on the same origin, as on GitHub Pages.
