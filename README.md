@@ -1,17 +1,57 @@
+<img src="site/icons/icon-192.png" alt="Depthfield mark" width="84">
+
 # Depthfield
 
-A design system for scroll-driven, world-behind-the-words pages: three parallax ridges, generated canvas "worlds", night/day/contrast skins, a cloth to pull and pluck, a guardian, stretch type, a lint for generic pages, and a component bundle exposed as `window.Depthfield` (2.2.0).
+A dark-first design system for scroll stories. The content stays in front; generated mountains, weather and a quiet HUD give it depth.
 
-This repo is a read-only export of the Depthfield design system (index format v3) from its Claude artifact:
-<https://claude.ai/artifact/2yngsrbj7HRDirATXbTwMz>
+**Mint, peach and thread in night and day, plus high contrast**
 
-The artifact is the source of truth. (Until 2.2 this repo was exported from a 2.0 copy of the system, `Depthfield (Copy)`; it now follows the main artifact, and the copy is no longer a source.) Opening that link requires access on claude.ai; everything needed to read the system is in this repo.
+[Open the showcase](https://stevoblevo.github.io/depthfield/) · [Read the interactive docs](https://stevoblevo.github.io/depthfield/docs.html) · [Compare the Saelion toolkits](https://saelion.co/toolkits)
 
-**Live site:** <https://stevoblevo.github.io/depthfield/> is the showcase, a scroll story through all seven themes, one chapter each: the glasshouse with three spores to find, day chrome over a night sky, a weather world that turns to red rain, a hub at the mint clearing, a ledger with the reality lens, this repo's own archive, and a high-contrast ending with doors out. Five night pets are hidden along the way, and a seven-shot reel plays the whole story (<https://stevoblevo.github.io/depthfield/?autoplay>). The docs (brand book, tokens per theme, every component running live, assets) are at <https://stevoblevo.github.io/depthfield/docs.html>. Both are built from the system's own files.
+## Try it
 
-## Start here
+[Watch the seven-shot reel](https://stevoblevo.github.io/depthfield/?autoplay). To try it by hand, find a spore in the glasshouse, then scroll until the weather changes. The opening tour is not a catalog of every component.
 
-Read [`project/README.md`](project/README.md) first. It is the brand book and explains how the other files fit together.
+## Use it in a page
+
+From the repository root, save this as `scratch.html` and run `python3 -m http.server 8701`. Open `http://localhost:8701/scratch.html`. No package install is needed for this example. The kit stylesheets can load web fonts; your browser uses fallback fonts when unavailable.
+
+```html
+<!doctype html>
+<html lang="en" data-theme="night">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Depthfield example</title>
+  <link rel="stylesheet" href="project/tokens.css">
+  <link rel="stylesheet" href="project/components/bundle.css">
+  <script src="project/components/bundle.js"></script>
+</head>
+<body class="df-page">
+  <a class="df-btn df-btn--primary" href="#chapter">Keep scrolling</a>
+  <h1 id="chapter">The glasshouse</h1>
+</body>
+</html>
+```
+
+The checked-in 2.3 kit adds the [Plate](project/components/Plate/README.md) for staging flat fills as night materials. Keep all three runtime files on the same commit; this repository does not currently expose a `v/index.json` release manifest. The **2.3** working runtime is distinct from the standalone Pen proposal ([PR #2](https://github.com/stevoblevo/depthfield/pull/2)). See the [Button](project/components/Button/README.md) for markup.
+
+## Project notes
+
+[Brand book](project/README.md) · [Component types](project/components/index.d.ts) · [Project plan](docs/plan.md)
+
+The [Claude artifact](https://claude.ai/artifact/2yngsrbj7HRDirATXbTwMz) is the design source of truth and may require access. The public repository and demos do not require Claude. For site development and checks, see [AGENTS.md](AGENTS.md).
+
+### The toolkit family
+
+[Storeybrook](https://github.com/stevoblevo/storeybrook) · [Hypermetapunk](https://github.com/stevoblevo/hypermetapunk) · [Shared toolkit contracts](https://github.com/stevoblevo/depthfield/blob/main/docs/family.md)
+
+### License
+
+The source is publicly viewable. No repository-wide license is published here; public visibility does not grant general permission to reuse or redistribute the code or artwork. Check individual notices for third-party materials, and ask the owner before reusing toolkit assets or code outside the repository.
+
+<details>
+<summary>Repository reference and maintenance notes</summary>
 
 ## Layout
 
@@ -74,3 +114,5 @@ project/
 Open any page with `?df-taste` in its address and the bundle lists the tells that make a page read as generated (see `project/19-taste.md`). The showcase passes its own check.
 
 After changing anything under `project/`, run `python3 site/build.py` and commit the output.
+
+</details>
