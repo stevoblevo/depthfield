@@ -62,7 +62,7 @@ main .fam-band { scroll-margin-top: 150px; }
 /* the bench: the one drawing, pinned while the plates scroll under it */
 .fam-bench { position: sticky; top: 0; z-index: 5; background: var(--fam-ground); color: var(--fam-ink); border-bottom: 1px solid var(--fam-line); padding: 12px 20px; transition: background 0.35s, color 0.35s, border-color 0.35s; font-family: var(--fam-label); }
 .fam-bench .fam-in { display: grid; grid-template-columns: clamp(128px, 26vw, 208px) minmax(0, 1fr); gap: 14px 18px; align-items: center; }
-#fam-src { display: block; width: 100%; height: auto; aspect-ratio: 1; border: 2px dashed var(--fam-line); border-radius: 6px; background: #ffffff; touch-action: none; cursor: crosshair; }
+#fam-src { display: block; width: 100%; height: auto; aspect-ratio: 1; border: 3px dashed var(--fam-line); border-radius: 6px; background: #ffffff; touch-action: none; cursor: crosshair; }
 .fam-tools { display: grid; gap: 9px; min-width: 0; }
 .fam-row { display: flex; flex-wrap: wrap; gap: 7px; align-items: center; }
 .fam-row > span, .fam-row > label { font-size: 13px; color: var(--fam-muted); margin-right: 2px; }
@@ -106,7 +106,7 @@ main .fam-band { scroll-margin-top: 150px; }
 <header class="fam-band fam-day fam-top" data-theme="daylight">
   <div class="fam-in">
     <h1>One drawing, sixteen looks</h1>
-    <p>Storeybrook, Hypermetapunk and Depthfield are three design systems that keep one contract. Each takes the same canvas of flat fills and makes it in its own material, by a process and never by redrawing. Draw on the picture below and every plate follows.</p>
+    <p>Storeybrook, Hypermetapunk and Depthfield are three design systems that keep one contract. Each takes the same canvas of flat fills and makes it in its own material, by a process and never by redrawing. Pick a brush, paint on the picture below, and every plate follows.</p>
     <div class="fam-filters">
       <div class="fam-row" role="group" aria-label="Show looks by mood"><span>Mood</span>
         <button class="fam-btn" type="button" data-mood="" aria-pressed="true">All 16</button>
@@ -122,7 +122,7 @@ main .fam-band { scroll-margin-top: 150px; }
 
 <div class="fam-bench fam-day" id="fam-bench" data-theme="daylight">
   <div class="fam-in">
-    <canvas id="fam-src" width="480" height="480" role="img" aria-label="The drawing, in flat colours. Drag on it to add to the drawing."></canvas>
+    <canvas id="fam-src" width="480" height="480" role="img" aria-label="The drawing, in flat colours. Tap or drag on it to add to the drawing."></canvas>
     <div class="fam-tools">
       <div class="fam-row" role="group" aria-label="Start from a drawing"><span>Start from</span>
         <button class="fam-btn" type="button" data-subject="seal" aria-pressed="true">Seal</button>
@@ -135,7 +135,7 @@ main .fam-band { scroll-margin-top: 150px; }
         <button class="fam-sw" type="button" style="background:#6b8fae" data-c="#6b8fae" aria-pressed="false" aria-label="Blue"></button>
         <button class="fam-sw" type="button" style="background:#1f2a37" data-c="#1f2a37" aria-pressed="false" aria-label="Dark"></button>
       </div>
-      <p class="fam-hint">Drag on the drawing to add to it.</p>
+      <p class="fam-hint fam-hint--keep" id="fam-brush-hint" aria-live="polite">Pick a brush, then tap or drag on the drawing. Every plate follows.</p>
     </div>
   </div>
 </div>
@@ -295,7 +295,7 @@ main .fam-band { scroll-margin-top: 150px; }
     });
   });
 
-  function reset() { sg.clearRect(0, 0, src.width, src.height); SUBJECTS[state.subject].draw(sg, src.width, src.height); src.setAttribute('aria-label', 'The drawing: ' + SUBJECTS[state.subject].label + ', in flat colours. Drag on it to add to the drawing.'); }
+  function reset() { sg.clearRect(0, 0, src.width, src.height); SUBJECTS[state.subject].draw(sg, src.width, src.height); src.setAttribute('aria-label', 'The drawing: ' + SUBJECTS[state.subject].label + ', in flat colours. Tap or drag on it to add to the drawing.'); }
   function put(host, c, text) { c.setAttribute('role', 'img'); c.setAttribute('aria-label', text); host.textContent = ''; host.appendChild(c); }
   function render() {
     var k = small.getContext('2d'); k.clearRect(0, 0, 300, 300); k.drawImage(src, 0, 0, 300, 300);
@@ -310,13 +310,22 @@ main .fam-band { scroll-margin-top: 150px; }
   /* ---------- the bench ---------- */
   var last = null;
   function at(e) { var r = src.getBoundingClientRect(); return [(e.clientX - r.left) * src.width / r.width, (e.clientY - r.top) * src.height / r.height]; }
-  function dab(a, b) { sg.strokeStyle = state.colour; sg.lineWidth = 28; sg.lineCap = 'round'; sg.beginPath(); sg.moveTo(a[0], a[1]); sg.lineTo(b[0], b[1]); sg.stroke(); }
+  function dab(a, b) {   /* a tap paints a dot: a stroke of no length paints nothing */
+    sg.strokeStyle = sg.fillStyle = state.colour; sg.lineWidth = 28; sg.lineCap = 'round';
+    sg.beginPath(); sg.arc(b[0], b[1], 14, 0, 7); sg.fill();
+    if (a[0] !== b[0] || a[1] !== b[1]) { sg.beginPath(); sg.moveTo(a[0], a[1]); sg.lineTo(b[0], b[1]); sg.stroke(); }
+  }
   src.addEventListener('pointerdown', function (e) { try { src.setPointerCapture(e.pointerId); } catch (x) {} last = at(e); dab(last, last); soon(); e.preventDefault(); });
   src.addEventListener('pointermove', function (e) { if (!last) return; var p = at(e); dab(last, p); last = p; soon(); });
   ['pointerup', 'pointercancel'].forEach(function (n) { src.addEventListener(n, function () { last = null; }); });
   function group(sel, attr, fn) { var all = $$(sel); all.forEach(function (b) { b.addEventListener('click', function () { all.forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); }); fn(b.getAttribute(attr)); }); }); }
   group('[data-subject]', 'data-subject', function (v) { state.subject = v; reset(); render(); });
-  group('.fam-sw', 'data-c', function (v) { state.colour = v; });
+  function brush(v, say) {   /* picking a colour shows at once: the drawing's frame takes it, and the hint says what to do with it */
+    state.colour = v; src.style.borderColor = v; src.style.borderStyle = 'solid';
+    var b = $('.fam-sw[data-c="' + v + '"]'), name = b ? b.getAttribute('aria-label') : '';
+    if (say) $('#fam-brush-hint').textContent = name + ' brush. Tap or drag on the drawing to paint with it.';
+  }
+  group('.fam-sw', 'data-c', function (v) { brush(v, true); });
   group('[data-mood]', 'data-mood', function (v) { state.mood = v; render(); var n = tiles.filter(function (t) { return !v || t.look.mood === v; }).length; $('#fam-hint').textContent = v ? n + ' of ' + tiles.length + ' looks reward ' + ({ still: 'stillness', impact: 'impact and tempo', lit: 'a light source' })[v] + '.' : 'A mood is what a look rewards in play: stillness by day, impact in print, a light source at night.'; });
   group('[data-df]', 'data-df', function (v) { state.df = v; render(); });
   $('#fam-word').addEventListener('input', function (e) { state.word = e.target.value.replace(/[^a-z0-9 ?]/gi, '').toUpperCase().slice(0, 8); soon(); });
@@ -354,7 +363,7 @@ main .fam-band { scroll-margin-top: 150px; }
     try { navigator.clipboard.writeText(text).then(function () { b.textContent = 'Copied'; }, function () { b.textContent = 'Select the call above to copy it'; }); } catch (e) { b.textContent = 'Select the call above to copy it'; }
   });
 
-  reset(); render(); wear();
+  brush(state.colour, false); reset(); render(); wear();
   if (doc.fonts && doc.fonts.ready) doc.fonts.ready.then(render);
 })();
 </script>
