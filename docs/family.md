@@ -11,7 +11,7 @@ Updated by Claude (session 013Z7RfDQ7jddLT6yzpjZp9y). Each kit now gives a game 
 | Kit | Runtime | Looks | For canvas | Where it waits |
 | --- | --- | --- | --- | --- |
 | Storeybrook (day) | 1.5.0 | six | `paper.js` (pen, Folded), `plate.js`, `pets.js` | pull request 10 in `stevoblevo/storeybrook` (carries 1.4.0 and 1.5.0) |
-| Depthfield (night) | 2.5.0 | seven | the plate in `bundle.js`, `pen.js`, `pets.js` | branch `claude/2.5-reconcile` here |
+| Depthfield (night) | 2.5.0 | seven | the plate in `bundle.js`, `pen.js`, `pets.js` | pull request 7 here (carries 2.3.0, 2.4.0 and 2.5.0) |
 | Hypermetapunk (dusk) | 0.5.0 | three | `pen.js`, `plate.js`, `pets.js` | pull request 7 in `stevoblevo/hypermetapunk` (carries 0.3.0, 0.4.0 and 0.5.0) |
 
 Every one of these is checked and conflict-free against its `main`; merging is Bleve's call. Until they merge, the Pages sites serve Storeybrook 1.3.2, Depthfield 2.3 (the plate, without the pen or pets) and Hypermetapunk 0.2.0, and AND SO runs on vendored copies of files that are not yet at their versioned addresses.
