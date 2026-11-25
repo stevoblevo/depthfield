@@ -1,0 +1,57 @@
+<!-- @dsCard group="World" height=580 -->
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Pets</title>
+<style>body{margin:0;background:var(--void);color:var(--ink);font-family:var(--font-sans)}.pv-pets{padding:16px 20px;display:grid;gap:10px}.pv-pets canvas{display:block;width:100%}#pv-pets-dance{height:150px;border-radius:var(--radius-md,12px);border:1px solid var(--line);background:var(--surface)}#pv-pets-still{height:140px}.pv-looks{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px}.pv-look{background:var(--void);color:var(--ink-muted);border:1px solid var(--line);border-radius:var(--radius-md,12px);padding:6px 8px 4px;font-size:12px}.pv-look canvas{height:64px}.pv-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;font-size:13px;color:var(--ink-muted)}.pv-row code{font-family:var(--font-mono);font-size:12px}.pv-row button{font:inherit;color:var(--ink);background:var(--surface-raised);border:1px solid var(--line);border-radius:999px;padding:6px 12px;min-height:32px;cursor:pointer}.pv-row button[aria-pressed="true"]{border-color:var(--accent);color:var(--accent)}.pv-row button:focus-visible{outline:2px solid var(--focus);outline-offset:2px}</style></head>
+<body>
+<div class="pv-pets">
+<canvas id="pv-pets-dance" role="img" aria-label="The five night pets in a row: glass bloom, mint spore, frost seed, Winkle the eye and the firefly. With the beat on they dance with a swing: the flower opens, the spore pumps and steps round, the crystal rings, the eye blinks on the off-beat and looks at the pointer, the firefly flares."></canvas>
+<div class="pv-row"><code>Depthfield.pets.draw(ctx, id, { x, y, size, t, beat, lookX, lookY })</code><button type="button" id="pv-pets-beat" aria-pressed="true">Swing beat, 104 a minute</button></div>
+<canvas id="pv-pets-still" role="img" aria-label="The same five pets held still, from 24 to 128 pixels tall."></canvas>
+<div class="pv-row"><code>{ still: true }</code><span>24, 40, 64, 96 and 128 px</span></div>
+<div class="pv-looks">
+  <div class="pv-look" data-theme="night">night<canvas role="img" aria-label="The five pets at night: they glow."></canvas></div>
+  <div class="pv-look" data-theme="day">day<canvas role="img" aria-label="The five pets by day: the day inks, with a soft shadow under each."></canvas></div>
+  <div class="pv-look" data-theme="contrast">high contrast<canvas role="img" aria-label="The five pets in high contrast: plain keylines, no glow."></canvas></div>
+</div>
+<div class="pv-row"><code>{ look }</code><span>Found so far, across the family: <b id="pv-pets-total">0 of 17</b></span></div>
+</div>
+<script src="../pets.js"></script>
+<script>
+(function () {
+  var D = window.Depthfield; if (!D || !D.pets) return;
+  var ids = D.pets.list.map(function (p) { return p.id; }), BPM = 104, on = true, t0 = performance.now(), raf = 0, px = null, py = null;
+  var dance = document.getElementById('pv-pets-dance'), still = document.getElementById('pv-pets-still'), looks = [].slice.call(document.querySelectorAll('.pv-look canvas')), beatBtn = document.getElementById('pv-pets-beat');
+  var RM = window.matchMedia('(prefers-reduced-motion: reduce)');
+  function held() { return RM.matches || (D.reducedMotion && D.reducedMotion()); }
+  function fit(c) {
+    var dpr = Math.min(2, window.devicePixelRatio || 1), w = c.clientWidth, h = c.clientHeight, x = c.getContext('2d');
+    if (c.width !== Math.round(w * dpr) || c.height !== Math.round(h * dpr)) { c.width = Math.round(w * dpr); c.height = Math.round(h * dpr); }
+    x.setTransform(dpr, 0, 0, dpr, 0, 0); x.clearRect(0, 0, w, h);
+    return { x: x, w: w, h: h };
+  }
+  function look() { return document.documentElement.getAttribute('data-theme') || 'night'; }
+  function frame(now) {
+    var t = (now - t0) / 1000, per = 60 / BPM, beat = on ? Math.exp(-(t % per) / per * 7) : 0, L = look();
+    var a = fit(dance), gap = a.w / 5, size = Math.min(92, gap * 0.8, a.h * 0.66);
+    ids.forEach(function (id, i) { D.pets.draw(a.x, id, { x: gap * (i + 0.5), y: a.h / 2, size: size, t: t, beat: beat, look: L, lookX: px, lookY: py }); });
+    var b = fit(still), sizes = [24, 40, 64, 96, 128], room = 0, k, cx;
+    sizes.forEach(function (s) { room += s * 1.1 + 22; });
+    k = Math.min(1, (b.w - 8) / room, (b.h - 6) / 132); cx = (b.w - room * k) / 2;
+    sizes.forEach(function (s, i) { s *= k; cx += s * 0.55 + 11 * k; D.pets.draw(b.x, ids[i], { x: cx, y: b.h / 2, size: s, look: L, still: true }); cx += s * 0.55 + 11 * k; });
+    looks.forEach(function (c) {
+      var d = fit(c), g = d.w / 5, s = Math.min(46, g * 0.8, d.h * 0.8), lk = c.parentNode.getAttribute('data-theme');
+      ids.forEach(function (id, i) { D.pets.draw(d.x, id, { x: g * (i + 0.5), y: d.h / 2, size: s, t: t, beat: beat, look: lk }); });
+    });
+    if (!held()) raf = requestAnimationFrame(frame);
+  }
+  function again() { cancelAnimationFrame(raf); raf = requestAnimationFrame(frame); }
+  beatBtn.addEventListener('click', function () { on = !on; beatBtn.setAttribute('aria-pressed', String(on)); again(); });
+  dance.addEventListener('pointermove', function (e) { var r = dance.getBoundingClientRect(); px = e.clientX - r.left; py = e.clientY - r.top; if (held()) again(); });
+  dance.addEventListener('pointerleave', function () { px = py = null; if (held()) again(); });
+  var tot = D.pets.total(); document.getElementById('pv-pets-total').textContent = tot.all + ' of 17 (Storeybrook ' + tot.sb + ', Depthfield ' + tot.df + ', Hypermetapunk ' + tot.hmp + ')';
+  window.addEventListener('resize', again); window.addEventListener('df:theme', again);
+  new MutationObserver(again).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  again();
+})();
+</script>
+</body></html>

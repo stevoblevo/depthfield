@@ -1,0 +1,28 @@
+{
+  "latest": "2.5.0",
+  "versions": {
+    "2.3.0": {
+      "tokens.css": "b14b55f7125d8ca8f78213d277d60ebe09d8ee2b6b22368eefb8b002b9b84f23",
+      "bundle.css": "58518e04bd7badc5aeabe22b755fb5c98ace8f6dbf00d2eaa4514c621b2575f6",
+      "bundle.js": "eae7c04f1da421faf35ad4eb00434c21a10bb102075ae348dd023560657bb0bf",
+      "index.d.ts": "596550a214fbb73b5349de4f927f4d41fa181cdbdfce0868f37b2001bd5d8743",
+      "pen.js": "5608cefbb2299bad32a6b3cbff641e61fe01b1d6842e5bb25ab9e448fdf516b8"
+    },
+    "2.4.0": {
+      "tokens.css": "b14b55f7125d8ca8f78213d277d60ebe09d8ee2b6b22368eefb8b002b9b84f23",
+      "bundle.css": "58518e04bd7badc5aeabe22b755fb5c98ace8f6dbf00d2eaa4514c621b2575f6",
+      "bundle.js": "f364ea817ebfa94d9dcd66adbeb024fee7bebeb097dad8b5f22e2aa792f2ee90",
+      "index.d.ts": "7f33434107901944ae229f221602cd65c5cbc8ce6af40dffa6a77fd014a6debb",
+      "pen.js": "aa95a9fc045a9f6f0ac3c4b0ac43a6e80e0db4bdf1285337b4766f5156e01608",
+      "pets.js": "6c7342a2b049fbcbce49aedb2c08c2dbbd3e7ce4f3bc93dbb1090093d9c612a0"
+    },
+    "2.5.0": {
+      "tokens.css": "b14b55f7125d8ca8f78213d277d60ebe09d8ee2b6b22368eefb8b002b9b84f23",
+      "bundle.css": "58518e04bd7badc5aeabe22b755fb5c98ace8f6dbf00d2eaa4514c621b2575f6",
+      "bundle.js": "99fdc1538875360edc3278d0e154e220879313b14b3a396b6db11a4016e518c8",
+      "index.d.ts": "fecba0894f4d6183d1417c613271be7431dbf2f85e4b853e7dd0a985fc5d7001",
+      "pen.js": "f47031cff33c6951bea61058730ed02ddbe338b881c91e15feee0f6197cbf604",
+      "pets.js": "6c7342a2b049fbcbce49aedb2c08c2dbbd3e7ce4f3bc93dbb1090093d9c612a0"
+    }
+  }
+}

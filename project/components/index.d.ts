@@ -1,4 +1,4 @@
-/* Depthfield 2.3 — types as documentation. Components are HTML + bundle.css classes; behaviors are window.Depthfield.
+/* Depthfield 2.5 — types as documentation. Components are HTML + bundle.css classes; behaviors are window.Depthfield.
    Each <Comp>Props names the markup contract a page provides (classes, attributes, data); the functions are the JS API. */
 
 export type Face = 'night' | 'day';
@@ -137,3 +137,82 @@ export interface DepthfieldApi {
   taste: ((o?: { scope?: Element; log?: boolean }) => TasteFinding[]) & { badge(findings?: TasteFinding[]): HTMLDetailsElement };
 }
 /** Events added in 2.2: df:cloth {canvas, type: 'pluck' | 'pull' | 'reject' | 'view' | 'weather', …}, df:lamp {el, room}, df:stretch {el, value}, df:sense SenseDetail, df:guide {id, step, found, total}, df:guardian {say} or {landed}, df:taste {findings}. */
+
+/** Added in 2.3: looks as data and the pen (components/pen.js, an add-on that also works alone). Family task F4. */
+type DfLookId = 'night' | 'day' | 'peach-night' | 'peach-day' | 'thread-night' | 'thread-day' | 'contrast';
+type DfWeatherId = 'peach' | 'rain' | 'mint' | 'night';
+type DfInk = [number, number, number] | [number, number, number, number];
+/** mood (2.5.0, family F10): what the look rewards in play. Night looks reward a light source, day looks stillness. */
+interface DfLook { id: DfLookId; name: string; light: boolean; motion: boolean; print: boolean; mood: 'still' | 'impact' | 'lit'; weather: DfWeatherId; }
+interface DfWeatherPalette { sky: [DfInk, DfInk]; sun: DfInk; ridge: [DfInk, DfInk, DfInk]; rim: DfInk; }
+type DfWeather = DfWeatherId | number | [number, number, number, number];
+interface DfBox { x?: number; y?: number; w: number; h: number; weather?: DfWeather; t?: number; }
+interface DfPen {
+  look: DfLookId; name: string; light: boolean;
+  inks: Record<string, DfInk>;
+  rgb(name: string | DfInk, alpha?: number): string;
+  weathers: { id: DfWeatherId; name: string }[];
+  weather(wx?: DfWeather): DfWeatherPalette;
+  sky(ctx: CanvasRenderingContext2D, o: DfBox): void;
+  sun(ctx: CanvasRenderingContext2D, o: { x: number; y: number; r?: number; glow?: number; w?: number; h?: number; weather?: DfWeather }): void;
+  stars(ctx: CanvasRenderingContext2D, o: DfBox & { count?: number; depth?: number; alpha?: number }): void;
+  ridgeY(n: 0 | 1 | 2, x: number, o: DfBox & { par?: number; base?: number[]; amp?: number[] }): number;
+  ridges(ctx: CanvasRenderingContext2D, o: DfBox & { par?: number; base?: number[]; amp?: number[]; from?: number; to?: number }): void;
+  haze(ctx: CanvasRenderingContext2D, o: DfBox & { amount?: number; ink?: string }): void;
+  vignette(ctx: CanvasRenderingContext2D, o: DfBox & { amount?: number }): void;
+  world(ctx: CanvasRenderingContext2D, o: DfBox & { par?: number; sunX?: number; sunY?: number; vignette?: boolean }): void;
+  /** Added in 2.4 (family task F9): draws src centred at (x, y) at o.w × o.h, lit by a moonlit rim on the side facing (o.lx, o.ly), with a contact shadow at o.ground. High contrast draws a plain keyline. */
+  rim(ctx: CanvasRenderingContext2D, src: CanvasImageSource, x: number, y: number, o?: DfRimOptions): void;
+}
+interface DfRimOptions {
+  /** drawn size; defaults to the source's own */
+  w?: number; h?: number;
+  /** where the light is, in the same coordinates as x and y; defaults to above and to the left */
+  lx?: number; ly?: number;
+  /** the rim's ink comes from this weather (an id, 0 to 3, or four weights); defaults to the look's */
+  weather?: DfWeather;
+  /** the ground's y, for a contact shadow (or, in high contrast, a ground line) */
+  ground?: number;
+  /** 0 to 1, how strong the rim is (default 1) */
+  amount?: number;
+  /** 0 to 1, the whole drawing (default 1) */
+  alpha?: number;
+}
+interface DepthfieldPenAddOn { looks: DfLook[]; pen(look?: DfLookId | Element, opts?: { still?: boolean }): DfPen; penVersion: string; }
+
+/** Added in 2.4: the night pets and the family's pets contract (components/pets.js, an add-on that also works alone). Family task F9.
+    Storeybrook (`sb:`, seven day pets) and Hypermetapunk (`hmp:`, five dusk pets) offer the same shape. */
+type DfPetId = 'glass-bloom' | 'mint-spore' | 'frost-seed' | 'winkle' | 'firefly';
+interface DfPet { id: DfPetId; name: string; line: string; how: string; /** the address on Depthfield's site where it is found */ where: string; }
+/** localStorage['crossing:pets'] on stevoblevo.github.io, shared by the three kits */
+interface DfCrossingPets { found: Record<string, number>; active?: { sb?: string; [kit: string]: string | undefined }; }
+interface DfPetDraw {
+  x: number; y: number;
+  /** about the pet's height in CSS pixels; 24 to 160 (default 40) */
+  size?: number;
+  /** seconds */
+  t?: number;
+  /** jumps to 1 on each beat and falls away; 0 or missing means no music */
+  beat?: number;
+  /** a Depthfield look id (default 'night') */
+  look?: DfLookId;
+  /** the rest pose, no motion (reduced motion holds it too) */
+  still?: boolean;
+  alpha?: number;
+  /** where Winkle looks, in the same coordinates as x and y */
+  lookX?: number; lookY?: number;
+}
+interface DfPets {
+  kit: 'df'; key: 'crossing:pets'; version: string;
+  list: DfPet[];
+  /** 'winkle' or 'df:winkle'; another kit's id ('sb:saelion') is looked up as given */
+  has(id: string): boolean;
+  /** records a find; true only the first time */
+  find(id: string): boolean;
+  /** Depthfield's five found */
+  count(): number;
+  /** found across the family: sb of 7, df of 5, hmp of 5, all of 17 */
+  total(): { sb: number; df: number; hmp: number; all: number };
+  draw(ctx: CanvasRenderingContext2D, id: string, o: DfPetDraw): void;
+}
+interface DepthfieldPetsAddOn { pets: DfPets; }

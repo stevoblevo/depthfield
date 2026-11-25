@@ -42,68 +42,69 @@
     var x = s.u * info.W;
     return [x, Math.min(info.ridgeY(s.plane, x) - 24, s.v * info.H + info.scroll * SINK[s.plane])];
   }
-  function drawSpores(cx, info) {
+  function drawSpores(cx, info) {   /* family F9: the spores are drawn by the kit's pets, each in its own form */
     SPOTS.forEach(function (s) {
       if (s.plane !== info.plane || s.found) return;
-      var p = spotXY(s, info), x = p[0], y = p[1], c = s.found ? FOUND : SPORE, pulse = 1 + Math.sin(info.t * 2 + s.u * 9) * .12;
-      var g = cx.createRadialGradient(x, y, 0, x, y, 26 * pulse);
-      g.addColorStop(0, rgba(c, .55)); g.addColorStop(1, rgba(c, 0));
-      cx.fillStyle = g; cx.beginPath(); cx.arc(x, y, 26 * pulse, 0, 6.283); cx.fill();
-      cx.save(); cx.translate(x, y); cx.rotate(info.t * .25 + s.u * 5);
-      cx.strokeStyle = rgba(c, .9); cx.lineWidth = 1.5; cx.lineCap = 'round';
-      for (var i = 0; i < 6; i++) { cx.rotate(1.0472); cx.beginPath(); cx.moveTo(0, 6); cx.lineTo(0, 11 * pulse); cx.stroke(); }
-      cx.fillStyle = rgba(c, 1); cx.beginPath(); cx.arc(0, 0, 3.2, 0, 6.283); cx.fill();
-      cx.restore();
+      var p = spotXY(s, info);
+      PK.draw(cx, s.id, { x: p[0], y: p[1], size: 58, t: info.t + s.u * 9, look: 'night', still: RM.matches });
     });
   }
   var foundCard = D.found($('#found'), { hold: 3400 }), hint = $('#spore-hint');
 
-  /* ---------- night pets: whatever you find follows you, saved with Storeybrook's day pets ---------- */
-  var PKEY = 'crossing:pets', DAY = 7;
-  var PETS = [
-    { id: 'glass-bloom', name: 'Glass bloom', kind: 'spore', c: FOUND, ch: 'ch-night', line: 'It floated off the haze to follow you.', how: 'Somewhere in the haze over the glasshouse.' },
-    { id: 'mint-spore', name: 'Mint spore', kind: 'spore', c: SPORE, ch: 'ch-night', line: 'It left the near ridge for your pointer.', how: 'On the nearest ridge of the glasshouse.' },
-    { id: 'frost-seed', name: 'Frost seed', kind: 'spore', c: FROST, ch: 'ch-night', line: 'The far ridge let it go.', how: 'On the far ridge of the glasshouse.' },
-    { id: 'winkle', name: 'Winkle', kind: 'eye', c: IRIS, ch: 'ch-peach-day', line: 'A small eye that came off the ridge when you winked first.', how: 'Wink at the eye in the mint clearing.' },
-    { id: 'firefly', name: 'Firefly', kind: 'fly', c: EMBER, ch: 'ch-contrast', line: 'The night garden’s last light.', how: 'It drifts over the night garden, past the doors.' }
-  ];
+  /* ---------- night pets: whatever you find follows you, saved with Storeybrook's day pets and Hypermetapunk's dusk pets ---------- */
+  /* family F9: the pets, their save and their drawing live in the kit (project/components/pets.js); the page keeps only
+     where each one waits and its dot colour */
+  var PK = D.pets, DAY = 7, DUSK = 5, ALL = 17;
+  var HERE = { 'glass-bloom': [FOUND, 'ch-night'], 'mint-spore': [SPORE, 'ch-night'], 'frost-seed': [FROST, 'ch-night'], 'winkle': [IRIS, 'ch-peach-day'], 'firefly': [EMBER, 'ch-contrast'] };
+  var PETS = PK.list.map(function (p) { return { id: p.id, name: p.name, line: p.line, how: p.how, c: HERE[p.id][0], ch: HERE[p.id][1] }; });
+  var WITH = [];   /* the found pets, in order: the procession */
   function pet(id) { return PETS.filter(function (p) { return p.id === id; })[0]; }
-  function save() { try { return JSON.parse(localStorage.getItem(PKEY)) || {}; } catch (e) { return {}; } }
-  function put(v) { try { localStorage.setItem(PKEY, JSON.stringify(v)); } catch (e) {} }
-  function has(id) { var f = save().found || {}; return !!f[id.indexOf(':') < 0 ? 'df:' + id : id]; }
-  function count() { return PETS.filter(function (p) { return has(p.id); }).length; }
-  function dayFound() { var f = save().found || {}; return Object.keys(f).filter(function (k) { return /^sb:/.test(k); }).length; }
+  function has(id) { return PK.has(id); }
+  function count() { return PK.count(); }
   SPOTS.forEach(function (sp) { sp.found = has(sp.id); });
 
-  function glyph(p, off) {
-    var c = off ? 'currentColor' : p.c, o = off ? .28 : 1, inner;
-    if (p.kind === 'eye') inner = '<ellipse cx="20" cy="20" rx="13" ry="8" fill="#e9f5ef"/><circle cx="22" cy="20" r="5" fill="' + c + '"/><circle cx="22" cy="20" r="2.2" fill="#07110f"/><ellipse cx="20" cy="20" rx="13" ry="8" fill="none" stroke="' + c + '" stroke-width="1.5"/>';
-    else if (p.kind === 'fly') inner = '<circle cx="20" cy="20" r="14" fill="' + c + '" opacity=".22"/><circle cx="20" cy="20" r="7" fill="' + c + '" opacity=".5"/><circle cx="20" cy="20" r="3" fill="#fff8e8"/>';
-    else inner = '<circle cx="20" cy="20" r="14" fill="' + c + '" opacity=".2"/><g stroke="' + c + '" stroke-width="1.6" stroke-linecap="round"><path d="M20 13v-5M20 27v5M14 16.5l-4.3-2.5M26 23.5l4.3 2.5M14 23.5l-4.3 2.5M26 16.5l4.3-2.5"/></g><circle cx="20" cy="20" r="3.4" fill="' + c + '"/>';
-    return '<svg class="sc-glyph" viewBox="0 0 40 40" width="40" height="40" aria-hidden="true" style="opacity:' + o + '">' + inner + '</svg>';
+  /* the list draws each pet with the kit's pen of pets, in the chapter's look; one still out there is a faint keyline */
+  var BOOK = { raf: 0, t0: 0, cvs: [] };
+  function bookPaint(now) {
+    var look = root.getAttribute('data-theme') || 'night', t = (now - BOOK.t0) / 1000, list = $('#petbook-list'), muted = list ? getComputedStyle(list).getPropertyValue('--ink-muted') || '#93aaa1' : '#93aaa1';
+    BOOK.cvs.forEach(function (cv, i) {
+      var x = cv.getContext('2d'), k = cv.width / 40, off = cv.hasAttribute('data-off');
+      x.setTransform(1, 0, 0, 1, 0, 0); x.clearRect(0, 0, cv.width, cv.height); x.setTransform(k, 0, 0, k, 0, 0);
+      PK.draw(x, cv.getAttribute('data-pet'), { x: 20, y: 20, size: 36, t: t + i * 0.7, look: off ? 'contrast' : look, still: off || RM.matches });
+      if (off) { x.globalCompositeOperation = 'source-in'; x.globalAlpha = 0.55; x.fillStyle = muted.trim() || '#93aaa1'; x.fillRect(0, 0, 40, 40); x.globalAlpha = 1; x.globalCompositeOperation = 'source-over'; }
+    });
   }
+  function bookLoop(now) { BOOK.raf = 0; if (book.hidden) return; if (!BOOK.t0) BOOK.t0 = now; bookPaint(now); if (!RM.matches) BOOK.raf = requestAnimationFrame(bookLoop); }
+  function bookStart() { if (!BOOK.raf && book && !book.hidden) BOOK.raf = requestAnimationFrame(bookLoop); }
   function paintPets() {
-    var n = count();
+    var n = count(), tot = PK.total(), dpr = Math.min(3, Math.ceil(window.devicePixelRatio || 1));
+    WITH = PETS.filter(function (p) { return has(p.id); });
     $('#pet-n').textContent = String(n);
     $('#pet-dots').innerHTML = PETS.map(function (p) { return '<i style="' + (has(p.id) ? 'background:' + p.c : '') + '"></i>'; }).join('');
     $('#chip-pets').setAttribute('aria-label', 'Night pets: ' + n + ' of 5 found. Open the list');
     $('#petbook-count').textContent = n + ' of 5 found. ' + (n ? 'The ones you found follow your pointer through the art.' : 'Whatever you find follows your pointer through the art.');
-    $('#petbook-list').innerHTML = PETS.map(function (p, i) {
+    $('#petbook-list').innerHTML = PETS.map(function (p) {
       var f = has(p.id);
-      return '<li><button type="button" class="df-drawer__item sc-petitem" data-pet-go="' + p.ch + '"><span class="df-n">' + glyph(p, !f) + '</span><span>' + (f ? p.name : 'Still out there') + '<small>' + (f ? p.line : p.how) + '</small></span><span class="df-go">' + (f ? 'with you' : 'go look') + '</span></button></li>';
+      return '<li><button type="button" class="df-drawer__item sc-petitem" data-pet-go="' + p.ch + '"><span class="df-n"><canvas class="sc-petcv" width="' + 40 * dpr + '" height="' + 40 * dpr + '" aria-hidden="true" data-pet="' + p.id + '"' + (f ? '' : ' data-off') + '></canvas></span><span>' + (f ? p.name : 'Still out there') + '<small>' + (f ? p.line : p.how) + '</small></span><span class="df-go">' + (f ? 'with you' : 'go look') + '</span></button></li>';
     }).join('');
-    var d = dayFound(), sky = has('sb:saelion');
+    BOOK.cvs = $$('#petbook-list canvas[data-pet]');
+    bookPaint(performance.now()); bookStart();
+    var d = tot.sb, k = tot.hmp, sky = has('sb:saelion');
     var day = (sky ? 'Saelion came over from Storeybrook: look up in the night garden. ' : 'Day pets from Storeybrook: ' + d + ' of ' + DAY + '. Find all seven and something appears in the night garden’s sky. ') +
       '<a class="df-link" href="https://stevoblevo.github.io/storeybrook/">' + (d < DAY ? 'Walk the brook' : 'Visit them') + '</a>';
-    $('#petbook-day').innerHTML = day; $('#cross-line').innerHTML = day;
+    var dusk = 'Dusk pets from Hypermetapunk: ' + k + ' of ' + DUSK + '. ', link = '<a class="df-link" href="https://stevoblevo.github.io/hypermetapunk/">' + (k < DUSK ? 'Find them in Hypermetapunk' : 'Visit them') + '</a>';
+    var all = $('#petbook-all');
+    $('#petbook-day').innerHTML = day;
+    $('#petbook-dusk').innerHTML = dusk + (tot.all < ALL ? tot.all + ' of ' + ALL + ' across the three kits. ' : '') + link;
+    all.innerHTML = 'All seventeen, across the three kits: the lattice is open. <a class="df-link" href="https://stevoblevo.github.io/and-so/?lattice=1">Open the lattice</a>'; all.hidden = tot.all < ALL;
+    $('#cross-line').innerHTML = day + ' ' + dusk + link;
     hint.textContent = n === 5 ? 'All five night pets are with you. Move the pointer and they come along.'
       : SPOTS.every(function (sp) { return sp.found; }) ? 'All three spores found, and they follow you now. Two more night pets are further down.'
       : n ? n + ' of 5 found, and they follow you. ' + (function (r) { return r + (r > 1 ? ' spores are' : ' spore is') + ' still in the glasshouse.'; })(SPOTS.filter(function (sp) { return !sp.found; }).length)
       : 'Five night pets live in this world, three of them spores in the glasshouse. Press anything that looks like decoration; whatever you find follows you down.';
   }
   function findPet(id, quiet) {
-    if (has(id)) return false;
-    var v = save(); v.found = v.found || {}; v.found['df:' + id] = Date.now(); put(v);
+    if (!PK.find(id)) return false;
     var p = pet(id), n = count();
     TRAIL.born[id] = 1;
     paintPets();
@@ -119,47 +120,29 @@
   var TRAIL = { pts: {}, born: {}, px: -1, py: -1, at: 0 };
   function aim(e) { TRAIL.px = e.clientX; TRAIL.py = e.clientY; TRAIL.at = performance.now(); }
   addEventListener('pointermove', aim, { passive: true }); addEventListener('pointerdown', aim, { passive: true });
-  function drawPet(cx, p, x, y, t) {
-    if (p.kind === 'eye') {
-      var lx = clamp((TRAIL.px - x) / 300, -1, 1) * 3, ly = clamp((TRAIL.py - y) / 300, -1, 1) * 2, open = (t % 4.2) < 4.05 ? 1 : .15;
-      cx.fillStyle = rgba(p.c, .18); cx.beginPath(); cx.arc(x, y, 20, 0, 6.283); cx.fill();
-      cx.beginPath(); cx.ellipse(x, y, 11, 7 * open, 0, 0, 6.283); cx.fillStyle = 'rgba(233,245,239,.95)'; cx.fill();
-      cx.save(); cx.clip(); cx.fillStyle = rgba(p.c, 1); cx.beginPath(); cx.arc(x + lx, y + ly, 4.6, 0, 6.283); cx.fill();
-      cx.fillStyle = '#07110f'; cx.beginPath(); cx.arc(x + lx, y + ly, 2, 0, 6.283); cx.fill(); cx.restore();
-      cx.strokeStyle = rgba(p.c, .9); cx.lineWidth = 1.4; cx.beginPath(); cx.ellipse(x, y, 11, 7 * open, 0, 0, 6.283); cx.stroke();
-      return;
-    }
-    if (p.kind === 'fly') {
-      var a = .55 + .45 * Math.sin(t * 3.1), g = cx.createRadialGradient(x, y, 0, x, y, 22);
-      g.addColorStop(0, rgba(p.c, .7 * a)); g.addColorStop(1, rgba(p.c, 0));
-      cx.fillStyle = g; cx.beginPath(); cx.arc(x, y, 22, 0, 6.283); cx.fill();
-      cx.fillStyle = 'rgba(255,248,232,' + (.6 + .4 * a) + ')'; cx.beginPath(); cx.arc(x, y, 2.6, 0, 6.283); cx.fill();
-      return;
-    }
-    var pulse = 1 + Math.sin(t * 2.4 + x * .01) * .12, sg = cx.createRadialGradient(x, y, 0, x, y, 18 * pulse);
-    sg.addColorStop(0, rgba(p.c, .5)); sg.addColorStop(1, rgba(p.c, 0));
-    cx.fillStyle = sg; cx.beginPath(); cx.arc(x, y, 18 * pulse, 0, 6.283); cx.fill();
-    cx.save(); cx.translate(x, y); cx.rotate(t * .5); cx.strokeStyle = rgba(p.c, .9); cx.lineWidth = 1.3; cx.lineCap = 'round';
-    for (var i = 0; i < 6; i++) { cx.rotate(1.0472); cx.beginPath(); cx.moveTo(0, 4.5); cx.lineTo(0, 8.5 * pulse); cx.stroke(); }
-    cx.fillStyle = rgba(p.c, 1); cx.beginPath(); cx.arc(0, 0, 2.5, 0, 6.283); cx.fill(); cx.restore();
+  var LOOK = { x: 0, y: 0, size: 40, t: 0, look: 'night', still: false, lookX: undefined, lookY: undefined };   /* one options record, reused every frame */
+  function drawPet(cx, id, x, y, t, size) {
+    LOOK.x = x; LOOK.y = y; LOOK.t = t; LOOK.size = size || 40; LOOK.still = RM.matches;
+    LOOK.lookX = TRAIL.at ? TRAIL.px : undefined; LOOK.lookY = TRAIL.at ? TRAIL.py : undefined;
+    PK.draw(cx, id, LOOK);
   }
   function drawTrail(cx, info) {
-    var list = PETS.filter(function (p) { return has(p.id); }); if (!list.length) return;
+    var list = WITH; if (!list.length) return;
     var fresh = TRAIL.at && performance.now() - TRAIL.at < 6000 && !root.classList.contains('df-reeling'), t = info.t;
     var tx = fresh ? TRAIL.px : info.W * (.5 + .34 * Math.sin(t * .23)), ty = fresh ? TRAIL.py : info.H * (.66 + .08 * Math.sin(t * .51));
     var prev = null;
     list.forEach(function (p, i) {
-      var st = TRAIL.pts[p.id];
-      if (!st) st = TRAIL.pts[p.id] = TRAIL.born[p.id] && p.kind === 'spore' ? spotXY(SPOTS.filter(function (q) { return q.id === p.id; })[0], info).slice() : [tx, ty];
-      if (RM.matches) { st[0] = info.W - 44 - i * 32; st[1] = info.H - 116; }
+      var st = TRAIL.pts[p.id], sp = SPOTS.filter(function (q) { return q.id === p.id; })[0];
+      if (!st) st = TRAIL.pts[p.id] = TRAIL.born[p.id] && sp ? spotXY(sp, info).slice() : [tx, ty];
+      if (RM.matches) { st[0] = info.W - 44 - i * 36; st[1] = info.H - 116; }
       else {
         var gx, gy, want, k;
         if (!prev) { var a = t * 1.3; gx = tx + Math.cos(a) * 30; gy = ty + Math.sin(a) * 18 - 14; want = 0; k = .07; }
-        else { gx = prev[0]; gy = prev[1]; want = 26; k = .22; }
+        else { gx = prev[0]; gy = prev[1]; want = 30; k = .22; }
         var dx = gx - st[0], dy = gy - st[1], d = Math.hypot(dx, dy);
         if (d > want) { var m = (d - want) / d * k; st[0] += dx * m; st[1] += dy * m; }
       }
-      drawPet(cx, p, st[0], st[1] + (RM.matches ? 0 : Math.sin(t * 2 + i * 1.7) * 3), t + i);
+      drawPet(cx, p.id, st[0], st[1] + (RM.matches ? 0 : Math.sin(t * 2 + i * 1.7) * 3), t + i, 42);
       prev = st;
     });
   }
@@ -179,7 +162,7 @@
     }
     if (info.plane === 2 && !has('firefly')) {
       FIREFLY.u = .78 + Math.sin(t * .47) * .05 + Math.sin(t * 1.3) * .012; FIREFLY.v = .3 + Math.sin(t * .71) * .04;
-      drawPet(cx, pet('firefly'), FIREFLY.u * info.W, FIREFLY.v * info.H, t);
+      drawPet(cx, 'firefly', FIREFLY.u * info.W, FIREFLY.v * info.H, t, 60);
     }
   }
   function drawWorld(mode) {
@@ -239,6 +222,7 @@
     current = sec;
     var id = sec.getAttribute('data-theme');
     root.setAttribute('data-theme', id);
+    bookStart();
     Object.keys(knots).forEach(function (k) { if (k === id) knots[k].setAttribute('aria-current', 'page'); else knots[k].removeAttribute('aria-current'); });
     $('#chip-theme').textContent = id;
     var ro = $('#ro-theme'); if (ro) ro.textContent = id;
@@ -297,7 +281,8 @@
     drawer.close(); var sec = doc.getElementById(b.getAttribute('data-pet-go'));
     if (sec) sec.scrollIntoView({ behavior: RM.matches ? 'auto' : 'smooth', block: 'start' });
   });
-  addEventListener('storage', function (e) { if (e.key === PKEY) { SPOTS.forEach(function (sp) { sp.found = has(sp.id); }); paintPets(); } });
+  addEventListener('storage', function (e) { if (e.key === PK.key) { SPOTS.forEach(function (sp) { sp.found = has(sp.id); }); paintPets(); } });
+  new MutationObserver(bookStart).observe(book, { attributes: true, attributeFilter: ['hidden'] });
   paintPets();
 
   /* ---------- the reel: the whole story in seven shots; any touch hands it back ---------- */

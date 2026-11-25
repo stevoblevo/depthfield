@@ -1,6 +1,6 @@
 # Depthfield
 
-A design system for scroll-driven, world-behind-the-words pages: three parallax ridges, generated canvas "worlds", night/day/contrast skins, a cloth to pull and pluck, a guardian, stretch type, a lint for generic pages, and a component bundle exposed as `window.Depthfield` (2.2.0).
+A design system for scroll-driven, world-behind-the-words pages: three parallax ridges, generated canvas "worlds", night/day/contrast skins, a cloth to pull and pluck, a guardian, stretch type, a lint for generic pages, and a component bundle exposed as `window.Depthfield` (2.5.0).
 
 This repo is a read-only export of the Depthfield design system (index format v3) from its Claude artifact:
 <https://claude.ai/artifact/2yngsrbj7HRDirATXbTwMz>
@@ -66,7 +66,7 @@ project/
 
 - **Night pets.** Five are hidden in the showcase: three spores in the glasshouse (chapter 01), Winkle, who comes off the ridge when you wink at the eye (chapter 04), and a firefly drifting over the night garden (chapter 07). Whatever you find follows your pointer through the art; without a pointer, the pets take a slow loop over the near ridge. The **pets** chip in the HUD opens the list, with a hint for each one still out there.
 - **The reel.** "Watch the reel" (in chapter 01, the ribbon, the pets list and the footer) plays the whole story in seven shots, about 47 seconds: it catches the spores, flips a setting, scrubs the weather, winks the eye, turns the lens on and off, and catches the firefly. Any key, wheel or touch hands control back, with every setting as it was. `?autoplay` starts it from a link, which is how the home-screen shortcut works. It never starts on its own.
-- **Shared with Storeybrook.** Both sites save to one `localStorage` key, `crossing:pets` (`df:` and `sb:` ids), on the same origin. Each site counts the other's pets, and finding all seven of Storeybrook's day pets puts Saelion in Depthfield's night sky as a constellation.
+- **Shared with Storeybrook and Hypermetapunk.** The three sites save to one `localStorage` key, `crossing:pets` (`sb:`, `df:` and `hmp:` ids), on the same origin. The pets list counts Storeybrook's seven day pets and Hypermetapunk's five dusk pets beside the five night pets; finding all seven of Storeybrook's puts Saelion in Depthfield's night sky as a constellation, and all seventeen open the lattice in AND SO.
 - Reduced motion keeps the reel's cuts but drops the camera moves, and the pets wait in a row instead of following.
 
 ### Taste
@@ -74,3 +74,18 @@ project/
 Open any page with `?df-taste` in its address and the bundle lists the tells that make a page read as generated (see `project/19-taste.md`). The showcase passes its own check.
 
 After changing anything under `project/`, run `python3 site/build.py` and commit the output.
+
+## 2.3.0: the pen
+
+`project/components/pen.js` adds `Depthfield.looks` (the seven looks as data) and `Depthfield.pen(look)`: a look's inks resolved to RGB and the world drawn on canvas (sky, sun, stars, three ridges, haze, vignette) in any of the four weathers. It works after `bundle.js` or alone, so a single-file game can use it. Versioned builds start here: pin `v/2.3.0/` (`tokens.css`, `bundle.css`, `bundle.js`, `index.d.ts`, `pen.js`); `tools/release.py` never rewrites a published version. Family tasks F2 and F4.
+
+## 2.4.0: the night pets in the kit, and the rim light
+
+`project/components/pets.js` adds `Depthfield.pets`: the five night pets as data (`list`), the shared save (`has`, `find`, `count`, and `total()` across Storeybrook, Depthfield and Hypermetapunk) and `draw(ctx, id, o)`, which draws each pet on canvas, lit like the art, from 24 to 160 px, dancing to a beat with a swing. Storeybrook and Hypermetapunk offer the same object for their pets (family task F9). The showcase now takes its pets, their save and their drawing from it. The pen gains `rim()`, which lights any creature drawn elsewhere as if it stood in the Depthfield night. Pin `v/2.4.0/` (`tokens.css`, `bundle.css`, `bundle.js`, `index.d.ts`, `pen.js`, `pets.js`); `v/2.3.0/` is unchanged.
+
+## 2.5.0: one build with the plate, the pen and the pets
+
+Two lines of work met here. The plate (`Depthfield.plate`, `tint`, `edges`; family task F9a) reached `main` on 23 Nov as "2.3" and was served from `project/`, but was never cut to `v/`. The pen (2.3.0) and the pets (2.4.0) were cut to `v/` on a branch without the plate, and AND SO pins those two folders. 2.5.0 is the first versioned build that holds all three: pin `v/2.5.0/` (`tokens.css`, `bundle.css`, `bundle.js`, `index.d.ts`, `pen.js`, `pets.js`). `v/2.3.0/` and `v/2.4.0/` are unchanged, byte for byte, and `pets.js` in 2.5.0 is the 2.4.0 file.
+
+2.5.0 also gives every look a mood (`Depthfield.looks[i].mood`; family task F10): `lit` for the night faces and High contrast, `still` for the day faces. A game reads it to choose what a look rewards.
+
