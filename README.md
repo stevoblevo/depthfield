@@ -47,7 +47,7 @@ Use the three files from the same [2.5.0 runtime](v/2.5.0/), the first versioned
 - **The pen** (`v/2.5.0/pen.js`, after `bundle.js` or alone): `Depthfield.looks` lists the seven looks as data, each with the mood it rewards in play, and `Depthfield.pen(look)` draws the world: sky, sun, stars, three ridges, haze and four weathers. See [Pen](project/components/Pen/README.md).
 - **The night pets** (`v/2.5.0/pets.js`): `Depthfield.pets` holds the five pets found in the showcase, their place in the family's shared save, and `draw(ctx, id, o)`. See [Pets](project/components/Pets/README.md).
 - **The family's page**: [`family/`](family/index.html) makes one drawing in every look of all three kits.
-- **Saelion Rock**: [`family/rock/`](family/rock/README.md) is one living 3D island with every look of all three kits as a live material over it.
+- **Saelion Rock**: [`family/rock/`](family/rock/README.md) is one living 3D island with every look of all three kits as a live material over it. Live at <https://saelion.co/rock>.
 
 ## Project notes
 

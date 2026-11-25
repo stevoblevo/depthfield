@@ -2,7 +2,9 @@
 
 One small island, drawn once, and made in seventeen materials by the three kits, live. It is a sketch for the family's next step (task F11 in `docs/family.md`): the plate, which makes a still drawing in a look's material, becomes a material that runs on the GPU every frame over a living scene.
 
-Open `family/rock/` on the kits' site, or the self-contained copy: <https://claude.ai/artifact/MZF9FaDkNqypZYd7yfFzqM>.
+Open <https://saelion.co/rock> (short link `/sr`; each version keeps its own address, the first is `/rock/v0.1`), or `family/rock/` on the kits' site. The toolkit shelf at <https://saelion.co/toolkit> has a way in. A self-contained copy is also the Claude artifact <https://claude.ai/artifact/MZF9FaDkNqypZYd7yfFzqM>.
+
+The saelion.co copy is the inline build (`build.py out.html inline`), published from `stevoblevo/saelion-relay-canary` (`rock/`). To publish a new version: bump the number in `src/shell.html`, build inline, add `rock/v<x.y>/index.html` there and replace `rock/index.html`; never rewrite a published version.
 
 ## What you do
 
