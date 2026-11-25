@@ -11,13 +11,13 @@
 <meta property="og:title" content="Saelion Rock">
 <meta property="og:description" content="One small island, drawn once, and made in seventeen materials by the three Saelion toolkits. Walk round it, move the sun, keep the star in the air.">
 <meta property="og:url" content="https://saelion.co/rock">
-<meta property="og:image" content="https://saelion.co/rock/card-0.1.jpg">
+<meta property="og:image" content="https://saelion.co/rock/card-0.2.jpg">
 <meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="The same island three times: folded from paper by day, in neon over a grid floor at dusk, and as glowing contour lines at night.">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://saelion.co/rock/card-0.1.jpg">
+<meta name="twitter:image" content="https://saelion.co/rock/card-0.2.jpg">
 <meta name="twitter:image:alt" content="The same island three times: folded from paper by day, in neon over a grid floor at dusk, and as glowing contour lines at night.">
 <link rel="icon" href="data:,">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -73,7 +73,7 @@ body[data-kit="df"] #look, body[data-kit="deep"] #look { font-weight: 300; lette
 <canvas id="gl" role="img" aria-label="A small island seen from the sea: a seal on a rock balancing a star, a striped lighthouse, pines, a kite, a paper boat and three cranes. Drag sideways to walk round it and up or down to move the sun."></canvas>
 
 <div class="hud" id="top">
-  <div class="plate" id="title"><h1>Saelion Rock <span id="ver">0.1</span></h1><p id="look" aria-live="polite">Origami</p><p id="sub"></p></div>
+  <div class="plate" id="title"><h1>Saelion Rock <span id="ver">0.2</span></h1><p id="look" aria-live="polite">Origami</p><p id="sub"></p></div>
   <div id="tools">
     <button class="btn plate" type="button" id="snd" aria-pressed="false">Sound off</button>
     <button class="btn plate" type="button" id="tune" aria-label="Tuning: 13 steps of the tritave. Switch to the ordinary 12">13 steps</button>
@@ -89,6 +89,7 @@ body[data-kit="df"] #look, body[data-kit="deep"] #look { font-weight: 300; lette
   <p>Day is Storeybrook, dusk is Hypermetapunk, night is Depthfield: one world, and every look a material over it.</p>
   <p><b>Play:</b> tap the star and the seal heads it. Keep it up. The pets on the beach are the kits' own, dancing to the beat.</p>
   <p><a href="https://saelion.co/toolkit">The three toolkits it is made with</a></p>
+  <p>This is 0.2. Each version keeps its address: <a href="https://saelion.co/rock/v0.1">0.1</a></p>
 </div>
 <div class="hud plate" id="toast" role="status" hidden></div>
 <div class="hud" id="bottom">
@@ -159,6 +160,9 @@ float vn(vec2 p){ vec2 i = floor(p), f = fract(p); f = f * f * (3. - 2. * f); re
 float fbm(vec2 p){ float a = .5, s = 0.; for (int i = 0; i < 4; i++) { s += a * vn(p); p = p * 2.03 + 7.1; a *= .5; } return s; }
 float lum(vec3 c){ return dot(c, vec3(.3, .59, .11)); }
 float lin(float d){ return uNear * uFar / (uFar - d * (uFar - uNear)); }
+/* where the eye is looking, for a light that stays over your shoulder */
+vec3 camF(){ vec4 p = uInvVP * vec4(0., 0., 1., 1.); return normalize(p.xyz / p.w - uCam); }
+vec3 shoulderL(){ vec3 F = camF(); return normalize(uLight * .7 + vec3(0., .75, 0.) - F * .55 + cross(F, vec3(0., 1., 0.)) * .45); }
 
 struct S { vec3 alb; float kind; vec3 n; float sh; float d; vec3 w; vec3 dir; float sky; float lit; float dist; };
 S fetch(vec2 uv){
@@ -216,7 +220,7 @@ vec3 mLamp(vec2 uv, vec3 c[8]){
 vec3 mInk(vec2 uv, vec3 c[8]){
   S s = fetch(uv); float tone;
   if (s.sky > .5) { float a = acos(clamp(dot(s.dir, uSun), -1., 1.)); tone = 1. - .5 * smoothstep(.07, .02, a) * step(a, .066) - .9 * smoothstep(.006, .0, abs(a - .066)); tone = min(tone, 1. - .12 * smoothstep(.35, -.05, s.dir.y)); }
-  else { tone = clamp(lum(s.alb) * (.5 + .85 * s.lit) + .1, 0., 1.); if (isSea(s)) tone = clamp(.86 - .16 * step(.72, fract(s.w.z * .8 + .3 * sin(s.w.x * .5) + uTime * .15)) - .3 * (1. - s.sh), 0., 1.); if (isGlow(s)) tone = 1.; }
+  else { tone = clamp(lum(s.alb) * (.5 + .85 * s.lit) + .1, 0., 1.); if (isSea(s)) tone = clamp(.975 - .3 * step(.74, fract(s.w.z * .8 + .3 * sin(s.w.x * .5) + uTime * .15)) * smoothstep(70., 8., s.dist) - .42 * (1. - s.sh), 0., 1.); if (isGlow(s)) tone = 1.; }
   float cs = 4.2 * uPx; vec2 g = uv * uRes / cs; vec2 id = floor(g), f = fract(g) - .5; vec2 jit = (vec2(h21(id + 3.1), h21(id + 7.7)) - .5) * .7;
   float dark = 1. - tone, rad = sqrt(clamp(dark * 1.1, 0., 1.)) * .66; float ink = tone < .27 ? 1. : smoothstep(rad, rad - .16, length(f - jit)) * step(.05, dark);
   vec2 ed = edge2(uv, 1.7 * uPx); ink = max(ink, max(ed.x, ed.y * (isSea(s) ? .0 : .85)) * (1. - s.sky * .0));
@@ -251,13 +255,14 @@ vec3 mPaper(vec2 uv, vec3 c[8]){
 }
 /* Skein silk: cross-stitch. The world is counted out in stitches on the cloth, a running stitch round the edge. */
 vec3 mStitch(vec2 uv, vec3 c[8]){
-  float cs = 7.5 * uPx; vec2 g = uv * uRes / cs; vec2 id = floor(g), f = fract(g); S s = fetch((id + .5) * cs / uRes);
-  vec3 cloth = c[0] * (.95 + .05 * sin(g.x * 6.2832) * sin(g.y * 6.2832)) * (.97 + .05 * vn(g * 3.)), col = cloth; vec3 th = vec3(0.); float on = 0.;
+  float cs = 8. * uPx; vec2 g = uv * uRes / cs; vec2 id = floor(g), f = fract(g); vec2 cu = (id + .5) * cs / uRes; S s = fetch(cu);
+  vec3 cloth = c[0] * (.95 + .05 * sin(g.x * 6.2832) * sin(g.y * 6.2832)) * (.97 + .05 * vn(g * 3.)), col = cloth; vec3 th = vec3(0.); float on = 0., half_ = 0.;
   if (s.sky > .5) { float a = acos(clamp(dot(s.dir, uSun), -1., 1.)); if (a < .07) { th = c[4]; on = 1.; } else if (a < .12 && h21(id) > .55) { th = c[2]; on = 1.; }
     else if (s.dir.y > .12 && fbm(s.dir.xz / (s.dir.y + .25) * 1.4 + uTime * .01) > .62) { th = mix(c[5], c[3], .5); on = 1.; } }
-  else { th = s.alb * (.66 + .5 * s.lit); if (isSea(s)) th = mix(th, c[3] * .9, .25) * (.9 + .15 * step(.5, h21(id + floor(uTime * .7)))); if (isGlow(s)) th = c[4]; on = 1.; }
+  else { th = mix(vec3(lum(s.alb)), s.alb, 1.5) * (.66 + .6 * max(s.lit, .6 * max(dot(s.n, shoulderL()), 0.))); if (isSea(s)) { th = mix(mix(vec3(lum(s.alb)), s.alb, 1.3), c[5], .3) * (.74 + .3 * s.lit) * (.92 + .14 * step(.5, h21(id + floor(uTime * .7)))); half_ = 1.; } if (isGlow(s)) th = c[4];
+    th = mix(th, c[1], .32 * edge2(cu, cs * .45).x * (isSea(s) ? .0 : 1.)); on = 1.; }
   if (on > .5) { float m = step(.1, f.x) * step(f.x, .9) * step(.1, f.y) * step(f.y, .9); float d1 = abs(f.x - f.y), d2 = abs(f.x + f.y - 1.);
-    col = mix(col, th * .74, smoothstep(.2, .11, d1) * m); col = mix(col, th * (1.02 + .1 * (f.y - .5)), smoothstep(.2, .11, d2) * m); }
+    col = mix(col, th * .7, smoothstep(.2, .12, d1) * m * (1. - half_)); col = mix(col, th * (1.04 + .14 * (f.y - .5)), smoothstep(.2, .12, d2) * m); }
   vec2 px = uv * uRes; float bd = min(min(px.x, uRes.x - px.x), min(px.y, uRes.y - px.y)) / uPx; float along = (min(px.x, uRes.x - px.x) < min(px.y, uRes.y - px.y)) ? px.y : px.x;
   col = mix(col, c[2], smoothstep(1.6, .8, abs(bd - 12.)) * step(.42, fract(along / (13. * uPx))));
   return col;
@@ -267,46 +272,62 @@ vec3 mStitch(vec2 uv, vec3 c[8]){
 vec3 hmpBand(float k, vec3 c[8]){ k = clamp(k, 0., 1.08);
   if (k < .34) return mix(c[0], c[1], k / .34); if (k < .52) return mix(c[1], c[2], (k - .34) / .18); if (k < .72) return mix(c[2], c[3], (k - .52) / .2);
   if (k < .9) return mix(c[3], c[4], (k - .72) / .18); return mix(c[4], c[5], (k - .9) / .18); }
-/* Dusk: a neon halftone. Toner-band sky, the banded sun, a grid floor running to the horizon, tube-light outlines, a slipped magenta plate. */
+/* Dusk: a neon halftone. Toner-band sky, the slit sun, a grid floor running to the horizon. Forms are lit twice, warm from the sun and
+   cyan from behind you, in four toner steps with dots between them; one thin tube of light holds each outline. */
 vec3 mNeon(vec2 uv, vec3 c[8]){
-  S s = fetch(uv); vec2 px = uv * uRes / uPx; vec3 col;
+  S s = fetch(uv); vec2 px = uv * uRes / uPx; vec3 col; float sea = isSea(s) ? 1. : 0.;
   if (s.sky > .5) { float k = 1. - clamp(s.dir.y / .75, 0., 1.); col = hmpBand(floor(pow(k, 2.3) * 13.) / 13. * .92, c);
-    vec2 sp = sunP(s.dir, uSun); float a = length(sp), R = .17; float y = sp.y / R; float bars = step(.0, y) + step(y, 0.) * step(.5 - .32 * (-y), fract(-y * 4.6));
-    vec3 sc = mix(c[3], c[5], smoothstep(-.9, .9, y)); col = mix(col, sc, step(a, R) * bars); col += c[3] * smoothstep(.5, .17, a) * .16 * step(R, a); }
+    col += c[6] * stars(s.dir, .01) * smoothstep(.22, .6, s.dir.y) * .8;
+    vec2 sp = sunP(s.dir, uSun); float a = length(sp), R = .17; float y = sp.y / R; float yy = .92 - y;
+    float slit = yy > 0. ? step(.08 + .2 * yy, fract(yy * 5.2)) : 1.;
+    vec3 sc = mix(c[3], c[5], smoothstep(-.7, .8, y)); col = mix(col, sc, step(a, R) * slit); col += c[3] * smoothstep(.5, .17, a) * .16 * step(R, a); }
   else if (isSea(s)) { vec2 gq = s.w.xz / 2.4; vec2 gl = abs(fract(gq) - .5) / fwidth(gq); float line = 1. - min(min(gl.x, gl.y) * .7, 1.); float far = smoothstep(120., 12., s.dist);
-    col = mix(c[1], c[0], smoothstep(8., 70., s.dist)); col += c[3] * line * far * 1.1; col += c[6] * line * far * .35 * uBeat;
+    col = mix(c[1], c[0], smoothstep(8., 70., s.dist)) * mix(.62, 1., s.sh); col += c[3] * line * far * 1.1; col += c[6] * line * far * .35 * uBeat;
     vec2 sp = sunP(reflect(s.dir, vec3(0., 1., 0.)), uSun); col += mix(c[4], c[5], .5) * smoothstep(.2, .0, abs(sp.x)) * smoothstep(.5, .0, sp.y) * .35 * step(.5, fract(s.dist * .5 - uTime * .4)); }
-  else { float t = clamp(lum(s.alb) * (.42 + .85 * s.lit), 0., 1.); if (isGlow(s)) t = 1.;
-    float cs = 6.; vec2 g = px / cs; g.x += .5 * mod(floor(g.y), 2.); float r = length(fract(g) - .5);
-    vec3 dc = t > .72 ? c[5] : t > .5 ? c[4] : t > .3 ? c[3] : c[2]; col = mix(c[0] * .9, dc, step(r, .2 + .32 * t));
+  else { vec3 F = camF(); vec3 Rv = normalize(cross(F, vec3(0., 1., 0.))); float side = dot(uSun, Rv) < 0. ? -1. : 1.; float al = lum(s.alb);
+    vec3 warmD = normalize(Rv * side * .95 - F * .42 + vec3(0., .3, 0.)), coolD = normalize(-Rv * side * .9 - F * .5 + vec3(0., .4, 0.));
+    float warm = max(dot(s.n, warmD), 0.), cool = max(dot(s.n, coolD), 0.);
+    float t = clamp(pow(warm, 1.3) * (.62 + .7 * al) + .1 * al, 0., .999);
+    float cs = 4.5; vec2 g = px / cs; g.x += .5 * mod(floor(g.y), 2.); float r = length(fract(g) - .5) * 1.5;
+    float q = t * 4.; float lv = floor(q) + step(r, fract(q));
+    col = lv < .5 ? mix(c[0], c[1], .75) : lv < 1.5 ? c[2] : lv < 2.5 ? c[3] : lv < 3.5 ? c[4] : c[5];
+    float ck = clamp(pow(cool, 1.5) * (.6 + .6 * al) * 1.3 - .3, 0., 1.); col = mix(col, mix(c[1], c[6], .78), step(r, ck) * step(lv, .5) * .9);
+    col = mix(col, c[0], .3 * smoothstep(.9, -.1, s.w.y));
     if (isGlow(s)) col = mix(c[5], vec3(1.), .4); }
-  vec2 ed = edge2(uv, 1.5 * uPx), eg = edge2(uv, 4.5 * uPx), em = edge2(uv - vec2(3., 2.) * uPx / uRes, 1.5 * uPx);
-  float sea = isSea(s) ? 0. : 1.; col = mix(col, c[7], em.x * .9); col += c[6] * eg.x * .3; col = mix(col, c[6], max(ed.x, ed.y * .55 * sea));
-  col *= 1. - .115 * step(3., mod(px.y, 5.)); float gr = h21(floor(px * .5) + floor(uTime * 12.)); return col * (.9 + .2 * gr);
+  vec2 ed = edge2(uv, 1.25 * uPx), eg = edge2(uv, 3.6 * uPx), em = edge2(uv - vec2(2.5, 1.6) * uPx / uRes, 1.2 * uPx);
+  col = mix(col, c[7], em.x * .5 * (1. - sea)); col += c[6] * eg.x * .2; col = mix(col, c[6], max(ed.x, ed.y * .14 * (1. - sea)));
+  col *= 1. - .1 * step(3., mod(px.y, 5.)); float gr = h21(floor(px * .5) + floor(uTime * 12.)); return col * (.92 + .16 * gr);
 }
-/* Zine: a xerox with one red. Darks go to toner, middle tones to the one spot colour off register, lights stay paper. */
+/* Zine: a xerox with one red. Darks go to toner, the middle to a coarse dot screen, lights stay paper; the one spot colour is kept for
+   the sun, the lamp and whatever was red to begin with, and it sits a little off register. */
+float xTone(S s){
+  if (s.sky > .5) return 1. - .4 * smoothstep(.3, .95, s.dir.y);
+  float sl = max(s.lit, max(dot(s.n, shoulderL()), 0.) * mix(.45, 1., s.sh)); float t = clamp(lum(s.alb) * (.34 + 1.15 * sl) + .06, 0., 1.);
+  if (isSea(s)) t = .95 - .2 * step(.62, fract(s.w.z * .9 + .3 * sin(s.w.x * .7) + uTime * .25)) * smoothstep(60., 6., s.dist) - .42 * (1. - s.sh);
+  if (isGlow(s)) t = 1.; return t; }
+float xRed(S s){
+  if (s.sky > .5) return step(length(sunP(s.dir, uSun)), .12); if (isGlow(s)) return 1.; if (isSea(s) || s.kind > .75) return 0.;
+  return step(.2, s.alb.r - max(s.alb.g, s.alb.b)); }
 vec3 mXerox(vec2 uv, vec3 c[8]){
   vec2 off = vec2(3., 2.) * uPx / uRes; S s = fetch(uv), r = fetch(uv - off); vec2 px = uv * uRes / uPx; float sp = h21(floor(px * .7) + 11.);
-  vec3 col = c[0];
-  float tone = 1., rt = 1.;
-  if (s.sky < .5) { tone = clamp(lum(s.alb) * (.55 + .8 * s.lit) + .1, 0., 1.); if (isSea(s)) tone = .52 + .2 * s.lit + .16 * step(.55, fract(s.w.z * .9 + .3 * sin(s.w.x * .7) + uTime * .25)); if (isGlow(s)) tone = 1.; }
-  else { vec2 q = sunP(s.dir, uSun); if (length(q) < .09) tone = .6; }
-  if (r.sky < .5) { rt = clamp(lum(r.alb) * (.55 + .8 * r.lit) + .1, 0., 1.); if (isSea(r)) rt = .6; if (isGlow(r)) rt = 1.; } else { vec2 q = sunP(r.dir, uSun); if (length(q) < .09) rt = .6; }
-  if (s.sky < .5 && tone >= .74) col = c[3];
-  col = mix(col, c[2], step(.44, rt) * step(rt, .74));
-  col = mix(col, c[1], step(tone, .44) * step(.03, 1. - s.sky + step(tone, .0)));
-  vec2 ed = edge2(uv, 1.9 * uPx); col = mix(col, c[1], max(ed.x, ed.y * (isSea(s) ? 0. : .8)));
-  col = mix(col, c[1], step(.992, sp) * .7); col = mix(col, c[0], step(sp, .008) * .8);
+  float n = fbm(px * .35); float tone = xTone(s) + (n - .5) * .14; if (s.sky < .5 && xRed(s) > .5) tone = max(tone, .8);
+  float ang = .785; mat2 R = mat2(cos(ang), -sin(ang), sin(ang), cos(ang)); float dr = length(fract(R * (px / 5.2)) - .5);
+  float mid = smoothstep(.74, .3, tone); float toner = max(step(tone, .3), step(dr, .64 * sqrt(mid)) * step(tone, .74));
+  vec3 col = c[0] * (.97 + .05 * n); col = mix(col, c[2], xRed(r)); col = mix(col, c[1], toner);
+  vec2 ed = edge2(uv, 1.7 * uPx); col = mix(col, c[1], max(ed.x, ed.y * (isSea(s) ? 0. : .6)));
+  col = mix(col, c[1], step(.996, sp) * .7); col = mix(col, c[0], step(sp, .006) * .8);
   float streak = step(.992, h21(vec2(floor(px.x / 2.), 3.))); return mix(col, c[1], streak * .08) * (.96 + .06 * h21(floor(px) + floor(uTime * 8.)));
 }
-/* High contrast: a solid cut. White on black with an acid keyline; nothing is lost and nothing shimmers. */
+/* High contrast: a solid cut. Every facet is either ink or void, cut by one fixed light from over your shoulder; a single acid keyline
+   holds the outline, the sea is drawn in lines of one weight; nothing is lost and nothing shimmers. */
 vec3 mSolid(vec2 uv, vec3 c[8]){
-  S s = fetch(uv); vec3 col = c[0];
-  if (s.sky > .5) { col = mix(col, c[1], disc(s.dir, uSun, .075)); }
-  else if (isSea(s)) { col = mix(c[0], c[1], step(.94, fract(s.w.z * .45 + .25 * sin(s.w.x * .6) + uTime * .12)) * smoothstep(70., 16., s.dist)); }
-  else { col = mix(c[0], c[1], step(.16, s.lit)); if (isGlow(s)) col = c[2]; }
-  vec2 ed = edge2(uv, 1.6 * uPx), ek = edge2(uv, 4. * uPx); float inner = ed.y * (isSea(s) ? 0. : 1.);
-  col = mix(col, lum(col) > .5 ? c[0] : c[1], inner); return mix(col, c[2], max(ek.x * (1. - s.sky), ed.x) * (isSea(s) ? 0. : 1.));
+  S s = fetch(uv); vec3 col = c[0]; float sea = isSea(s) ? 1. : 0.;
+  if (s.sky > .5) { col = mix(col, c[1], disc(s.dir, uSun, .085)); }
+  else if (isSea(s)) { float iso = s.w.z * .45 + .25 * sin(s.w.x * .6) + uTime * .12; float line = 1. - smoothstep(.7, 1.7, abs(fract(iso) - .5) / fwidth(iso));
+    col = mix(c[0], c[1], line * smoothstep(46., 14., s.dist) * step(.5, s.sh)); }
+  else { float v = max(dot(s.n, shoulderL()), 0.) * (.5 + .95 * lum(s.alb)) * mix(.35, 1., s.sh); col = mix(c[0], c[1], step(.34, v)); if (isGlow(s)) col = c[2]; }
+  vec2 ed = edge2(uv, 1.5 * uPx); col = mix(col, c[0], ed.y * (1. - sea) * (1. - s.sky) * step(.5, lum(col)) * (isGlow(s) ? 0. : 1.));
+  return mix(col, c[2], ed.x * (1. - sea));
 }
 
 /* ===== Depthfield ===== */
@@ -327,9 +348,10 @@ vec3 mRidge(vec2 uv, vec3 c[8], float wx){
     col = mix(col, c[2], smoothstep(.45, .06, a) * .3); col = mix(col, c[2], smoothstep(.07, .064, a)); col += vec3(1.) * stars(s.dir, .014) * nightly; }
   else { float t = clamp((s.dist - (uFocus - 6.)) / 11.5, 0., 1.); if (isSea(s)) t = clamp((s.dist - (uFocus - 9.)) / 60., 0., 1.);
     float b = floor(t * 2.999); vec3 plane = b < .5 ? c[5] : b < 1.5 ? c[4] : c[3]; float inb = fract(t * 2.999);
-    col = plane * (.74 + .46 * lum(s.alb)); col = mix(col, c[1], (t * .5 + inb * .2));
+    col = plane * (.56 + .8 * lum(s.alb)); col = mix(col, c[1], (t * .5 + inb * .2));
     if (isSea(s)) { col = mix(c[1], c[4], .45 + .25 * t); col += c[6] * step(.93, fract(s.w.z * .7 + .2 * sin(s.w.x) + uTime * .15)) * .14 * smoothstep(80., 10., s.dist); }
-    col += c[6] * pow(s.lit, 2.) * .42 * (1. - t * .6); vec2 ed = edge2(uv, 1.4 * uPx); col = mix(col, c[6], ed.x * .5 * step(.02, s.lit) ); col *= 1. - .18 * ed.y * (isSea(s) ? 0. : 1.);
+    float rl = max(s.lit, .55 * max(dot(s.n, shoulderL()), 0.) * s.sh); col += c[6] * pow(rl, 1.6) * .6 * (1. - t * .6) * (isSea(s) ? .6 : 1.); col *= isSea(s) ? 1. : mix(.72, 1., s.sh);
+    vec2 ed = edge2(uv, 1.4 * uPx); col = mix(col, c[6], ed.x * .72 * (isSea(s) ? .4 : 1.)); col *= 1. - .3 * ed.y * (isSea(s) ? 0. : 1.);
     if (isGlow(s)) col = mix(c[2], vec3(1.), .3); }
   vec3 tint; float m = df_wx(uv, wx, tint); col = mix(col, wx > 2.5 ? c[7] : wx > 1.5 ? vec3(.86, .16, .2) : c[2], m * (wx > 2.5 ? .9 : .7));
   vec2 v = uv - .5; return col * (1. - .5 * dot(v, v));

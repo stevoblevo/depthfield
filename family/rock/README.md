@@ -6,6 +6,11 @@ Open <https://saelion.co/rock> (short link `/sr`; each version keeps its own add
 
 The saelion.co copy is the inline build (`build.py out.html inline`), published from `stevoblevo/saelion-relay-canary` (`rock/`). To publish a new version: bump the number in `src/shell.html`, build inline, add `rock/v<x.y>/index.html` there and replace `rock/index.html`; never rewrite a published version.
 
+## Versions
+
+- **0.2** (25 Nov 2026). Bleve: "a few looks still need work, mostly Hypermetapunk." The three Hypermetapunk materials are rewritten. Dusk lights each form twice, warm from the sun's side and cyan from the other, in four toner steps with dots between them, under one thin tube line; the sun has its slits. Zine keeps the one red for the sun, the lamp and what was red to begin with, and puts the middle tones through a coarse dot screen instead of flooding the sea with the spot colour. High contrast cuts every facet to ink or void by one light that stays over your shoulder, with a single acid keyline and sea lines of one weight. Also: Skein silk is full crosses on land and half stitches on the sea, with stronger thread; Ink Blot's sea is quiet; the four Depthfield weathers pick the island out with a rim and a shadow. A new helper, `shoulderL()`, is a light tied to the eye, for looks that must read whichever way the sun is.
+- **0.1** (25 Nov 2026). First version. Kept at <https://saelion.co/rock/v0.1>.
+
 ## What you do
 
 - Drag sideways to walk round the island. Pinch or use the wheel to come nearer.
