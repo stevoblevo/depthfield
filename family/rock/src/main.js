@@ -119,7 +119,10 @@
     kick(t) { const C = this.ctx, o = C.createOscillator(), g = C.createGain(); o.frequency.setValueAtTime(130, t); o.frequency.exponentialRampToValueAtTime(42, t + .16); this.env(g, t, .004, .3, .5); o.connect(g); g.connect(this.out); o.start(t); o.stop(t + .4); },
     hat(t, v) { const C = this.ctx, n = C.createBufferSource(), b = C.createBuffer(1, 2205, 44100), d = b.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / d.length); n.buffer = b; const f = C.createBiquadFilter(), g = C.createGain(); f.type = 'highpass'; f.frequency.value = 6500; g.gain.value = v || .07; n.connect(f); f.connect(g); g.connect(this.out); n.start(t); },
     mood(m) { this.moodNow = m; this.bpm = m === 'impact' ? 96 : m === 'lit' ? 66 : 74; },
-    tick() { if (!this.on || !this.ctx) return; const C = this.ctx, sixteenth = () => 60 / this.bpm / 2; while (this.next < C.currentTime + .25) { const s = this.step, t = this.next, bar = Math.floor(s / 8), i = s % 8, m = this.moodNow;
+    tick() { if (!this.on || !this.ctx) return; const C = this.ctx, sixteenth = () => 60 / this.bpm / 2;
+      /* 0.3: if the scheduler fell behind the clock (a hidden tab, a locked phone), skip what was missed instead of firing it all at once */
+      if (this.next < C.currentTime - .1) this.next = C.currentTime + .05;
+      while (this.next < C.currentTime + .25) { const s = this.step, t = this.next, bar = Math.floor(s / 8), i = s % 8, m = this.moodNow;
         const roots = this.norm ? [0, 5, 7, 3] : [0, 6, 10, 4], root = roots[Math.floor(bar / 2) % 4], ch = this.chord(root), sc = this.scale();
         if (i % 2 === 0) { this.beatAt = t; this.beatLen = sixteenth() * 2; }
         if (i === 0 && bar % 2 === 0) this.pad(ch.slice(0, 3), t, sixteenth() * 16, m === 'lit' ? .06 : .04);
@@ -145,6 +148,8 @@
     LOOKS[DEEP].btn.setAttribute('aria-label', st.deep ? 'Deep' : 'Deep, locked: cross the day to open it'); if (l.btn.scrollIntoView && !still) l.btn.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' }); }
   function axes() { const s = sky(st.tod), hour = 12 + st.tod * 11.5, hh = Math.floor(hour) % 24, mm = Math.floor((hour % 1) * 60), seen = Object.keys(st.seen).length;
     const gap = innerWidth < 520 ? ' · ' : '   '; elAx.textContent = ['x ' + String(Math.round(((st.yaw * 180 / Math.PI) % 360 + 360) % 360)).padStart(3, '0') + '°', 'depth ' + st.dist.toFixed(0), 'time ' + String(hh).padStart(2, '0') + ':' + String(mm).padStart(2, '0'), 'look ' + String(st.look + 1).padStart(2, '0') + '/17', (innerWidth < 520 ? 'mem ' : 'memory ') + seen + '/16'].join(gap); }
+  /* 0.3: sound sleeps while the page is hidden and wakes where it is when the page comes back */
+  document.addEventListener('visibilitychange', () => { if (!AU.ctx || !AU.on) return; if (document.hidden) AU.ctx.suspend(); else { AU.ctx.resume(); AU.next = AU.ctx.currentTime + .05; } });
   $('#snd').addEventListener('click', e => { AU.on = !AU.on; if (AU.on) { AU.start(); AU.mood(LOOKS[st.look].mood); } else if (AU.ctx) AU.ctx.suspend(); e.currentTarget.setAttribute('aria-pressed', String(AU.on)); e.currentTarget.textContent = AU.on ? 'Sound on' : 'Sound off'; });
   $('#tune').addEventListener('click', e => { AU.norm = !AU.norm; e.currentTarget.textContent = AU.norm ? '12 steps' : '13 steps'; e.currentTarget.setAttribute('aria-label', AU.norm ? 'Tuning: the ordinary 12 steps of the octave. Switch to 13 steps of the tritave' : 'Tuning: 13 steps of the tritave. Switch to the ordinary 12'); });
   $('#up').addEventListener('click', () => { st.todT = Math.max(0, st.todT - .09); st.pinned = false; st.travel = null; }); $('#down').addEventListener('click', () => { st.todT = Math.min(1, st.todT + .09); st.pinned = false; st.travel = null; });

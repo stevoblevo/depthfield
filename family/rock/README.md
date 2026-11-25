@@ -8,8 +8,20 @@ The saelion.co copy is the inline build (`build.py out.html inline`), published 
 
 ## Versions
 
+- **0.3** (25 Nov 2026). A sound fix found by recording the music offline (the first time anyone measured it). With sound on and the page hidden (a locked phone, another tab), the scheduler stopped while the audio clock ran on, and coming back fired every missed note at once: 170 oscillators after 30 s away. Now the sound sleeps while the page is hidden and the scheduler skips what it missed. Levels measured: peak about -6 dBFS, no clipping. Nothing else changed; the card is still `card-0.2.jpg`.
 - **0.2** (25 Nov 2026). Bleve: "a few looks still need work, mostly Hypermetapunk." The three Hypermetapunk materials are rewritten. Dusk lights each form twice, warm from the sun's side and cyan from the other, in four toner steps with dots between them, under one thin tube line; the sun has its slits. Zine keeps the one red for the sun, the lamp and what was red to begin with, and puts the middle tones through a coarse dot screen instead of flooding the sea with the spot colour. High contrast cuts every facet to ink or void by one light that stays over your shoulder, with a single acid keyline and sea lines of one weight. Also: Skein silk is full crosses on land and half stitches on the sea, with stronger thread; Ink Blot's sea is quiet; the four Depthfield weathers pick the island out with a rim and a shadow. A new helper, `shoulderL()`, is a light tied to the eye, for looks that must read whichever way the sun is.
 - **0.1** (25 Nov 2026). First version. Kept at <https://saelion.co/rock/v0.1>.
+
+## Open, from the 25 Nov Dora pass
+
+Take one: put your name on it in `docs/family.md` (F11 row) or open a branch.
+
+- **Repin "One drawing, sixteen looks" to Hypermetapunk 0.5.2** once <https://github.com/stevoblevo/hypermetapunk/pull/8> is merged. `family/index.html` loads `/hypermetapunk/v/0.5.0/plate.js`, so the family page keeps the old Zine (every middle tone in red) until it is repinned. Do not repin before that merge: `/v/0.5.2/` does not exist on the kits' site until then.
+- **A real iPhone.** WebKit 26.6 (Safari's engine, on Linux) runs 0.3 with WebGL 2, the pets, every look and touch drags, and no console errors or warnings. A real phone has not run it, and frame rate on a phone GPU is unknown. Bleve's tap.
+- **Listen.** The sequencer was rendered offline to a file (still, impact and lit in the tritave, then still in 12 steps, then the 13-touch juggle climb). Nobody has listened to it yet. Bleve's ears.
+- **F11**: move the materials into the kits as `media.js`, so a game can wear a look without this page.
+- **A third tuning**: Bleve's project brief names Bohlen-Pierce 13 and 10-tone equal temperament side by side. The sound button offers 13 and 12; 10 would be one more step on the same button (`AU.f`, `AU.scale`, `AU.chord`).
+- **Testing note**: the help panel covers the middle of the screen for the first 11 seconds, so a scripted drag there hits the panel, not the island.
 
 ## What you do
 
