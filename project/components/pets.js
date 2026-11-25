@@ -1,4 +1,4 @@
-/* Depthfield 2.4.0 · pets: the five night pets as data and as drawings, and the family's shared pets save (family task F9).
+/* Depthfield 2.5.1 · pets: the five night pets as data and as drawings, and the family's shared pets save (family task F9).
    Depthfield.pets.list            the five night pets: { id, name, line, how, where }
    Depthfield.pets.has(id)         found yet? (find(id) records it; count() counts Depthfield's own)
    Depthfield.pets.total()         found across the family from the same save: Storeybrook sb (7), Depthfield df (5),
@@ -12,7 +12,7 @@
   'use strict';
   var D = w.Depthfield = w.Depthfield || {};
   if (D.pets) return;
-  var VERSION = '2.4.0', KEY = 'crossing:pets', KIT = 'df', SIZE = { sb: 7, df: 5, hmp: 5 }, HOME = 'https://stevoblevo.github.io/depthfield/';
+  var VERSION = '2.5.1', KEY = 'crossing:pets', KIT = 'df', SIZE = { sb: 7, df: 5, hmp: 5 }, HOME = 'https://stevoblevo.github.io/depthfield/';
   var LIST = [
     { id: 'glass-bloom', name: 'Glass bloom', line: 'It floated off the haze to follow you.', how: 'Somewhere in the haze over the glasshouse.', where: HOME + '?theme=night' },
     { id: 'mint-spore', name: 'Mint spore', line: 'It left the near ridge for your pointer.', how: 'On the nearest ridge of the glasshouse.', where: HOME + '?theme=night' },
@@ -22,7 +22,7 @@
   ];
 
   /* ---------- the shared save ---------- */
-  var held = null;   /* a copy kept here as well, for when storage is out of reach (a private window, blocked site data) */
+  var held = null, pending = {};   /* a copy kept here as well, for when storage is out of reach (a private window, blocked site data) */
   function read() {
     var raw, v = null;
     try { raw = w.localStorage.getItem(KEY); } catch (e) { raw = undefined; }
@@ -30,9 +30,14 @@
     else if (raw) { try { v = JSON.parse(raw); } catch (e) { v = null; } }   /* a save that does not parse starts again */
     if (!v || typeof v !== 'object') v = {};
     if (!v.found || typeof v.found !== 'object') v.found = {};
+    Object.keys(pending).forEach(function (k) { if (!v.found[k]) v.found[k] = pending[k]; });
     return v;
   }
-  function write(v) { held = v; try { w.localStorage.setItem(KEY, JSON.stringify(v)); } catch (e) {} }
+  function write(v, key) {
+    held = v;
+    try { w.localStorage.setItem(KEY, JSON.stringify(v)); pending = {}; }
+    catch (e) { pending[key] = v.found[key]; }
+  }
   function bare(id) { id = String(id == null ? '' : id); return id.indexOf(KIT + ':') === 0 ? id.slice(KIT.length + 1) : id; }
   function known(id) { for (var i = 0; i < LIST.length; i++) if (LIST[i].id === id) return true; return false; }
   /* 'winkle' and 'df:winkle' are the same pet; another kit's id ('sb:saelion') is looked up as given */
@@ -42,7 +47,7 @@
     if (!known(b)) return false;
     v = read();
     if (v.found[KIT + ':' + b]) return false;
-    v.found[KIT + ':' + b] = Date.now(); write(v);
+    v.found[KIT + ':' + b] = Date.now(); write(v, KIT + ':' + b);
     return true;
   }
   function count() { var f = read().found, n = 0, i; for (i = 0; i < LIST.length; i++) if (f[KIT + ':' + LIST[i].id]) n++; return n; }

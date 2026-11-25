@@ -1,5 +1,5 @@
 {
-  "latest": "2.5.0",
+  "latest": "2.5.1",
   "versions": {
     "2.3.0": {
       "tokens.css": "b14b55f7125d8ca8f78213d277d60ebe09d8ee2b6b22368eefb8b002b9b84f23",
@@ -34,6 +34,19 @@
       "pen.js": "f47031cff33c6951bea61058730ed02ddbe338b881c91e15feee0f6197cbf604",
       "pets.js": "6c7342a2b049fbcbce49aedb2c08c2dbbd3e7ce4f3bc93dbb1090093d9c612a0",
       "index.html": "2a4225668f4e03b59222702effc32e6f918c42baebb4149c346f989c6c4779c2",
+      "site/hooks.css": "3affbc0a2648e65c757a079db6d73f3f71ddcfc089007111edbbe0ddfe6495d4",
+      "site/immersive.js": "4ffc49752d1279855660f39cf542e258428fd354965658f1af972012788cb41a",
+      "site/showcase.css": "7c5da851f1073ff9293175763eb2b822c44e9ff827601d55afa28bfa18dbcfba",
+      "site/showcase.js": "3ac9d29689ea8d51601fdbaa2dbccad3ce7702fddfdd72009b6f5e46acde1f14"
+    },
+    "2.5.1": {
+      "tokens.css": "b14b55f7125d8ca8f78213d277d60ebe09d8ee2b6b22368eefb8b002b9b84f23",
+      "bundle.css": "58518e04bd7badc5aeabe22b755fb5c98ace8f6dbf00d2eaa4514c621b2575f6",
+      "bundle.js": "f939ba8e4843cb0afb9e6cb9495bee01ca55eaea895f1b2a86b28bde04cda46c",
+      "index.d.ts": "fecba0894f4d6183d1417c613271be7431dbf2f85e4b853e7dd0a985fc5d7001",
+      "pen.js": "f47031cff33c6951bea61058730ed02ddbe338b881c91e15feee0f6197cbf604",
+      "pets.js": "d28dee39b99b7069ae9dce35b74f4e9395ad219b1ed4b31e94f68e1e4433d8a4",
+      "index.html": "198e92e4c7cf6d1ef5beb9eba337e4f4f5ba830be6008f421821cb61f7f8404c",
       "site/hooks.css": "3affbc0a2648e65c757a079db6d73f3f71ddcfc089007111edbbe0ddfe6495d4",
       "site/immersive.js": "4ffc49752d1279855660f39cf542e258428fd354965658f1af972012788cb41a",
       "site/showcase.css": "7c5da851f1073ff9293175763eb2b822c44e9ff827601d55afa28bfa18dbcfba",

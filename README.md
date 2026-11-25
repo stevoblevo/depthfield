@@ -1,5 +1,8 @@
 <img src="site/icons/icon-192.png" alt="Depthfield mark" width="84">
 
+
+**Patch 2.5.1:** Newly found night pets stay visible when browser storage is full or temporarily unwritable. Pending discoveries are saved alongside other kits’ progress on the next successful find. [Open the 2.5.1 showcase](https://stevoblevo.github.io/depthfield/v/2.5.1/).
+
 # Depthfield
 
 A dark-first design system for scroll stories. The content stays in front; generated mountains, weather and a quiet HUD give it depth.
