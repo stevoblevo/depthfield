@@ -87,6 +87,8 @@ After changing anything under `project/`, run `python3 site/build.py` and commit
 
 Two lines of work met here. The plate (`Depthfield.plate`, `tint`, `edges`; family task F9a) reached `main` on 23 Nov as "2.3" and was served from `project/`, but was never cut to `v/`. The pen (2.3.0) and the pets (2.4.0) were cut to `v/` on a branch without the plate, and AND SO pins those two folders. 2.5.0 is the first versioned build that holds all three: pin `v/2.5.0/` (`tokens.css`, `bundle.css`, `bundle.js`, `index.d.ts`, `pen.js`, `pets.js`). `v/2.3.0/` and `v/2.4.0/` are unchanged, byte for byte, and `pets.js` in 2.5.0 is the 2.4.0 file.
 
+Each version keeps its own showcase too: open `v/2.5.0/` for the page as it shipped, running on that version's runtime, and `v/2.4.0/` or `v/2.3.0/` for the ones before it (back-filled from their branches). `tools/release.py` freezes the page with the release and refuses to rewrite it; `tools/landing.py` does the back-filling.
+
 2.5.0 also gives every look a mood (`Depthfield.looks[i].mood`; family task F10): `lit` for the night faces and High contrast, `still` for the day faces. A game reads it to choose what a look rewards.
 
 ## The family's page
