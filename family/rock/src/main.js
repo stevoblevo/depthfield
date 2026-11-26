@@ -87,7 +87,7 @@
   function wear(i, c) { if (i === st.look) return; st.from = st.wiping && st.wipe < .5 ? st.from : st.look;
     st.look = i; st.wipe = still ? 1 : 0.0001; st.wiping = !still; st.wipeC = c || st.wipeC; if (still) st.from = i;
     const l = LOOKS[i]; if (l.kit !== 'deep') { st.seen[l.kit + ':' + l.id] = 1; st.crossed[l.kit] = 1; if (!st.deep && st.crossed.sb && st.crossed.hmp && st.crossed.df) { st.deep = true; toast('You crossed the day. The deep look is open.'); } save(); }
-    hud(); if (AU.on) AU.mood(l.mood); }
+    hud(); if (AU.on) AU.mood(l.mood, l.kit); }
   function pick(i) { const l = LOOKS[i]; if (i === DEEP) { if (!st.deep) { toast('The deep look opens when you have crossed the day: drag the sun down through dusk into night.'); return; } st.pinned = true; wear(i, [.5, .5]); return; }
     st.pinned = false; st.cur[l.kit] = i; if (kitAt(st.todT) !== l.kit) st.todT = K[l.kit].tod; st.travel = kitAt(st.tod) !== l.kit ? l.kit : null; wear(i, sunUV()); }
 
@@ -102,39 +102,7 @@
     return [(m[0] * p[0] + m[4] * p[1] + m[8] * p[2] + m[12]) / w * .5 + .5, (m[1] * p[0] + m[5] * p[1] + m[9] * p[2] + m[13]) / w * .5 + .5]; }
   function sunUV() { if (!cam) return [.5, .5]; const s = sky(st.tod), p = project(s.sun[1] > -.08 ? s.sun : s.moon); return p ? [Math.max(-.2, Math.min(1.2, p[0])), Math.max(-.2, Math.min(1.2, p[1]))] : [.5, .3]; }
 
-  /* ---------- sound: one sequence, three arrangements. 13 steps of the tritave (Bohlen-Pierce), the ordinary 12, or 10 equal steps of the octave (0.4) ---------- */
-  const AU = { on: false, ctx: null, tun: 13, get norm() { return this.tun !== 13; }, bpm: 72, moodNow: 'still', step: 0, next: 0, beatAt: 0, beatLen: .8,
-    f(n) { return this.tun === 13 ? 196 * Math.pow(3, n / 13) : 196 * Math.pow(2, n / this.tun); },
-    scale() { return this.tun === 12 ? [0, 2, 4, 7, 9, 12, 14, 16, 19] : this.tun === 10 ? [0, 2, 3, 4, 6, 7, 9, 10, 12, 13, 14, 16] : [0, 2, 3, 4, 6, 7, 9, 10, 12, 13, 15, 16]; },
-    /* 10 steps: a neutral triad, 360 and 720 cents, between minor and major; odd, but easy on the ear */
-    chord(root) { return (this.tun === 12 ? [0, 4, 7, 12] : this.tun === 10 ? [0, 3, 6, 10] : [0, 6, 10, 13]).map(x => x + root); },
-    start() { if (this.ctx) { this.ctx.resume(); return; } const C = this.ctx = new (window.AudioContext || window.webkitAudioContext)(); this.out = C.createGain(); this.out.gain.value = 0; const comp = C.createDynamicsCompressor();
-      const dl = C.createDelay(1.5), fb = C.createGain(), wet = C.createGain(); dl.delayTime.value = .42; fb.gain.value = .34; wet.gain.value = .26; this.out.connect(comp); this.out.connect(dl); dl.connect(fb); fb.connect(dl); dl.connect(wet); wet.connect(comp); comp.connect(C.destination);
-      this.out.gain.linearRampToValueAtTime(.55, C.currentTime + 1.2); this.next = C.currentTime + .1; this.step = 0; },
-    env(g, t, a, d, peak) { g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(peak, t + a); g.gain.exponentialRampToValueAtTime(0.0001, t + a + d); },
-    pluck(n, t, v) { const C = this.ctx, o = C.createOscillator(), f = C.createBiquadFilter(), g = C.createGain(); o.type = this.norm ? 'triangle' : 'square'; o.frequency.value = this.f(n); f.type = 'lowpass'; f.frequency.setValueAtTime(2600, t); f.frequency.exponentialRampToValueAtTime(500, t + .5); f.Q.value = 1.2;
-      this.env(g, t, .006, .7, (v || .16) * (this.norm ? 1.3 : .8)); o.connect(f); f.connect(g); g.connect(this.out); o.start(t); o.stop(t + .8); },
-    pad(ns, t, len, v) { const C = this.ctx; for (const n of ns) for (const det of [-4, 4]) { const o = C.createOscillator(), g = C.createGain(), f = C.createBiquadFilter(); o.type = 'triangle'; o.frequency.value = this.f(n) / (this.norm ? 2 : 3); o.detune.value = det; f.type = 'lowpass'; f.frequency.value = 850;
-        g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(v || .045, t + len * .4); g.gain.linearRampToValueAtTime(0.0001, t + len * 1.15); o.connect(f); f.connect(g); g.connect(this.out); o.start(t); o.stop(t + len * 1.2); } },
-    bell(n, t, v) { const C = this.ctx, base = this.f(n), parts = this.norm ? [1, 2, 3, 4.2, 5.4] : [1, 9 / 7, 5 / 3, 7 / 3, 3, 5]; parts.forEach((p, i) => { const o = C.createOscillator(), g = C.createGain(); o.type = 'sine'; o.frequency.value = base * p; this.env(g, t, .004, 2.6 / (1 + i * .5), (v || .12) / (1 + i * .9)); o.connect(g); g.connect(this.out); o.start(t); o.stop(t + 3); }); },
-    kick(t) { const C = this.ctx, o = C.createOscillator(), g = C.createGain(); o.frequency.setValueAtTime(130, t); o.frequency.exponentialRampToValueAtTime(42, t + .16); this.env(g, t, .004, .3, .5); o.connect(g); g.connect(this.out); o.start(t); o.stop(t + .4); },
-    hat(t, v) { const C = this.ctx, n = C.createBufferSource(), b = C.createBuffer(1, 2205, 44100), d = b.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / d.length); n.buffer = b; const f = C.createBiquadFilter(), g = C.createGain(); f.type = 'highpass'; f.frequency.value = 6500; g.gain.value = v || .07; n.connect(f); f.connect(g); g.connect(this.out); n.start(t); },
-    mood(m) { this.moodNow = m; this.bpm = m === 'impact' ? 96 : m === 'lit' ? 66 : 74; },
-    tick() { if (!this.on || !this.ctx) return; const C = this.ctx, sixteenth = () => 60 / this.bpm / 2;
-      /* 0.3: if the scheduler fell behind the clock (a hidden tab, a locked phone), skip what was missed instead of firing it all at once */
-      if (this.next < C.currentTime - .1) this.next = C.currentTime + .05;
-      while (this.next < C.currentTime + .25) { const s = this.step, t = this.next, bar = Math.floor(s / 8), i = s % 8, m = this.moodNow;
-        const roots = this.tun === 12 ? [0, 5, 7, 3] : this.tun === 10 ? [0, 4, 6, 3] : [0, 6, 10, 4], root = roots[Math.floor(bar / 2) % 4], ch = this.chord(root), sc = this.scale();
-        if (i % 2 === 0) { this.beatAt = t; this.beatLen = sixteenth() * 2; }
-        if (i === 0 && bar % 2 === 0) this.pad(ch.slice(0, 3), t, sixteenth() * 16, m === 'lit' ? .06 : .04);
-        if (m === 'still') { if (i % 2 === 0) this.pluck(ch[(i / 2 + bar) % 4], t, .15); if (i === 4 && bar % 4 === 3) this.bell(ch[2], t, .1); }
-        else if (m === 'impact') { if (i === 0 || i === 4) this.kick(t); if (i % 2 === 1) this.hat(t, .06); this.pluck(ch[[0, 2, 1, 3, 2, 0, 3, 1][i]] + (i > 5 ? this.tun : 0), t, .13); if (i === 0) this.pluck(ch[0] - this.tun, t, .2); }
-        else { if (i === 0) this.pluck(ch[0] - this.tun, t, .17); if (i === 3 || (i === 6 && bar % 2)) this.bell(ch[(bar + i) % 4] + this.tun, t, .085); if (i === 5) this.pluck(sc[(bar * 5 + 2) % sc.length] + root, t, .09); }
-        this.step++; this.next += sixteenth(); } },
-    note(k) { if (!this.on || !this.ctx) return; this.bell(Math.round(k * this.tun / 13) % 27, this.ctx.currentTime + .01, .17); },
-    ring(y) { if (!this.on || !this.ctx) return; const sc = this.scale(); this.bell(sc[Math.max(0, Math.min(sc.length - 1, Math.round(y * (sc.length - 1))))] + this.tun, this.ctx.currentTime + .01, .16); },
-    beat() { if (this.on && this.ctx) { const ph = (this.ctx.currentTime - this.beatAt) / this.beatLen; return ph >= 0 ? Math.exp(-3.5 * ph) : 0; } const len = 60 / 74, ph = (performance.now() / 1000 % len) / len; return still ? 0 : Math.exp(-3.5 * ph) * .6; }
-  };
+/*SOUND*/
 
   /* ---------- HUD ---------- */
   const elLook = $('#look'), elSub = $('#sub'), elAx = $('#axes'), elChips = $('#chips'), elToast = $('#toast');
@@ -151,7 +119,7 @@
     const gap = innerWidth < 520 ? ' · ' : '   '; elAx.textContent = ['x ' + String(Math.round(((st.yaw * 180 / Math.PI) % 360 + 360) % 360)).padStart(3, '0') + '°', 'depth ' + st.dist.toFixed(0), 'time ' + String(hh).padStart(2, '0') + ':' + String(mm).padStart(2, '0'), 'look ' + String(st.look + 1).padStart(2, '0') + '/17', (innerWidth < 520 ? 'mem ' : 'memory ') + seen + '/16'].join(gap); }
   /* 0.3: sound sleeps while the page is hidden and wakes where it is when the page comes back */
   document.addEventListener('visibilitychange', () => { if (!AU.ctx || !AU.on) return; if (document.hidden) AU.ctx.suspend(); else { AU.ctx.resume(); AU.next = AU.ctx.currentTime + .05; } });
-  $('#snd').addEventListener('click', e => { AU.on = !AU.on; if (AU.on) { AU.start(); AU.mood(LOOKS[st.look].mood); } else if (AU.ctx) AU.ctx.suspend(); e.currentTarget.setAttribute('aria-pressed', String(AU.on)); e.currentTarget.textContent = AU.on ? 'Sound on' : 'Sound off'; });
+  $('#snd').addEventListener('click', e => { AU.on = !AU.on; if (AU.on) { AU.start(); AU.mood(LOOKS[st.look].mood, LOOKS[st.look].kit); } else if (AU.ctx) AU.ctx.suspend(); e.currentTarget.setAttribute('aria-pressed', String(AU.on)); e.currentTarget.textContent = AU.on ? 'Sound on' : 'Sound off'; });
   const TUN = { 13: 'Tuning: 13 steps of the tritave (Bohlen-Pierce). Switch to the ordinary 12', 12: 'Tuning: the ordinary 12 steps of the octave. Switch to 10 equal steps', 10: 'Tuning: 10 equal steps of the octave. Switch to 13 steps of the tritave' };
   $('#tune').addEventListener('click', e => { AU.tun = AU.tun === 13 ? 12 : AU.tun === 12 ? 10 : 13; e.currentTarget.textContent = AU.tun + ' steps'; e.currentTarget.setAttribute('aria-label', TUN[AU.tun]); });
   $('#up').addEventListener('click', () => { st.todT = Math.max(0, st.todT - .09); st.pinned = false; st.travel = null; }); $('#down').addEventListener('click', () => { st.todT = Math.min(1, st.todT + .09); st.pinned = false; st.travel = null; });

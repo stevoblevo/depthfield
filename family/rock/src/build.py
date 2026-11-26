@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Assemble Saelion Rock into one page: the shell, the three scripts, and the looks' inks read from the kits' tokens.
+"""Assemble Saelion Rock into one page: the shell, the four scripts (the sound goes inside main.js), and the looks' inks read from the kits' tokens.
   python3 -I family/rock/src/build.py                    writes family/rock/index.html, with the kits' pets pinned by address
   python3 -I family/rock/src/build.py out.html inline    writes one self-contained file (the Claude artifact), the pets inlined
 The kits are found beside this repository unless STOREYBROOK or HYPERMETAPUNK say otherwise."""
@@ -16,6 +16,7 @@ inline = len(sys.argv) > 2 and sys.argv[2] == 'inline'
 s = (here / 'shell.html').read_text()
 for tag, f in (('/*SHADERS*/', 'shaders.js'), ('/*SCENE*/', 'scene.js'), ('/*MAIN*/', 'main.js')):
     assert tag in s; s = s.replace(tag, (here / f).read_text().replace('</script', '<\\/script'))
+assert '/*SOUND*/' in s; s = s.replace('/*SOUND*/', (here / 'sound.js').read_text().replace('</script', '<\\/script'))
 assert '/*PALETTES*/null' in s; s = s.replace('/*PALETTES*/null', json.dumps(P.palettes(), separators=(',', ':')))
 kits = '\n'.join('<script>/* ' + url + ' */\n' + path.read_text().replace('</script', '<\\/script') + '</script>' if inline else f'<script src="{url}"></script>' for url, path in KITS)
 assert '<!--KITS-->' in s; s = s.replace('<!--KITS-->', kits)
