@@ -1,0 +1,65 @@
+<!-- @dsCard group="World" height=300 -->
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Axes</title>
+<style>body{margin:0;background:var(--void,#07110f);color:var(--ink,#e9f5ef);font-family:var(--font-sans,system-ui,sans-serif)}.pv-axes{padding:16px 20px;display:grid;gap:12px;max-width:560px}.pv-axes canvas{display:block;width:100%;height:150px;border-radius:var(--radius-md,12px);border:1px solid var(--line,#23352f);background:var(--surface,#0c1a17);touch-action:none;cursor:crosshair}.pv-axes code{font:12px/16px var(--font-mono,ui-monospace,monospace);color:var(--ink-muted,#93aaa1)}</style></head>
+<body>
+<div class="pv-axes">
+<canvas id="pv-axes-world" role="img" aria-label="A small world of three rings receding to a point. Dragging sideways turns it, dragging up goes deeper, holding stops it, and a tap leaves a mark; the strip under it shows the same five numbers and moves the same world."></canvas>
+<div id="pv-axes-strip"></div>
+<code>Depthfield.axes(el, state, { text, live }).update()</code>
+</div>
+<script src="../axes.js"></script>
+<script>
+(function () {
+  var D = window.Depthfield; if (!D || !D.axes) return;
+  var LOOKS = ['mint', 'peach', 'rain', 'night', 'thread'], INK = ['#5ef2b8', '#ffb48a', '#ff6b6b', '#c9e6ff', '#f2c98a'];
+  var S = { x: 0, depth: 0.2, time: 1, look: 0, memory: 1 }, marks = [], live = 'depth', held = false, clock = 0, last = 0;
+  var c = document.getElementById('pv-axes-world'), g = c.getContext('2d');
+  var RM = window.matchMedia('(prefers-reduced-motion: reduce)');
+  var strip = D.axes(document.getElementById('pv-axes-strip'), S, {
+    axes: [{ id: 'x', min: -1, max: 1, step: 0.001 }, { id: 'depth', min: 0, max: 1, step: 0.001 }, { id: 'time', min: -1, max: 1, step: 0.01 }, { id: 'look', min: 0, max: 4, step: 1 }, { id: 'memory', min: 0, max: 1, step: 0.01 }],
+    text: function (id, v) {
+      if (id === 'depth') return ('00' + Math.round(v * 100)).slice(-3) + '%';
+      if (id === 'time') return (held ? '×0.00' : (v < 0 ? '−' : '×') + Math.abs(v).toFixed(2));
+      if (id === 'look') return LOOKS[Math.round(v)];
+      if (id === 'memory') return ('0' + Math.round(marks.length * v)).slice(-2);
+      return (v < 0 ? '−' : '+') + Math.abs(v).toFixed(2);
+    }
+  });
+  var drag = null;
+  c.addEventListener('pointerdown', function (e) { c.setPointerCapture(e.pointerId); drag = { x: e.clientX, y: e.clientY, moved: false, t: performance.now() }; drag.timer = setTimeout(function () { if (drag && !drag.moved) { held = true; live = 'time'; } }, 300); });
+  c.addEventListener('pointermove', function (e) {
+    if (!drag) return; var dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+    if (!drag.moved && Math.abs(dx) + Math.abs(dy) > 6) { drag.moved = true; clearTimeout(drag.timer); held = false; }
+    if (!drag.moved) return;
+    S.x = ((S.x + dx / c.clientWidth + 1) % 2 + 2) % 2 - 1; S.depth = Math.max(0, Math.min(1, S.depth - dy / c.clientHeight * 0.6));
+    live = Math.abs(dx) > Math.abs(dy) ? 'x' : 'depth'; drag.x = e.clientX; drag.y = e.clientY;
+  });
+  function up(e) {
+    if (!drag) return; clearTimeout(drag.timer);
+    if (!held && !drag.moved && e.type === 'pointerup') { var r = c.getBoundingClientRect(); marks.push({ u: (e.clientX - r.left) / r.width, v: (e.clientY - r.top) / r.height, look: Math.round(S.look) }); if (marks.length > 40) marks.shift(); live = 'memory'; }
+    held = false; drag = null;
+  }
+  c.addEventListener('pointerup', up); c.addEventListener('pointercancel', up);
+  function draw(ms) {
+    requestAnimationFrame(draw);
+    var dt = Math.min(0.05, (ms - (last || ms)) / 1000); last = ms; clock += dt * (held || RM.matches ? 0 : S.time);
+    var dpr = Math.min(2, window.devicePixelRatio || 1), W = c.clientWidth, H = c.clientHeight;
+    if (c.width !== Math.round(W * dpr)) { c.width = Math.round(W * dpr); c.height = Math.round(H * dpr); }
+    g.setTransform(dpr, 0, 0, dpr, 0, 0); g.fillStyle = '#07110f'; g.fillRect(0, 0, W, H);
+    var ink = INK[Math.round(S.look)], cx = W * 0.5, cy = H * 0.5;
+    for (var k = 0; k < 7; k++) {
+      var z = ((k / 7 + S.depth * 2 + clock * 0.04) % 1 + 1) % 1, r = 6 + z * z * H * 0.9, a = S.x * Math.PI + k * 0.5;
+      g.globalAlpha = 0.15 + 0.6 * z * (1 - z) * 2; g.strokeStyle = ink; g.lineWidth = 1; g.beginPath();
+      for (var i = 0; i <= 5; i++) { var t = a + i * Math.PI * 2 / 5, px = cx + Math.cos(t) * r * 1.5, py = cy + Math.sin(t) * r; if (i) g.lineTo(px, py); else g.moveTo(px, py); }
+      g.stroke();
+    }
+    g.globalAlpha = 1; g.fillStyle = '#07110f'; g.beginPath(); g.arc(cx, cy, 5, 0, 7); g.fill(); g.strokeStyle = ink; g.stroke();
+    var shown = Math.round(marks.length * S.memory);
+    for (var m = 0; m < shown; m++) { g.strokeStyle = INK[marks[m].look]; g.globalAlpha = 0.9; g.beginPath(); g.arc(marks[m].u * W, marks[m].v * H, 5, 0, 7); g.stroke(); }
+    g.globalAlpha = 1;
+    strip.update(live);
+  }
+  requestAnimationFrame(draw);
+})();
+</script></body></html>

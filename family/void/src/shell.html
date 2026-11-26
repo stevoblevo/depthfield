@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Void</title>
+<meta name="description" content="A descent under the page, on five axes: the gap, the vanishing point, the rest, the pupil and the trace. Six signs people use for nothing, in three.js.">
+<meta name="theme-color" content="#07110f">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%2307110f'/%3E%3Ccircle cx='16' cy='16' r='8' fill='%2307110f' stroke='%235ef2b8' stroke-width='2.5'/%3E%3C/svg%3E">
+<!--HEAD-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Hanken+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>document.documentElement.className += ' js';</script>
+<style>
+/* Depthfield 5D · The void.
+   Layout: one fixed scene. The words sit low and left of the vanishing point and never move with it.
+   Five axes (x, depth, time, look, memory) in one strip along the bottom; everything else is in a sheet.
+   The art keeps its own light in both faces; the day face changes the chrome, not the dark. */
+:root {
+  /* art inks (fixed: the world is a night scene in every face) */
+  --art-void: #07110f;
+  --art-ink: #e9f5ef;
+  --art-ink-muted: #93aaa1;
+  --art-accent: #5ef2b8;
+  --art-cue: #c9e6ff;
+  /* chrome, day face */
+  --surface-raised: #ffffff;
+  --chrome: rgba(255, 255, 255, 0.92);
+  --line: #cddcd5;
+  --ink: #0d1a17;
+  --ink-muted: #4f6460;
+  --accent: #0b7255;
+  --focus: #0d1a17;
+  --shadow-float: 0 24px 64px rgba(13, 26, 23, 0.16);
+  /* type */
+  --font-display: "Fraunces", "Iowan Old Style", Georgia, serif;
+  --font-sans: "Hanken Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  /* space, motion */
+  --gutter: 16px;
+  --strip-h: 84px;
+  --dur-fast: 160ms;
+  --dur-base: 420ms;
+  --dur-slow: 900ms;
+  --dur-stagger: 60ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --shadow-type-display: 0 2px 30px rgba(7, 17, 15, 0.6);
+  --shadow-type-lede: 0 1px 16px rgba(7, 17, 15, 0.8);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --surface-raised: #142420;
+    --chrome: rgba(20, 36, 32, 0.86);
+    --line: #23352f;
+    --ink: #e9f5ef;
+    --ink-muted: #93aaa1;
+    --accent: #5ef2b8;
+    --focus: #c9e6ff;
+    --shadow-float: 0 24px 64px rgba(0, 8, 6, 0.6);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --surface-raised: #142420;
+  --chrome: rgba(20, 36, 32, 0.86);
+  --line: #23352f;
+  --ink: #e9f5ef;
+  --ink-muted: #93aaa1;
+  --accent: #5ef2b8;
+  --focus: #c9e6ff;
+  --shadow-float: 0 24px 64px rgba(0, 8, 6, 0.6);
+  color-scheme: dark;
+}
+@media (min-width: 760px) { :root { --gutter: 48px; } }
+
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body {
+  background: var(--art-void);
+  color: var(--art-ink);
+  font-family: var(--font-sans);
+  font-size: 17px;
+  line-height: 27px;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+.js body { overflow: hidden; overscroll-behavior: none; }
+button, input { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; border-radius: 6px; }
+.over-art :focus-visible { outline-color: var(--art-cue); }
+
+/* the world */
+#world {
+  position: fixed; inset: 0; width: 100%; height: 100%; display: block;
+  touch-action: none; cursor: crosshair; z-index: 0;
+  background: radial-gradient(120% 80% at 50% 36%, #12483c 0%, #081c19 38%, #07110f 72%);
+}
+.no-gl #world { cursor: default; }
+
+/* the words */
+#story { position: relative; z-index: 10; }
+.beat { padding: 18vh var(--gutter) 8vh; max-width: 36rem; }
+.js #story { position: fixed; inset: 0; pointer-events: none; }
+.js .beat {
+  position: absolute; left: max(var(--gutter), env(safe-area-inset-left)); right: max(var(--gutter), env(safe-area-inset-right));
+  bottom: calc(var(--strip-h) + 32px);
+  padding: 0; display: grid; gap: 12px; justify-items: start;
+  opacity: 0; visibility: hidden;
+  transition: opacity var(--dur-base) linear, visibility 0s linear var(--dur-base);
+}
+.js .beat.is-on { opacity: 1; visibility: visible; transition: opacity var(--dur-base) linear; }
+.js .beat > * {
+  transform: translateY(24px); opacity: 0;
+  transition: transform var(--dur-slow) var(--ease-out), opacity var(--dur-slow) var(--ease-out);
+  transition-delay: calc(var(--i, 0) * var(--dur-stagger));
+}
+.js .beat.is-on > * { transform: none; opacity: 1; }
+.beat > :nth-child(2) { --i: 1; } .beat > :nth-child(3) { --i: 2; }
+.beat > :nth-child(4) { --i: 3; } .beat > :nth-child(5) { --i: 4; } .beat > :nth-child(6) { --i: 5; }
+@media (min-width: 760px) { .js .beat { right: auto; width: min(34rem, 44vw); bottom: calc(var(--strip-h) + 56px); } }
+
+.eyebrow {
+  margin: 0; font-family: var(--font-mono); font-size: 12px; line-height: 16px; font-weight: 500;
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--art-ink-muted);
+  text-shadow: var(--shadow-type-lede);
+}
+.display {
+  margin: 0; font-family: var(--font-display); font-weight: 300; letter-spacing: -0.025em;
+  font-variation-settings: 'opsz' 144; line-height: 0.95; text-wrap: balance;
+  font-size: clamp(44px, 12.5vw, 96px); text-shadow: var(--shadow-type-display);
+}
+.display--xl { font-size: clamp(60px, 19vw, 148px); line-height: 0.9; letter-spacing: -0.03em; white-space: nowrap; }
+.display em { font-style: italic; color: var(--art-accent); transition: color 1600ms linear; }
+.lede {
+  margin: 0; max-width: 34em; font-size: clamp(17px, 2.2vw, 21px); line-height: 1.5;
+  text-shadow: var(--shadow-type-lede); text-wrap: pretty;
+}
+.readout {
+  margin: 0; font-family: var(--font-mono); font-size: 13px; line-height: 18px; letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums; color: var(--art-ink-muted); text-shadow: var(--shadow-type-lede);
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+}
+.swatch { width: 14px; height: 14px; border: 1px solid var(--art-ink-muted); background: var(--art-void); display: inline-block; }
+.hint {
+  margin: 0; font-family: var(--font-mono); font-size: 13px; line-height: 18px; color: var(--art-cue);
+  font-variant-numeric: tabular-nums; text-shadow: var(--shadow-type-lede); max-width: 38em;
+}
+.go {
+  pointer-events: auto; cursor: pointer; margin-top: 4px;
+  font-family: var(--font-mono); font-size: 13px; line-height: 18px; letter-spacing: 0.04em;
+  padding: 11px 18px; min-height: 44px; border-radius: 999px;
+  color: var(--art-ink); background: rgba(7, 17, 15, 0.55); border: 1px solid var(--art-ink-muted);
+  transition: border-color var(--dur-fast), background var(--dur-fast);
+}
+.go:hover { border-color: var(--art-ink); background: rgba(7, 17, 15, 0.8); }
+
+/* an invitation is light: it asks, and records nothing */
+.cue { position: fixed; z-index: 10; right: calc(var(--gutter) + 20px); bottom: calc(var(--strip-h) + 110px); width: 30px; height: 30px; pointer-events: none; opacity: 0; transition: opacity var(--dur-base) linear; }
+.js .cue { opacity: 1; }
+.js.moved .cue { opacity: 0; }
+.cue span { position: absolute; inset: 0; border: 1.5px solid var(--art-cue); border-radius: 50%; animation: cue 3.2s var(--ease-out) infinite; }
+@keyframes cue { 0% { transform: translateY(44px) scale(0.5); opacity: 0; } 18% { opacity: 0.9; } 70% { opacity: 0.45; } 100% { transform: translateY(-72px) scale(1); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .cue span { animation: none; opacity: 0.6; } }
+
+/* chrome */
+.top {
+  position: fixed; z-index: 100; top: max(12px, env(safe-area-inset-top)); left: max(var(--gutter), env(safe-area-inset-left)); right: max(var(--gutter), env(safe-area-inset-right));
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; pointer-events: none;
+}
+.mark {
+  margin: 0; font-family: var(--font-mono); font-size: 12px; line-height: 16px; font-weight: 500;
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--art-ink-muted); text-shadow: var(--shadow-type-lede);
+}
+.tools { display: flex; gap: 8px; pointer-events: auto; }
+.tool {
+  cursor: pointer; font-family: var(--font-mono); font-size: 12px; line-height: 16px; letter-spacing: 0.04em;
+  padding: 0 14px; min-height: 40px; border-radius: 999px; white-space: nowrap;
+  color: var(--ink); background: var(--chrome); border: 1px solid var(--line);
+  -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+  transition: border-color var(--dur-fast);
+}
+.tool:hover { border-color: var(--ink-muted); }
+.no-js-only { display: none; }
+
+/* plan D2: the five-axis strip is the kit's add-on (components/axes.js); the page only places it */
+.axes { position: fixed; z-index: 100; left: max(var(--gutter), env(safe-area-inset-left)); right: max(var(--gutter), env(safe-area-inset-right)); bottom: max(12px, env(safe-area-inset-bottom)); box-shadow: var(--shadow-float); }
+@media (min-width: 760px) { .axes { right: auto; width: 500px; bottom: max(24px, env(safe-area-inset-bottom)); gap: 16px; padding: 12px 16px 10px; } }
+
+/* the sheet */
+.sheet {
+  position: fixed; z-index: 1000; inset: 0; display: grid; justify-items: end;
+  background: rgba(7, 17, 15, 0.5);
+}
+.sheet[hidden] { display: none; }
+.sheet__panel {
+  width: min(100%, 440px); height: 100%; overflow-y: auto; overscroll-behavior: contain;
+  background: var(--surface-raised); color: var(--ink); border-left: 1px solid var(--line);
+  padding: 20px var(--gutter) 40px; display: grid; gap: 20px; align-content: start;
+}
+@media (min-width: 760px) { .sheet__panel { padding: 28px 32px 48px; } }
+.sheet__head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.sheet h2 { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: 34px; line-height: 1; letter-spacing: -0.02em; }
+.sheet h3 { margin: 0 0 8px; font-family: var(--font-mono); font-size: 12px; line-height: 16px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-muted); }
+.sheet p, .sheet li, .sheet dd { font-size: 15px; line-height: 23px; }
+.sheet p { margin: 0; max-width: 60ch; }
+.sheet ol, .sheet ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+.sheet ul.plain li { padding-left: 14px; position: relative; }
+.sheet ul.plain li::before { content: ""; position: absolute; left: 0; top: 10px; width: 5px; height: 1px; background: var(--ink-muted); }
+.jump {
+  width: 100%; text-align: left; cursor: pointer; display: grid; grid-template-columns: 2.4em 1fr auto; gap: 8px; align-items: baseline;
+  padding: 10px 12px; min-height: 44px; border-radius: 10px; background: transparent; border: 1px solid var(--line);
+  font-size: 15px; line-height: 22px;
+}
+.jump:hover { border-color: var(--ink-muted); }
+.jump[aria-current="true"] { border-color: var(--ink); }
+.jump b { font-family: var(--font-mono); font-weight: 500; font-size: 12px; color: var(--ink-muted); font-variant-numeric: tabular-nums; }
+.jump i { font-family: var(--font-mono); font-style: normal; font-size: 12px; color: var(--ink-muted); }
+.sheet dl { margin: 0; display: grid; grid-template-columns: 5.5em 1fr; gap: 8px 12px; }
+.sheet dt { font-family: var(--font-mono); font-size: 12px; line-height: 23px; letter-spacing: 0.06em; }
+.sheet dd { margin: 0; }
+.sheet .tool { background: var(--surface-raised); border-color: var(--ink-muted); }
+.sheet small { font-family: var(--font-mono); font-size: 12px; line-height: 18px; color: var(--ink-muted); }
+.sheet a { color: var(--accent); text-underline-offset: 3px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .js .beat > * { transform: none; transition: opacity var(--dur-fast) linear; transition-delay: 0s; }
+  .display em { transition: none; }
+}
+/* without JS or WebGL the page is a column of the same words over a still */
+html:not(.js) .axes, html:not(.js) .tools, .no-gl .axes, .no-gl .tools, .no-gl .cue { display: none; }
+html:not(.js) .no-js-only, .no-gl .no-js-only { display: block; }
+.no-gl body { overflow: auto; }
+.no-gl #story { position: relative; inset: auto; pointer-events: auto; }
+.no-gl .beat { position: static; opacity: 1; visibility: visible; padding: 18vh 0 8vh; margin: 0 var(--gutter); }
+.no-gl .beat > * { transform: none; opacity: 1; }
+.no-gl .go { display: none; }
+</style>
+</head>
+<body>
+<canvas id="world" aria-hidden="true"></canvas>
+
+<main id="story" class="over-art">
+  <section class="beat is-on" data-beat="0" aria-labelledby="t0">
+    <p class="eyebrow">Depthfield 5D · under the page</p>
+    <h1 class="display display--xl" id="t0">The <em>void</em>.</h1>
+    <p class="lede">Depthfield grounds every page on a color named void. This page goes under it.</p>
+    <p class="readout"><span class="swatch" aria-hidden="true"></span><span>--void #07110f</span></p>
+    <p class="hint" id="hint0">Swipe up or scroll to descend. The floor drops away.</p>
+    <button class="go" type="button" data-go="next">Descend</button>
+  </section>
+
+  <section class="beat" data-beat="1" aria-labelledby="t1" aria-hidden="true">
+    <p class="eyebrow">Chapter 01 — Axis x</p>
+    <h2 class="display" id="t1">The <em>gap</em></h2>
+    <p class="lede">Every mark here is a zero, one ring to a script. Move through them and they part: the gap is the zero none of them can write.</p>
+    <p class="readout" id="ringOut">Ring 01 of 24</p>
+    <p class="hint" id="hint1">Swipe sideways to turn the field. Tap to leave a mark. 00 kept.</p>
+    <button class="go" type="button" data-go="next">Descend</button>
+  </section>
+
+  <section class="beat" data-beat="2" aria-labelledby="t2" aria-hidden="true">
+    <p class="eyebrow">Chapter 02 — Axis depth</p>
+    <h2 class="display" id="t2">The vanishing <em>point</em></h2>
+    <p class="lede">Painters needed a zero too. Every receding line agrees to meet at one point, and the point depicts nothing: it only says how far.</p>
+    <p class="readout" id="fallOut">Fallen 0120 · the point 1.00×</p>
+    <p class="hint">Keep falling. It gets no closer.</p>
+    <button class="go" type="button" data-go="next">Descend</button>
+  </section>
+
+  <section class="beat" data-beat="3" aria-labelledby="t3" aria-hidden="true">
+    <p class="eyebrow">Chapter 03 — Axis time</p>
+    <h2 class="display" id="t3">The <em>rest</em></h2>
+    <p class="lede">Music writes its nothing down. A rest is a mark you play by not playing.</p>
+    <p class="readout" id="timeOut">Clock ×1.00</p>
+    <p class="hint">Press and hold. The rain keeps its place.</p>
+    <button class="go" type="button" data-go="next">Descend</button>
+  </section>
+
+  <section class="beat" data-beat="4" aria-labelledby="t4" aria-hidden="true">
+    <p class="eyebrow">Chapter 04 — Axis look</p>
+    <h2 class="display" id="t4">The <em>pupil</em></h2>
+    <p class="lede">A pupil is a hole. It is dark because almost nothing that goes in comes back out.</p>
+    <p class="readout" id="eyeOut">The eye is drawn. It follows the pointer and nothing else.</p>
+    <p class="hint" id="hint4" aria-live="polite">Hold still. It takes a moment.</p>
+    <button class="go" type="button" data-go="next">Fall in</button>
+  </section>
+
+  <section class="beat" data-beat="5" aria-labelledby="t5" aria-hidden="true">
+    <p class="eyebrow">Chapter 05 — Axis memory</p>
+    <h2 class="display" id="t5">The <em>trace</em></h2>
+    <p class="lede">You went through. For a moment the whole screen was #07110f and nothing else: that was the void.</p>
+    <p class="readout"><span class="swatch" aria-hidden="true"></span><span>--void #07110f</span></p>
+    <p class="hint" id="hint5" aria-live="polite">You left nothing, so nothing is here. Tap to leave a mark.</p>
+    <button class="go" type="button" data-go="top">Back to the top</button>
+  </section>
+
+  <p class="beat no-js-only lede">This page is a scene you move through. It needs JavaScript and WebGL; the words above are all of its text.</p>
+</main>
+
+<div class="cue" aria-hidden="true"><span></span></div>
+
+<header class="top">
+  <p class="mark">Depthfield 5D</p>
+  <div class="tools">
+    <button class="tool" type="button" id="soundBtn" aria-pressed="false">Sound off</button>
+    <button class="tool" type="button" id="indexBtn" aria-haspopup="dialog" aria-controls="sheet">Index</button>
+  </div>
+</header>
+
+<form class="axes df-axes" id="axes" aria-label="Five axes" autocomplete="off">
+  <fieldset class="df-axis" data-axis="x">
+    <label class="df-axis__name" for="ax-x">x</label>
+    <input id="ax-x" type="range" min="-1" max="1" step="0.001" value="0" aria-describedby="ao-x">
+    <output id="ao-x" for="ax-x">+0.00</output>
+  </fieldset>
+  <fieldset class="df-axis is-live" data-axis="depth">
+    <label class="df-axis__name" for="ax-depth">depth</label>
+    <input id="ax-depth" type="range" min="0" max="6" step="0.001" value="0" aria-describedby="ao-depth">
+    <output id="ao-depth" for="ax-depth">000%</output>
+  </fieldset>
+  <fieldset class="df-axis" data-axis="time">
+    <label class="df-axis__name" for="ax-time">time</label>
+    <input id="ax-time" type="range" min="-1" max="1" step="0.01" value="1" aria-describedby="ao-time">
+    <output id="ao-time" for="ax-time">×1.00</output>
+  </fieldset>
+  <fieldset class="df-axis" data-axis="look">
+    <label class="df-axis__name" for="ax-look">look</label>
+    <input id="ax-look" type="range" min="0" max="5" step="1" value="0" aria-describedby="ao-look">
+    <output id="ao-look" for="ax-look">auto</output>
+  </fieldset>
+  <fieldset class="df-axis" data-axis="memory">
+    <label class="df-axis__name" for="ax-memory">memory</label>
+    <input id="ax-memory" type="range" min="0" max="1" step="0.01" value="1" aria-describedby="ao-memory">
+    <output id="ao-memory" for="ax-memory">00</output>
+  </fieldset>
+</form>
+
+<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle" hidden>
+  <div class="sheet__panel">
+    <div class="sheet__head">
+      <h2 id="sheetTitle">Index</h2>
+      <button class="tool" type="button" id="sheetClose">Close</button>
+    </div>
+    <ol id="jumps">
+      <li><button class="jump" type="button" data-jump="0"><b>00</b><span>The void</span><i>the name</i></button></li>
+      <li><button class="jump" type="button" data-jump="1"><b>01</b><span>The gap</span><i>x</i></button></li>
+      <li><button class="jump" type="button" data-jump="2"><b>02</b><span>The vanishing point</span><i>depth</i></button></li>
+      <li><button class="jump" type="button" data-jump="3"><b>03</b><span>The rest</span><i>time</i></button></li>
+      <li><button class="jump" type="button" data-jump="4"><b>04</b><span>The pupil</span><i>look</i></button></li>
+      <li><button class="jump" type="button" data-jump="5"><b>05</b><span>The trace</span><i>memory</i></button></li>
+    </ol>
+    <p><button class="tool" type="button" id="reelBtn">Watch the whole fall</button></p>
+    <small>It plays by itself from the top. Any touch hands it back.</small>
+    <section>
+      <h3>Five axes</h3>
+      <dl>
+        <dt>x</dt><dd>Swipe sideways, or ← →. Turns the field.</dd>
+        <dt>depth</dt><dd>Swipe up, scroll, or ↓ ↑. The camera descends.</dd>
+        <dt>time</dt><dd>Press and hold, or Space. The clock stops. The slider also runs it backwards.</dd>
+        <dt>look</dt><dd>The slider, or L. Changes the weather: mint, peach fall, red rain, night garden, thread. Left on auto it follows the descent. Your pointer is where the focus goes and where the eye points.</dd>
+        <dt>memory</dt><dd>Tap, or M. Leaves a mark. Marks stay in this browser and nowhere else; the slider shows more or fewer of them. At the bottom they come back in the order you made them, and ring again if the sound is on.</dd>
+      </dl>
+    </section>
+    <section>
+      <h3>How it is made</h3>
+      <ul class="plain">
+        <li>The floor is Depthfield's three ridges, drawn in one shader.</li>
+        <li>The shaft is noise in log-polar space, so it has no bottom to run out of.</li>
+        <li>Focus follows the pointer. Zeros blur by distance from it, using the texture's mipmaps.</li>
+        <li>The vanishing point holds its size with a dolly zoom: the lens widens as fast as you fall.</li>
+        <li>The frames are pentagons. Every sixth carries its pentagram, where diagonal to side is the golden ratio.</li>
+        <li>A lens pass bends the scene around the hole. The hole itself is drawn in exactly #07110f.</li>
+        <li>The sound is a Shepard–Risset glissando over a harmonic seventh. It falls without getting lower.</li>
+      </ul>
+    </section>
+    <section>
+      <h3>What is drawn</h3>
+      <p>The eye is drawn, not sensing. It follows the pointer and nothing else. This page has no camera and no microphone, and sends nothing anywhere.</p>
+    </section>
+    <section>
+      <h3>Memory</h3>
+      <p id="memNote">No marks kept.</p>
+      <p style="margin-top:12px"><button class="tool" type="button" id="forgetBtn">Forget the marks</button></p>
+    </section>
+    <small>The Void 0.2 · <a href="https://stevoblevo.github.io/depthfield/" target="_blank" rel="noopener">Depthfield</a> 5D · three.js r128 · <a href="https://saelion.co/toolkit" target="_blank" rel="noopener">the toolkit shelf</a> · <a href="https://github.com/stevoblevo/depthfield/tree/main/family/void" target="_blank" rel="noopener">source</a></small>
+  </div>
+</div>
+
+<!--THREE-->
+<!--AXES-->
+<script>
+(function () {
+'use strict';
+var root = document.documentElement;
+var canvas = document.getElementById('world');
+function $(id) { return document.getElementById(id); }
+function fail() { root.classList.add('no-gl'); }
+if (!window.THREE) { fail(); return; }
+
+/* ---------- tokens ---------- */
+var VOID = [7 / 255, 17 / 255, 15 / 255];
+function hex(h) { return [parseInt(h.substr(1, 2), 16) / 255, parseInt(h.substr(3, 2), 16) / 255, parseInt(h.substr(5, 2), 16) / 255]; }
+var LOOKS = [
+  { id: 'mint',   skyTop: '#081c19', skyLow: '#12483c', sun: '#c9ffe6', r1: '#0c2e26', r2: '#104234', r3: '#1e6852', rim: '#5ef2b8' },
+  { id: 'peach',  skyTop: '#261a2c', skyLow: '#ff9678', sun: '#ffc8a0', r1: '#3c2234', r2: '#562c3a', r3: '#783c40', rim: '#ffb48a' },
+  { id: 'rain',   skyTop: '#160e18', skyLow: '#962834', sun: '#ff6e6e', r1: '#28121c', r2: '#3a1620', r3: '#501c26', rim: '#ff6b6b' },
+  { id: 'night',  skyTop: '#0a0e1a', skyLow: '#223050', sun: '#c9e6ff', r1: '#121828', r2: '#182034', r3: '#202a42', rim: '#c9e6ff' },
+  { id: 'thread', skyTop: '#0d0b1c', skyLow: '#3a3358', sun: '#f6dcae', r1: '#15122b', r2: '#1f1a3a', r3: '#2d2650', rim: '#f2c98a' }
+];
+var PKEYS = ['skyTop', 'skyLow', 'sun', 'r1', 'r2', 'r3', 'rim'];
+LOOKS.forEach(function (l) { PKEYS.forEach(function (k) { l[k + 'V'] = hex(l[k]); }); });
+var BEAT_LOOK = [0, 3, 4, 2, 0, 1];           /* auto: the weather follows the descent */
+var BEAT_AXIS = ['depth', 'x', 'depth', 'time', 'look', 'memory'];
+var BEATS = 6, L = 60, ZH = -301.2;           /* beat length in world units; the hole's place */
+var RM = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+var COARSE = window.matchMedia && matchMedia('(pointer: coarse)').matches;
+
+/* ---------- the five axes ---------- */
+var S = {
+  x: 0, d: 0, dT: 0, v: 0,
+  ts: 1, tsSlider: 1, hold: false,
+  look: 0, lookPin: -1,
+  mem: 1,
+  ptr: { x: 0, y: 0, tx: 0, ty: 0, live: 0, speed: 0 },
+  beat: 0, travel: null
+};
+var marks = [];                 /* {u,v,d,look,p:[x,y,z],born,old} */
+var STORE = 'df5d:void:marks';
+function loadMarks() {
+  try {
+    var raw = JSON.parse(localStorage.getItem(STORE) || 'null');
+    if (raw && raw.v === 1 && Array.isArray(raw.m)) {
+      raw.m.slice(-96).forEach(function (a) {
+        if (Array.isArray(a) && a.length >= 7 && a.every(function (n) { return typeof n === 'number' && isFinite(n); })) {
+          marks.push({ u: a[0], v: a[1], d: a[2], look: Math.max(0, Math.min(4, a[3] | 0)), p: [a[4], a[5], a[6]], born: -100, old: true });
+        }
+      });
+    }
+  } catch (e) {}
+}
+function saveMarks() {
+  try {
+    localStorage.setItem(STORE, JSON.stringify({ v: 1, m: marks.slice(-96).map(function (m) {
+      return [r3(m.u), r3(m.v), r3(m.d), m.look, r3(m.p[0]), r3(m.p[1]), r3(m.p[2])];
+    }) }));
+  } catch (e) {}
+}
+function r3(n) { return Math.round(n * 1000) / 1000; }
+loadMarks();
+
+/* ---------- renderer ---------- */
+var renderer;
+try {
+  renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: false, alpha: false, powerPreference: 'high-performance' });
+} catch (e) { fail(); return; }
+renderer.setPixelRatio(1);
+renderer.setClearColor(new THREE.Color(VOID[0], VOID[1], VOID[2]), 1);
+canvas.style.background = 'none';
+var rt = new THREE.WebGLRenderTarget(4, 4, { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, depthBuffer: false, stencilBuffer: false });
+var scene = new THREE.Scene();
+var camera = new THREE.PerspectiveCamera(60, 1, 0.1, 700);
+var shaft = new THREE.Group();
+scene.add(shaft);
+var W = 1, H = 1, RW = 1, RH = 1, aspect = 1, quality = 1, CX = 0, CY = 0, baseTan = 0.55, holeR = 6, rs2 = 0.05;
+function v3(a) { return new THREE.Vector3(a[0], a[1], a[2]); }
+var ADD = { transparent: true, depthTest: false, depthWrite: false, blending: THREE.AdditiveBlending };
+function mat(o) { for (var k in ADD) o[k] = ADD[k]; return new THREE.ShaderMaterial(o); }
+
+/* ---------- 1. the floor and the shaft (one background shader) ---------- */
+var bgU = {
+  uRes: { value: new THREE.Vector2(1, 1) }, uC: { value: new THREE.Vector2(0, 0) },
+  uSink: { value: 0 }, uPitch: { value: 0 }, uShaft: { value: 0 }, uPtr: { value: new THREE.Vector2(0, 0) },
+  uTime: { value: 0 }, uX: { value: 0 }, uD: { value: 0 },
+  uSkyTop: { value: v3(LOOKS[0].skyTopV) }, uSkyLow: { value: v3(LOOKS[0].skyLowV) }, uSun: { value: v3(LOOKS[0].sunV) },
+  uR1: { value: v3(LOOKS[0].r1V) }, uR2: { value: v3(LOOKS[0].r2V) }, uR3: { value: v3(LOOKS[0].r3V) },
+  uRim: { value: v3(LOOKS[0].rimV) }, uVoid: { value: v3(VOID) }
+};
+var bg = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), new THREE.ShaderMaterial({
+  uniforms: bgU, depthTest: false, depthWrite: false,
+  vertexShader: 'void main(){gl_Position=vec4(position.xy,0.,1.);}',
+  fragmentShader: [
+    'uniform vec2 uRes,uC,uPtr;uniform float uSink,uPitch,uShaft,uTime,uX,uD;',
+    'uniform vec3 uSkyTop,uSkyLow,uSun,uR1,uR2,uR3,uRim,uVoid;',
+    'float h1(float n){return fract(sin(n)*43758.5453);}',
+    'float n1(float x){float i=floor(x),f=fract(x);f=f*f*(3.-2.*f);return mix(h1(i),h1(i+1.),f);}',
+    'float fbm1(float x){return n1(x)*.55+n1(x*2.13+7.1)*.28+n1(x*4.7+3.3)*.17;}',
+    'float h3(vec3 p){p=fract(p*.3183099+.1);p*=17.;return fract(p.x*p.y*p.z*(p.x+p.y+p.z));}',
+    'float n3(vec3 x){vec3 i=floor(x),f=fract(x);f=f*f*(3.-2.*f);',
+    ' return mix(mix(mix(h3(i),h3(i+vec3(1,0,0)),f.x),mix(h3(i+vec3(0,1,0)),h3(i+vec3(1,1,0)),f.x),f.y),',
+    '  mix(mix(h3(i+vec3(0,0,1)),h3(i+vec3(1,0,1)),f.x),mix(h3(i+vec3(0,1,1)),h3(i+vec3(1,1,1)),f.x),f.y),f.z);}',
+    'void main(){',
+    ' vec2 uv=gl_FragCoord.xy/uRes;float asp=uRes.x/uRes.y;float px=1./uRes.y;',
+    /* the surface: sky, sun, seven shafts, three ridges that sink, nearest fastest */
+    ' float y=uv.y-uPitch*1.3;',
+    ' float hz=.42;',
+    ' vec3 col=y>hz?mix(uSkyLow,uSkyTop,pow(clamp((y-hz)/.62,0.,1.),.62)):mix(uVoid,uSkyLow,pow(smoothstep(-.34,hz,y),2.2));',
+    ' vec2 sp=vec2((.5+uPtr.x*.16+uC.x*.5)*asp,mix(.80,.66,uSink)+uPitch*1.3);',
+    ' vec2 sd=vec2(uv.x*asp,uv.y)-sp;float sl=length(sd);',
+    ' col+=uSun*(exp(-sl*3.4)*.36+exp(-sl*15.)*.5);',
+    ' float sa=atan(sd.x,-sd.y);',
+    ' col+=uSun*pow(max(0.,cos(sa*12.6+sin(uTime*.21)*.35)),5.)*smoothstep(1.7,.2,abs(sa))*exp(-sl*1.5)*.1;',
+    ' float xw=uv.x*asp;',
+    ' if(uSink<.999){for(int i=0;i<3;i++){float fi=float(i);',
+    '  float base=.50-fi*.115;float amp=.10+fi*.03;float fr=1.9+fi*1.15;',
+    '  float sink=uSink*(.6+fi*.12);',
+    '  float pan=uX*(.5+fi*.9)+uPtr.x*(18.+fi*23.)*px;',
+    '  float h=base+amp*(fbm1(xw*fr+fi*31.7+pan*fr)-.38)-sink;',
+    '  vec3 rc=i==0?uR1:(i==1?uR2:uR3);',
+    '  rc=mix(rc,uSkyLow,.08*(2.-fi));',
+    '  float yr=uv.y;float m=smoothstep(h+px,h-px,yr);',
+    '  col=mix(col,rc*(.72+.28*smoothstep(h-.3,h,yr)),m);',
+    '  col+=uRim*(.15+fi*.05)*smoothstep(3.*px,0.,abs(yr-h+1.2*px));}}',
+    /* the shaft: noise in log-polar space, scrolled by the depth */
+    ' if(uShaft>.001){vec2 p=(uv*2.-1.)-uC;p.x*=asp;float r=length(p);float a=atan(p.y,p.x)+uX*3.14159;',
+    ' float lr=log(max(r,.002));',
+    ' float w=n3(vec3(cos(a)*3.4,sin(a)*3.4,lr*.75-uD*1.25))*.5+n3(vec3(cos(a)*9.5,sin(a)*9.5,lr*1.5-uD*2.6))*.28+n3(vec3(cos(a)*1.7,sin(a)*1.7,lr*2.2-uD*3.))*.22;',
+    ' float wall=smoothstep(.38,.8,w)*smoothstep(.015,.5,r);',
+    ' vec3 sh=mix(uR2,mix(uR3,uSkyLow,.35),w)*wall*.7+uSkyLow*(exp(-r*1.4)*.2+exp(-r*4.5)*.13)+uR3*.12+uRim*exp(-r*9.)*.05;',
+    ' col+=sh*uShaft;}',
+    ' gl_FragColor=vec4(col,1.);}'
+  ].join('\n')
+}));
+bg.frustumCulled = false; bg.renderOrder = -10;
+scene.add(bg);
+
+/* ---------- 2. zeros: one ring to a script ---------- */
+var ZEROS = [
+  ['0', 'Latin'], ['٠', 'Arabic-Indic'], ['۰', 'Persian'], ['०', 'Devanagari'], ['০', 'Bengali'],
+  ['੦', 'Gurmukhi'], ['૦', 'Gujarati'], ['௦', 'Tamil'], ['౦', 'Telugu'], ['೦', 'Kannada'],
+  ['൦', 'Malayalam'], ['๐', 'Thai'], ['໐', 'Lao'], ['༠', 'Tibetan'], ['၀', 'Myanmar'],
+  ['០', 'Khmer'], ['〇', 'Chinese numeral'], ['零', 'Chinese character'], ['∅', 'empty set']
+];
+function buildAtlas() {
+  var cols = 8, rows = 4, cell = 128, c = document.createElement('canvas');
+  c.width = cols * cell; c.height = rows * cell;
+  var g = c.getContext('2d');
+  g.fillStyle = '#000'; g.fillRect(0, 0, c.width, c.height);
+  /* drop any script this device has no glyph for: it draws the same box as a code point nothing uses */
+  var probe = document.createElement('canvas'); probe.width = probe.height = 48;
+  var pg = probe.getContext('2d', { willReadFrequently: true });
+  function sig(ch) {
+    pg.fillStyle = '#000'; pg.fillRect(0, 0, 48, 48); pg.fillStyle = '#fff';
+    pg.font = '300 32px system-ui, sans-serif'; pg.textAlign = 'center'; pg.textBaseline = 'middle';
+    pg.fillText(ch, 24, 24);
+    var d = pg.getImageData(0, 0, 48, 48).data, s = '', n = 0, x, y, x0 = 48, x1 = -1, y0 = 48, y1 = -1;
+    function lit(px, py) { return d[(py * 48 + px) * 4] > 96; }
+    for (y = 0; y < 48; y++) for (x = 0; x < 48; x++) if (lit(x, y)) { n++; if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+    for (y = 0; y < 48; y += 2) for (x = 0; x < 48; x += 2) s += lit(x, y) ? 1 : 0;
+    var box = false;
+    if (x1 - x0 > 8 && y1 - y0 > 8) {          /* a drawn rectangle is a missing glyph, whatever it has inside */
+      var top = 0, left = 0;
+      for (x = x0; x <= x1; x++) if (lit(x, y0) || lit(x, y0 + 1)) top++;
+      for (y = y0; y <= y1; y++) if (lit(x0, y) || lit(x0 + 1, y)) left++;
+      box = top / (x1 - x0 + 1) > 0.8 && left / (y1 - y0 + 1) > 0.8;
+    }
+    return { s: s, n: n, box: box };
+  }
+  var tofu = sig('￿').s, tofu2 = sig('͸').s, kept = [];
+  ZEROS.forEach(function (z) { var q = sig(z[0]); if (q.n > 6 && !q.box && q.s !== tofu && q.s !== tofu2) kept.push(z); });
+  if (kept.length < 3) kept = [ZEROS[0], ['O', 'the letter O'], ['o', 'small o']];
+  g.fillStyle = '#fff'; g.textAlign = 'center'; g.textBaseline = 'middle';
+  g.font = '300 76px system-ui, "Noto Sans", sans-serif';
+  kept.forEach(function (z, i) {
+    var cx = (i % cols) * cell + cell / 2, cy = Math.floor(i / cols) * cell + cell / 2;
+    g.fillText(z[0], cx, cy + 3);
+  });
+  var tex = new THREE.CanvasTexture(c);
+  tex.anisotropy = 2;
+  return { tex: tex, cols: cols, rows: rows, kept: kept };
+}
+var atlas = buildAtlas();
+function rng(seed) { return function () { seed |= 0; seed = seed + 0x6D2B79F5 | 0; var t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+var rings = [];
+var glyphU = {
+  uAtlas: { value: atlas.tex }, uGrid: { value: new THREE.Vector2(atlas.cols, atlas.rows) },
+  uTime: { value: 0 }, uAspect: { value: 1 }, uPtr: { value: new THREE.Vector2(9, 9) },
+  uPartR: { value: 0.3 }, uPartS: { value: 0 }, uFocus: { value: 14 }, uFogK: { value: 0.027 }, uFade: { value: 0 },
+  uInk: { value: v3(hex('#e9f5ef')) }, uRim: { value: v3(LOOKS[0].rimV) }
+};
+(function buildGlyphs() {
+  var R = rng(5), NR = 24, z0 = -66, z1 = -140, ring = [], info = [];
+  for (var k = 0; k < NR; k++) {
+    var z = z0 + (z1 - z0) * k / (NR - 1);
+    var r = 2.5 + 6.6 * ((k * 0.6180339887 + 0.13) % 1);
+    var n = Math.max(7, Math.round(2 * Math.PI * r / (0.95 + 0.3 * ((k * 0.37) % 1))));
+    var gi = k % atlas.kept.length;
+    var spin = (k % 2 ? 1 : -1) * (0.035 + 0.05 * ((k * 0.71) % 1));
+    rings.push({ z: z, name: atlas.kept[gi][1], ch: atlas.kept[gi][0] });
+    for (var j = 0; j < n; j++) { ring.push(r, j / n * Math.PI * 2 + k, z, spin); info.push(gi, 0.78, 1.0, R()); }
+  }
+  for (var i = 0; i < 560; i++) {
+    ring.push(2.8 + 12 * Math.sqrt(R()), R() * Math.PI * 2, z0 + 6 + (z1 - z0 - 16) * R(), (R() - 0.5) * 0.02);
+    info.push(Math.floor(R() * atlas.kept.length), 0.3 + R() * 0.42, 0.35 + R() * 0.4, R());
+  }
+  var plane = new THREE.PlaneGeometry(1, 1), geo = new THREE.InstancedBufferGeometry();
+  geo.index = plane.index; geo.setAttribute('position', plane.attributes.position); geo.setAttribute('uv', plane.attributes.uv);
+  geo.setAttribute('iRing', new THREE.InstancedBufferAttribute(new Float32Array(ring), 4));
+  geo.setAttribute('iInfo', new THREE.InstancedBufferAttribute(new Float32Array(info), 4));
+  geo.instanceCount = ring.length / 4;
+  var m = new THREE.Mesh(geo, mat({
+    uniforms: glyphU,
+    vertexShader: [
+      'attribute vec4 iRing,iInfo;uniform float uTime,uAspect,uPartR,uPartS,uFocus,uFogK,uFade;uniform vec2 uPtr,uGrid;',
+      'varying vec2 vUv;varying float vA,vCoc,vTint;',
+      'void main(){',
+      ' float a=iRing.y+iRing.w*uTime;vec3 c=vec3(cos(a)*iRing.x,sin(a)*iRing.x,iRing.z);',
+      ' vec4 mv=modelViewMatrix*vec4(c,1.);float dist=-mv.z;',
+      ' vec4 clip=projectionMatrix*mv;vec2 ndc=clip.xy/max(clip.w,1e-4);',
+      ' vec2 dd=ndc-uPtr;dd.x*=uAspect;float l=length(dd);',   /* the pointer parts them, in screen space */
+      ' float pk=clamp(1.-l/(uPartR*1.6),0.,1.);vec2 off=dd/max(l,1e-4)*uPartS*uPartR*.65*pk*pk;off.x/=uAspect;',
+      ' float coc=clamp(dist>uFocus?(dist-uFocus)/(uFocus*3.2):(uFocus-dist)/uFocus,0.,1.);',
+      ' mv.xy+=position.xy*iInfo.y*(1.+coc*1.5);',
+      ' gl_Position=projectionMatrix*mv;gl_Position.xy+=off*gl_Position.w;',
+      ' if(dist<.4)gl_Position=vec4(2.,2.,2.,1.);',
+      ' float col=mod(iInfo.x,uGrid.x),row=floor(iInfo.x/uGrid.x);',
+      ' vUv=vec2((col+uv.x)/uGrid.x,1.-(row+1.-uv.y)/uGrid.y);vCoc=coc;',
+      ' vA=iInfo.z*exp(-dist*uFogK)*smoothstep(.6,3.5,dist)*uFade/(1.+coc*coc*2.6);',
+      ' vTint=step(.9,fract(iInfo.w*7.31));}'
+    ].join('\n'),
+    fragmentShader: [
+      'uniform sampler2D uAtlas;uniform vec3 uInk,uRim;varying vec2 vUv;varying float vA,vCoc,vTint;',
+      'void main(){float a=texture2D(uAtlas,vUv,vCoc*4.6).r;gl_FragColor=vec4(mix(uInk,uRim,vTint)*a*vA,1.);}'
+    ].join('\n')
+  }));
+  m.frustumCulled = false; shaft.add(m);
+})();
+
+/* ---------- 3. the vanishing point: pentagon frames, helix rails ---------- */
+var lineU = { uColor: { value: v3(LOOKS[0].rimV) }, uFogK: { value: 0.022 }, uFade: { value: 0 } };
+var LINE_VS = 'attribute float aA;uniform float uFogK;varying float vA;void main(){vec4 mv=modelViewMatrix*vec4(position,1.);float dist=-mv.z;vA=aA*exp(-dist*uFogK)*smoothstep(.4,6.,dist);gl_Position=projectionMatrix*mv;}';
+var LINE_FS = 'uniform vec3 uColor;uniform float uFade;varying float vA;void main(){gl_FragColor=vec4(uColor*vA*uFade,1.);}';
+(function buildFrames() {
+  var pos = [], al = [], K = 50, R0 = 8.5;
+  function pt(k, i, rad) { var a = k * 0.21 + i * Math.PI * 2 / 5 + Math.PI / 2; return [Math.cos(a) * rad, Math.sin(a) * rad, -112 - k * 3]; }
+  function seg(a, b, alpha) { pos.push(a[0], a[1], a[2], b[0], b[1], b[2]); al.push(alpha, alpha); }
+  for (var k = 0; k < K; k++) {
+    var edge = k % 6 === 0 ? 0.95 : 0.5;
+    for (var i = 0; i < 5; i++) {
+      seg(pt(k, i, R0), pt(k, (i + 1) % 5, R0), edge);
+      if (k < K - 1) seg(pt(k, i, R0), pt(k + 1, i, R0), 0.3);
+      if (k % 6 === 0) seg(pt(k, i, R0), pt(k, (i + 2) % 5, R0), 0.36);   /* the pentagram: diagonal to side is the golden ratio */
+    }
+  }
+  var geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  geo.setAttribute('aA', new THREE.Float32BufferAttribute(al, 1));
+  var m = new THREE.LineSegments(geo, mat({ uniforms: lineU, vertexShader: LINE_VS, fragmentShader: LINE_FS }));
+  m.frustumCulled = false; shaft.add(m);
+})();
+
+/* ---------- 4. rain that keeps its place, and motes ---------- */
+var rainU = { uColor: { value: v3(LOOKS[2].rimV) }, uCamZ: { value: 0 }, uFall: { value: 0 }, uLen: { value: 1 }, uRange: { value: 70 }, uFade: { value: 0 }, uScale: { value: 400 } };
+var RAIN_HEAD = 'attribute vec3 aSeed;attribute float aEnd,aSpeed;uniform float uCamZ,uFall,uLen,uRange;varying float vA;' +
+  'vec4 place(){float z=aSeed.z-uFall*aSpeed;float wz=uCamZ+3.-mod(uCamZ+3.-z,uRange);wz+=aEnd*uLen*aSpeed;return modelViewMatrix*vec4(aSeed.xy,wz,1.);}';
+(function buildRain() {
+  var R = rng(11), N = 760, seed = [], end = [], sp = [], pseed = [], psp = [];
+  for (var i = 0; i < N; i++) {
+    var a = R() * Math.PI * 2, r = 1.3 + 13 * Math.sqrt(R()), x = Math.cos(a) * r, y = Math.sin(a) * r, z = -R() * 70, s = 0.6 + R() * 0.8;
+    seed.push(x, y, z, x, y, z); end.push(0, 1); sp.push(s, s); pseed.push(x, y, z); psp.push(s);
+  }
+  var geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.Float32BufferAttribute(new Float32Array(N * 6), 3));
+  geo.setAttribute('aSeed', new THREE.Float32BufferAttribute(seed, 3));
+  geo.setAttribute('aEnd', new THREE.Float32BufferAttribute(end, 1));
+  geo.setAttribute('aSpeed', new THREE.Float32BufferAttribute(sp, 1));
+  var lines = new THREE.LineSegments(geo, mat({
+    uniforms: rainU,
+    vertexShader: RAIN_HEAD + 'void main(){vec4 mv=place();float dist=-mv.z;vA=(1.-aEnd)*exp(-dist*.03)*smoothstep(.3,3.,dist);gl_Position=projectionMatrix*mv;}',
+    fragmentShader: 'uniform vec3 uColor;uniform float uFade;varying float vA;void main(){gl_FragColor=vec4(uColor*vA*uFade*.9,1.);}'
+  }));
+  lines.frustumCulled = false; shaft.add(lines);
+  var pg = new THREE.BufferGeometry();
+  pg.setAttribute('position', new THREE.Float32BufferAttribute(new Float32Array(N * 3), 3));
+  pg.setAttribute('aSeed', new THREE.Float32BufferAttribute(pseed, 3));
+  pg.setAttribute('aEnd', new THREE.Float32BufferAttribute(new Float32Array(N), 1));
+  pg.setAttribute('aSpeed', new THREE.Float32BufferAttribute(psp, 1));
+  var heads = new THREE.Points(pg, mat({
+    uniforms: rainU,
+    vertexShader: RAIN_HEAD + 'uniform float uScale;void main(){vec4 mv=place();float dist=-mv.z;vA=exp(-dist*.03)*smoothstep(.3,3.,dist);gl_PointSize=clamp(.11*uScale/max(dist,.3),1.5,14.);gl_Position=projectionMatrix*mv;}',
+    fragmentShader: 'uniform vec3 uColor;uniform float uFade;varying float vA;void main(){vec2 q=gl_PointCoord*2.-1.;float a=smoothstep(1.,.2,length(q));gl_FragColor=vec4(uColor*a*vA*uFade,1.);}'
+  }));
+  heads.frustumCulled = false; shaft.add(heads);
+})();
+var moteU = { uColor: { value: v3(hex('#e9f5ef')) }, uCamZ: { value: 0 }, uFall: { value: 0 }, uLen: { value: 0 }, uRange: { value: 90 }, uFade: { value: 0 }, uScale: { value: 400 } };
+(function buildMotes() {
+  var R = rng(23), N = 420, seed = [], sp = [];
+  for (var i = 0; i < N; i++) { var a = R() * Math.PI * 2, r = 0.8 + 15 * Math.sqrt(R()); seed.push(Math.cos(a) * r, Math.sin(a) * r, -R() * 90); sp.push(0.4 + R()); }
+  var pg = new THREE.BufferGeometry();
+  pg.setAttribute('position', new THREE.Float32BufferAttribute(new Float32Array(N * 3), 3));
+  pg.setAttribute('aSeed', new THREE.Float32BufferAttribute(seed, 3));
+  pg.setAttribute('aEnd', new THREE.Float32BufferAttribute(new Float32Array(N), 1));
+  pg.setAttribute('aSpeed', new THREE.Float32BufferAttribute(sp, 1));
+  var m = new THREE.Points(pg, mat({
+    uniforms: moteU,
+    vertexShader: RAIN_HEAD + 'uniform float uScale;void main(){vec4 mv=place();float dist=-mv.z;vA=exp(-dist*.035)*smoothstep(.3,2.5,dist)*(.35+.65*fract(aSpeed*5.3));gl_PointSize=clamp(.07*uScale/max(dist,.3),1.,9.);gl_Position=projectionMatrix*mv;}',
+    fragmentShader: 'uniform vec3 uColor;uniform float uFade;varying float vA;void main(){vec2 q=gl_PointCoord*2.-1.;float a=smoothstep(1.,0.,length(q));gl_FragColor=vec4(uColor*a*vA*uFade*.5,1.);}'
+  }));
+  m.frustumCulled = false; shaft.add(m);
+})();
+
+/* ---------- 5. marks: light asks, marks remember ---------- */
+var MAXM = 160;
+var MARK_VS = 'attribute float aBorn,aDim,aIdx;attribute vec3 aCol;uniform float uNow,uScale,uMem,uSize;varying float vRip,vA;varying vec3 vCol;' +
+  'void main(){vec4 mv=modelViewMatrix*vec4(position,1.);float dist=-mv.z;vRip=(uNow-aBorn)/1.2;vCol=aCol;' +
+  'vA=aDim*smoothstep(.25,1.6,dist)*exp(-dist*.012)*step(aIdx,uMem+.0001)*step(0.,vRip);' +
+  'gl_PointSize=clamp(uSize*uScale/max(dist,.25),14.,420.);gl_Position=projectionMatrix*mv;if(dist<.2)gl_Position=vec4(2.,2.,2.,1.);}';
+var MARK_FS = 'uniform float uFade;varying float vRip,vA;varying vec3 vCol;' +
+  'void main(){vec2 q=gl_PointCoord*2.-1.;float r=length(q);float set=clamp(vRip,0.,1.);' +
+  'float ring=exp(-pow((r-.16)/.03,2.))*.85+smoothstep(.06,.025,r);' +
+  'float rip=(vRip>0.&&vRip<1.)?exp(-pow((r-.16-vRip*.76)/.04,2.))*(1.-vRip):0.;' +
+  'gl_FragColor=vec4(vCol*(ring*(.35+.65*set)+rip*1.3)*vA*uFade,1.);}';
+function markCloud(size) {
+  var geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(MAXM * 3), 3));
+  geo.setAttribute('aBorn', new THREE.BufferAttribute(new Float32Array(MAXM), 1));
+  geo.setAttribute('aDim', new THREE.BufferAttribute(new Float32Array(MAXM), 1));
+  geo.setAttribute('aIdx', new THREE.BufferAttribute(new Float32Array(MAXM), 1));
+  geo.setAttribute('aCol', new THREE.BufferAttribute(new Float32Array(MAXM * 3), 3));
+  geo.setDrawRange(0, 0);
+  var u = { uNow: { value: 0 }, uScale: { value: 400 }, uMem: { value: 1 }, uSize: { value: size }, uFade: { value: 1 } };
+  var m = new THREE.Points(geo, mat({ uniforms: u, vertexShader: MARK_VS, fragmentShader: MARK_FS }));
+  m.frustumCulled = false; m.userData.u = u;
+  return m;
+}
+var shaftMarks = markCloud(2.6); shaft.add(shaftMarks);
+var trace = markCloud(2.6); scene.add(trace);
+var threadGeo = new THREE.BufferGeometry();
+threadGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(MAXM * 3), 3));
+threadGeo.setAttribute('aA', new THREE.BufferAttribute(new Float32Array(MAXM).fill(0.55), 1));
+var threadU = { uColor: { value: v3(LOOKS[4].rimV) }, uFogK: { value: 0.0 }, uFade: { value: 0 } };
+var thread = new THREE.Line(threadGeo, mat({ uniforms: threadU, vertexShader: LINE_VS, fragmentShader: LINE_FS }));
+thread.frustumCulled = false; scene.add(thread);
+var traceWeave = 0, traceDirty = true;
+
+function fillMarks() {
+  var list = marks.slice(-MAXM), n = list.length, g = shaftMarks.geometry;
+  var P = g.attributes.position.array, B = g.attributes.aBorn.array, Dm = g.attributes.aDim.array, I = g.attributes.aIdx.array, C = g.attributes.aCol.array;
+  for (var i = 0; i < n; i++) {
+    var m = list[i], c = LOOKS[m.look].rimV;
+    P[i * 3] = m.p[0]; P[i * 3 + 1] = m.p[1]; P[i * 3 + 2] = m.p[2];
+    B[i] = m.born; Dm[i] = m.old ? 0.45 : 1; I[i] = n > 1 ? i / (n - 1) : 0;
+    C[i * 3] = c[0]; C[i * 3 + 1] = c[1]; C[i * 3 + 2] = c[2];
+  }
+  ['position', 'aBorn', 'aDim', 'aIdx', 'aCol'].forEach(function (k) { g.attributes[k].needsUpdate = true; });
+  g.setDrawRange(0, n);
+  traceDirty = true;
+}
+/* the trace: every mark of the visit at once, in order, on three planes (never more) */
+function fillTrace() {
+  traceDirty = false;
+  var list = marks.slice(-MAXM), n = list.length, g = trace.geometry;
+  var P = g.attributes.position.array, B = g.attributes.aBorn.array, Dm = g.attributes.aDim.array, I = g.attributes.aIdx.array, C = g.attributes.aCol.array, T = threadGeo.attributes.position.array;
+  var i, minU = 1e9, maxU = -1e9, minV = 1e9, maxV = -1e9;
+  for (i = 0; i < n; i++) { minU = Math.min(minU, list[i].u); maxU = Math.max(maxU, list[i].u); minV = Math.min(minV, list[i].v); maxV = Math.max(maxV, list[i].v); }
+  var cu = (minU + maxU) / 2, cv = (minV + maxV) / 2;
+  var boxW = Math.min(0.8, 0.8 * aspect) * (aspect < 0.9 ? 1 : 0.62), boxH = aspect < 0.9 ? 0.27 : 0.5;
+  var sc = Math.min(boxW / Math.max(0.05, (maxU - minU) / 2 * aspect), boxH / Math.max(0.05, (maxV - minV) / 2));
+  sc = Math.min(sc, 1.6);
+  var zc = -L * 5 - 3;
+  for (i = 0; i < n; i++) {
+    var m = list[i], plane = Math.min(2, Math.floor(m.d / 2)), dist = 15.5 - plane * 3.2, c = LOOKS[m.look].rimV;
+    var x = (m.u - cu) * aspect * sc * dist * baseTan, y = (m.v - cv) * sc * dist * baseTan, z = zc - dist;
+    P[i * 3] = x; P[i * 3 + 1] = y; P[i * 3 + 2] = z; T[i * 3] = x; T[i * 3 + 1] = y; T[i * 3 + 2] = z;
+    B[i] = i < Math.floor(traceWeave) ? -100 : 1e9; Dm[i] = m.old ? 0.5 : 1; I[i] = n > 1 ? i / (n - 1) : 0;   /* each mark waits for the thread to reach it */
+    C[i * 3] = c[0]; C[i * 3 + 1] = c[1]; C[i * 3 + 2] = c[2];
+  }
+  ['position', 'aBorn', 'aDim', 'aIdx', 'aCol'].forEach(function (k) { g.attributes[k].needsUpdate = true; });
+  threadGeo.attributes.position.needsUpdate = true;
+  g.setDrawRange(0, n);
+}
+fillMarks();
+
+/* ---------- 6. the lens pass: the hole, the eye, vignette, grain ---------- */
+var postU = {
+  tScene: { value: rt.texture }, uRes: { value: new THREE.Vector2(1, 1) }, uHole: { value: new THREE.Vector3(0, 0, 0.05) },
+  uHoleOn: { value: 1 }, uLens: { value: 1 }, uRing: { value: 0 }, uEye: { value: 0 }, uLid: { value: 0 }, uPupil: { value: 1 },
+  uGaze: { value: new THREE.Vector2(0, 0) }, uYou: { value: new THREE.Vector2(0, 0) }, uFlat: { value: 0 }, uTime: { value: 0 },
+  uAccent: { value: v3(LOOKS[0].rimV) }, uVoid: { value: v3(VOID) }, uCue: { value: v3(hex('#c9e6ff')) },
+  uWhite: { value: v3(hex('#e9f5ef')) }, uLidCol: { value: v3(LOOKS[0].r1V) }
+};
+var postScene = new THREE.Scene(), postCam = new THREE.Camera();
+var postQuad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), new THREE.ShaderMaterial({
+  uniforms: postU, depthTest: false, depthWrite: false,
+  vertexShader: 'varying vec2 vUv;void main(){vUv=uv;gl_Position=vec4(position.xy,0.,1.);}',
+  fragmentShader: [
+    'uniform sampler2D tScene;uniform vec2 uRes,uGaze,uYou;uniform vec3 uHole,uAccent,uVoid,uCue,uWhite,uLidCol;',
+    'uniform float uHoleOn,uLens,uRing,uEye,uLid,uPupil,uFlat,uTime;varying vec2 vUv;',
+    'float h2(vec2 p){p=fract(p*vec2(123.34,456.21));p+=dot(p,p+45.32);return fract(p.x*p.y);}',
+    'float vn(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(h2(i),h2(i+vec2(1,0)),f.x),mix(h2(i+vec2(0,1)),h2(i+vec2(1,1)),f.x),f.y);}',
+    'float sc(vec2 q,float asp,int ch){q.x/=asp;vec2 u=q*.5+.5;float inb=smoothstep(-.02,.03,u.x)*smoothstep(1.02,.97,u.x)*smoothstep(-.02,.03,u.y)*smoothstep(1.02,.97,u.y);vec3 t=mix(uVoid,texture2D(tScene,clamp(u,0.,1.)).rgb,inb);return ch==0?t.r:(ch==1?t.g:t.b);}',
+    'void main(){',
+    ' float asp=uRes.x/uRes.y;float px=2./uRes.y;vec2 p=vUv*2.-1.;p.x*=asp;',
+    ' vec2 c=uHole.xy;c.x*=asp;float rs=uHole.z;',
+    ' vec2 hc=c+uGaze*rs*.5*uEye;',                                   /* once there is an eye, the hole rides its gaze */
+    ' vec2 r=p-hc;float d=length(r);vec2 dir=r/max(d,1e-5);',
+    ' float re=rs*1.75;float defl=uLens*uHoleOn*re*re/max(d,rs*.55);',
+    ' vec2 ab=p*dot(p,p)*.0035;',                                      /* a lens fringe that grows toward the corners */
+    ' vec3 col=vec3(sc(p-dir*defl*1.07-ab,asp,0),sc(p-dir*defl,asp,1),sc(p-dir*defl*.93+ab,asp,2));',
+    ' float rsv=max(rs,2.2*px);',
+    ' float sh=smoothstep(rsv-px,rsv+px,d);',
+    ' col=mix(col,mix(uVoid,col,sh),uHoleOn);',                        /* the hole is the token, exactly */
+    ' float ring=exp(-pow((d-rsv*1.08)/(rsv*.05+1.1*px),2.));',
+    ' float halo=exp(-max(d-rsv,0.)/(rsv*.9+2.*px))*.22*sh;',
+    ' col+=uAccent*(ring*.95+halo)*uRing*uHoleOn;',
+    ' if(uEye>.002){',
+    '  vec2 e=p-c;float ri=rs*2.25;float Wd=ri*1.62;float xn=e.x/Wd;float arch=max(0.,1.-xn*xn);arch=arch*(.4+.6*arch);',
+    '  float Ht=ri*1.0*arch,Hb=ri*.8*arch;',
+    '  float mid=-Hb*.12;',
+    '  float topc=mix(mid,Ht,uLid),botc=mix(mid,-Hb,smoothstep(0.,.7,uLid));',
+    '  float mF=smoothstep(-px,px,min(Ht-e.y,e.y+Hb))*step(abs(xn),1.);',
+    '  float gapc=min(topc-e.y,e.y-botc);float mC=smoothstep(-px,px,gapc);',
+    '  vec2 ir=p-hc;float id=length(ir);float ia=atan(ir.y,ir.x);float rp=rs*uPupil;',
+    '  float t=clamp((id-rp)/max(ri-rp,1e-4),0.,1.);vec2 cs=vec2(cos(ia),sin(ia));',
+    '  float fib=vn(cs*10.+t*1.3)*.5+vn(cs*27.+7.+t*.6)*.5;',
+    '  vec3 iris=uAccent*(.16+.9*fib*fib)*(.5+.9*exp(-pow((t-.22)/.2,2.)))*(1.-smoothstep(.72,1.,t)*.8);',
+    '  iris+=uWhite*pow(fib,6.)*.25*(1.-t);',
+    '  vec3 white=mix(uVoid,uWhite,.12+.04*vn(p*7.));',
+    '  vec3 ball=mix(white,iris,smoothstep(ri+px,ri-px,id));',
+    '  ball*=1.-.55*smoothstep(topc-ri*.7,topc,e.y);',                 /* the lid shades what it is about to cover */
+    '  ball=mix(uVoid,ball,smoothstep(rp-px,rp+px,id));',
+    '  float near=1.-smoothstep(.7,1.7,rs);',
+    '  ball+=uWhite*smoothstep(rs*.1,rs*.04,length(p-(hc+vec2(-.52,.54)*rp)))*.75*near;',
+    '  ball+=uCue*smoothstep(rs*.075,rs*.03,length(p-(hc-uYou*rp*.5)))*.9*near;',  /* pupilla: the small light is you */
+    '  vec3 lid=mix(uVoid,uLidCol,.5+.5*smoothstep(-Hb,Ht,e.y));',
+    '  vec3 eye=mix(lid,ball,mC);',
+    '  eye+=uAccent*(1.-smoothstep(0.,1.8*px,abs(gapc)))*.28;',       /* rim light on the lid edge */
+    '  col=mix(col,eye,mF*uEye);',
+    '  col+=uAccent*(1.-smoothstep(0.,1.6*px,abs(min(Ht-e.y,e.y+Hb))))*.1*uEye*step(abs(xn),1.);',
+    '  float cr=ri*1.22*arch+ri*.1;col+=uAccent*(1.-smoothstep(0.,1.4*px,abs(e.y-cr)))*.07*uEye*smoothstep(1.,.7,abs(xn));',
+    ' }',
+    ' vec2 vv=vUv*2.-1.;col=mix(col,uVoid,smoothstep(.62,1.5,length(vv))*.75);',
+    ' col=mix(col,uVoid,uFlat);',
+    ' col+=(h2(gl_FragCoord.xy+fract(uTime)*71.3)-.5)*(2.6/255.)*(1.-uFlat);',
+    ' gl_FragColor=vec4(col,1.);}'
+  ].join('\n')
+}));
+postQuad.frustumCulled = false; postScene.add(postQuad);
+
+/* ---------- size ---------- */
+function resize() {
+  W = Math.max(1, canvas.clientWidth); H = Math.max(1, canvas.clientHeight);
+  var pr = Math.min(window.devicePixelRatio || 1, 2) * quality;
+  var cap = Math.sqrt(2.3e6 / (W * H * pr * pr)); if (cap < 1) pr *= cap;
+  RW = Math.max(2, Math.round(W * pr)); RH = Math.max(2, Math.round(H * pr));
+  renderer.setSize(RW, RH, false); rt.setSize(RW, RH);
+  aspect = W / H;
+  var portrait = aspect < 0.9;
+  CX = portrait ? 0 : Math.min(0.24, (aspect - 0.9) * 0.3);
+  CY = portrait ? 0.36 : 0.1;
+  baseTan = Math.tan((portrait ? 70 : 58) * Math.PI / 360);
+  holeR = portrait ? 6 * Math.max(0.5, aspect * 1.1) : 5.2;
+  bgU.uRes.value.set(RW, RH); bgU.uC.value.set(CX, CY);
+  postU.uRes.value.set(RW, RH);
+  glyphU.uAspect.value = aspect; glyphU.uPartR.value = 118 * 2 / H * (COARSE ? 1.25 : 1);
+  var st = $('axes').getBoundingClientRect();
+  if (st.height) root.style.setProperty('--strip-h', Math.round(H - st.top) + 'px');
+  rs2 = holeR / ((camZ(2) - ZH) * baseTan);
+  traceDirty = true;
+}
+function camZ(d) { return -L * Math.min(d, 5) - 6 * Math.max(d - 5, 0); }
+function tanAt(d) {
+  var d2 = ZH - camZ(2), d3 = ZH - camZ(3);
+  if (d <= 2) return baseTan;
+  if (d <= 3) return baseTan * d2 / (ZH - camZ(d));              /* dolly zoom: the point holds its size */
+  var k = Math.min(1, (d - 3) / 0.7); k = k * k * (3 - 2 * k);
+  return baseTan * (d2 / d3) * (1 - k) + baseTan * k;
+}
+function ss(a, b, x) { var t = Math.max(0, Math.min(1, (x - a) / (b - a))); return t * t * (3 - 2 * t); }
+
+/* ---------- sound: off by default, started by a press ---------- */
+var snd = { on: false, ctx: null, voices: [], master: null, bus: null };
+function soundStart(given) {
+  var AC = window.AudioContext || window.webkitAudioContext; if (!AC && !given) return false;
+  try {
+    var ctx = snd.ctx = given || new AC();
+    var lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 2100;
+    var dl = ctx.createDelay(1); dl.delayTime.value = 0.37;
+    var fb = ctx.createGain(); fb.gain.value = 0.4;
+    var wet = ctx.createGain(); wet.gain.value = 0.4;
+    snd.master = ctx.createGain(); snd.master.gain.value = 0;
+    snd.bus = ctx.createGain(); snd.bus.gain.value = 0.6;
+    snd.master.connect(lp); snd.bus.connect(lp); lp.connect(ctx.destination);
+    lp.connect(dl); dl.connect(fb); fb.connect(dl); dl.connect(wet); wet.connect(ctx.destination);
+    [[1, 1], [1.75, 0.42]].forEach(function (layer) {            /* 7/4: the harmonic seventh */
+      for (var i = 0; i < 7; i++) {
+        var o = ctx.createOscillator(), g = ctx.createGain();
+        o.type = 'sine'; o.frequency.value = 30; g.gain.value = 0; o.connect(g); g.connect(snd.master); o.start();
+        snd.voices.push({ o: o, g: g, i: i, ratio: layer[0], amp: layer[1], pos: -1 });
+      }
+    });
+    return true;
+  } catch (e) { return false; }
+}
+function soundFrame() {
+  if (!snd.ctx) return;
+  var now = snd.ctx.currentTime;
+  snd.voices.forEach(function (vc) {
+    var pos = (((vc.i - S.d * 0.85) % 7) + 7) % 7, f = 30 * Math.pow(2, pos) * vc.ratio;
+    var g = Math.exp(-Math.pow(pos - 3.0, 2) / 3.1) * vc.amp;
+    if (vc.pos < 0 || Math.abs(pos - vc.pos) > 3) vc.o.frequency.setValueAtTime(f, now); else vc.o.frequency.setTargetAtTime(f, now, 0.03);
+    vc.g.gain.setTargetAtTime(g, now, 0.06); vc.pos = pos;
+  });
+  var level = snd.on ? (0.035 + 0.06 * Math.min(1, Math.abs(S.v) * 1.6)) * Math.min(1, Math.abs(S.ts)) : 0;   /* a hold is a rest */
+  snd.master.gain.setTargetAtTime(level, now, 0.12);
+}
+function bell(u) {
+  if (!snd.on || !snd.ctx) return;
+  var H8 = [8, 9, 10, 11, 12, 13, 14, 16], f = 55 * H8[Math.max(0, Math.min(7, Math.floor((u * 0.5 + 0.5) * 8)))];
+  var ctx = snd.ctx, now = ctx.currentTime;
+  [[1, 0.16], [2.76, 0.035]].forEach(function (pp) {
+    var o = ctx.createOscillator(), g = ctx.createGain(); o.type = 'sine'; o.frequency.value = f * pp[0];
+    g.gain.setValueAtTime(0, now); g.gain.linearRampToValueAtTime(pp[1], now + 0.006); g.gain.exponentialRampToValueAtTime(0.0001, now + 1.6);
+    o.connect(g); g.connect(snd.bus); o.start(now); o.stop(now + 1.7);
+  });
+}
+function thump() {
+  if (!snd.on || !snd.ctx) return;
+  var ctx = snd.ctx, now = ctx.currentTime, o = ctx.createOscillator(), g = ctx.createGain();
+  o.type = 'sine'; o.frequency.setValueAtTime(62, now); o.frequency.exponentialRampToValueAtTime(38, now + 0.7);
+  g.gain.setValueAtTime(0, now); g.gain.linearRampToValueAtTime(0.3, now + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, now + 0.9);
+  o.connect(g); g.connect(snd.bus); o.start(now); o.stop(now + 1);
+}
+function haptic(ms) { try { if (navigator.vibrate) navigator.vibrate(ms); } catch (e) {} }
+$('soundBtn').addEventListener('click', function () {
+  if (!snd.ctx && !soundStart()) { this.textContent = 'No sound here'; this.disabled = true; return; }
+  snd.on = !snd.on;
+  if (snd.on && snd.ctx.state === 'suspended') { try { snd.ctx.resume(); } catch (e) {} }
+  this.setAttribute('aria-pressed', snd.on ? 'true' : 'false');
+  this.textContent = snd.on ? 'Sound on' : 'Sound off';
+});
+
+/* ---------- marks ---------- */
+var realNow = 0, eye = { stare: 0, open: false, amount: 0, lid: 0, blink: 0, nextBlink: 2.6, pupil: 1, poked: 0, gx: 0, gy: 0 };
+var hole = { x: 0, y: 0, rs: 0.05 };
+function addMark(nx, ny) {
+  camera.updateMatrixWorld();
+  var v = new THREE.Vector3(nx, ny, 0.5).unproject(camera).sub(camera.position);
+  var k = 9 / Math.max(0.2, -v.z);
+  var p = camera.position.clone().add(v.multiplyScalar(k));
+  var a = -shaft.rotation.z, cs = Math.cos(a), sn = Math.sin(a);
+  var look = currentLook();
+  marks.push({ u: nx - CX, v: ny - CY, d: S.d, look: look, p: [p.x * cs - p.y * sn, p.x * sn + p.y * cs, p.z], born: realNow, old: false });
+  if (marks.length > 400) marks.shift();
+  fillMarks(); saveMarks(); bell(nx); haptic(6);
+  traceWeave = Math.min(traceWeave, Math.max(0, marks.length - 1));
+}
+function tap(nx, ny) {
+  if (S.beat === 4 && eye.amount > 0.6) {
+    var dx = (nx - hole.x) * aspect, dy = ny - hole.y;
+    if (Math.sqrt(dx * dx + dy * dy) < hole.rs * 3.4) { eye.blink = 0.26; eye.poked = realNow; eye.pupil = 0.62; haptic(5); return; }
+  }
+  addMark(nx, ny);
+}
+var forgetArmed = 0;
+$('forgetBtn').addEventListener('click', function () {
+  var b = this;
+  if (!marks.length) return;
+  if (realNow - forgetArmed > 4 || !forgetArmed) { forgetArmed = realNow; b.textContent = 'Forget all ' + pad(marks.length, 2) + '? Press again'; return; }
+  marks.length = 0; forgetArmed = 0; try { localStorage.removeItem(STORE); } catch (e) {}
+  fillMarks(); b.textContent = 'Forget the marks';
+});
+
+/* ---------- input: every axis has a hand and a second way in ---------- */
+function ndcOf(e) { var r = canvas.getBoundingClientRect(); return [((e.clientX - r.left) / r.width) * 2 - 1, -(((e.clientY - r.top) / r.height) * 2 - 1)]; }
+var drag = null, reel = null;
+function handBack() { S.travel = null; reel = null; }
+canvas.addEventListener('pointerdown', function (e) {
+  if (e.button !== undefined && e.button > 0) return;
+  try { canvas.setPointerCapture(e.pointerId); } catch (er) {}
+  var n = ndcOf(e);
+  drag = { id: e.pointerId, x: e.clientX, y: e.clientY, x0: e.clientX, y0: e.clientY, t0: performance.now(), moved: false, vy: 0, lt: performance.now() };
+  S.ptr.tx = n[0]; S.ptr.ty = n[1]; S.ptr.live = 1; handBack();
+  drag.timer = setTimeout(function () { if (drag && !drag.moved) { S.hold = true; haptic(12); } }, 300);
+});
+canvas.addEventListener('pointermove', function (e) {
+  var n = ndcOf(e);
+  S.ptr.tx = n[0]; S.ptr.ty = n[1]; S.ptr.live = 1; S.ptr.lastMove = realNow;
+  if (!drag || drag.id !== e.pointerId) return;
+  var dx = e.clientX - drag.x, dy = e.clientY - drag.y, now = performance.now();
+  if (!drag.moved && Math.hypot(e.clientX - drag.x0, e.clientY - drag.y0) > 8) { drag.moved = true; clearTimeout(drag.timer); if (S.hold) S.hold = false; }
+  if (drag.moved) {
+    var dd = -dy / H * 0.8;
+    S.dT = Math.max(0, Math.min(BEATS, S.dT + dd));
+    S.x = wrap(S.x + dx / W * 0.7);
+    var dtm = Math.max(1, now - drag.lt) / 1000;
+    drag.vy = drag.vy * 0.6 + (dd / dtm) * 0.4;
+  }
+  drag.x = e.clientX; drag.y = e.clientY; drag.lt = now;
+});
+function endDrag(e) {
+  if (!drag || (e && drag.id !== e.pointerId)) return;
+  clearTimeout(drag.timer);
+  if (S.hold) { S.hold = false; }
+  else if (!drag.moved && performance.now() - drag.t0 < 320 && e && e.type === 'pointerup') { var n = ndcOf(e); tap(n[0], n[1]); }
+  else if (drag.moved && performance.now() - drag.lt < 80) S.dT = Math.max(0, Math.min(BEATS, S.dT + Math.max(-0.5, Math.min(0.5, drag.vy * 0.2))));
+  if (e && e.pointerType !== 'mouse') S.ptr.lastMove = realNow;
+  drag = null;
+}
+canvas.addEventListener('pointerup', endDrag);
+canvas.addEventListener('pointercancel', endDrag);
+canvas.addEventListener('pointerleave', function (e) { if (e.pointerType === 'mouse') S.ptr.live = 0; });
+canvas.addEventListener('wheel', function (e) {
+  e.preventDefault(); handBack();
+  var k = e.deltaMode === 1 ? 32 : 1;
+  if (Math.abs(e.deltaX) > Math.abs(e.deltaY) * 1.5) S.x = wrap(S.x + e.deltaX * k / 1800);
+  else S.dT = Math.max(0, Math.min(BEATS, S.dT + e.deltaY * k / 1500));
+}, { passive: false });
+canvas.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+function wrap(x) { return ((x + 1) % 2 + 2) % 2 - 1; }
+function goTo(d, speed) { S.travel = { to: Math.max(0, Math.min(BEATS, d)), speed: speed || 0.42 }; }
+function typing(e) { var t = e.target; return t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA'); }
+window.addEventListener('keydown', function (e) {
+  if (e.metaKey || e.ctrlKey || e.altKey) return;
+  if (e.key === 'Escape' && !$('sheet').hidden) { closeSheet(); return; }
+  if (!$('sheet').hidden || typing(e)) return;
+  var k = e.key;
+  reel = null;
+  if (k === 'ArrowDown') { S.travel = null; S.dT = Math.min(BEATS, S.dT + 0.1); }
+  else if (k === 'ArrowUp') { S.travel = null; S.dT = Math.max(0, S.dT - 0.1); }
+  else if (k === 'PageDown') goTo(Math.floor(S.d + 0.01) + 1.5);
+  else if (k === 'PageUp') goTo(Math.max(0, Math.ceil(S.d - 0.01) - 1.5));
+  else if (k === 'Home') goTo(0, 1.6);
+  else if (k === 'End') goTo(5.5, 1.6);
+  else if (k === 'ArrowLeft') S.x = wrap(S.x - 0.04);
+  else if (k === 'ArrowRight') S.x = wrap(S.x + 0.04);
+  else if (k === ' ' && e.target.tagName !== 'BUTTON') S.hold = true;
+  else if (k === 'm' || k === 'M') tap(S.ptr.live > 0.2 ? S.ptr.x : CX, S.ptr.live > 0.2 ? S.ptr.y : CY - 0.2);
+  else if (k === 'l' || k === 'L') { S.lookPin = S.lookPin >= 4 ? -1 : S.lookPin + 1; }
+  else return;
+  e.preventDefault();
+});
+window.addEventListener('keyup', function (e) { if (e.key === ' ') S.hold = false; });
+window.addEventListener('blur', function () { S.hold = false; });
+Array.prototype.forEach.call(document.querySelectorAll('[data-go]'), function (b) {
+  b.addEventListener('click', function () {
+    reel = null;
+    if (b.getAttribute('data-go') === 'top') goTo(0, 1.8);
+    else goTo(Math.min(5.5, Math.floor(S.d + 0.12) + 1.5), S.beat === 0 ? 0.36 : 0.42);
+  });
+});
+
+/* the world's own handle, for tests and for anyone curious in the console */
+var D5 = window.Depthfield5D = { version: '0.2.0', state: S, looks: LOOKS, marks: marks, goTo: goTo };
+function pad(n, w) { var s = String(Math.max(0, Math.round(n))); while (s.length < w) s = '0' + s; return s; }
+function currentLook() { return S.lookPin >= 0 ? S.lookPin : BEAT_LOOK[Math.max(0, Math.min(5, Math.floor(S.d + 0.02)))]; }
+/* plan D2: the strip is the kit's Depthfield.axes; the numbers stay in S, so it is given a get and a set */
+var strip = window.Depthfield.axes($('axes'), null, {
+  get: function (k) {
+    return k === 'x' ? S.x : k === 'depth' ? S.d : k === 'time' ? S.tsSlider : k === 'look' ? S.lookPin + 1 : S.mem;
+  },
+  set: function (k, v) {
+    if (k === 'x') S.x = v;
+    else if (k === 'depth') { handBack(); S.dT = v; }
+    else if (k === 'time') S.tsSlider = v;
+    else if (k === 'look') S.lookPin = Math.round(v) - 1;
+    else S.mem = v;
+  },
+  text: function (k) {
+    if (k === 'x') return (S.x < 0 ? '−' : '+') + Math.abs(S.x).toFixed(2);
+    if (k === 'depth') return pad(S.d / BEATS * 100, 3) + '%';
+    if (k === 'time') return (S.ts < -0.005 ? '−' : '×') + Math.abs(S.ts).toFixed(2);
+    if (k === 'look') return S.lookPin < 0 ? 'auto' : LOOKS[S.lookPin].id;
+    return pad(Math.round(marks.length * S.mem), 2);
+  }
+});
+
+/* ---------- the sheet ---------- */
+var lastFocus = null;
+function openSheet() {
+  lastFocus = document.activeElement; $('sheet').hidden = false; S.hold = false;
+  Array.prototype.forEach.call(document.querySelectorAll('.jump'), function (j) { j.setAttribute('aria-current', String(+j.getAttribute('data-jump') === S.beat)); });
+  var old = marks.filter(function (m) { return m.old; }).length;
+  $('memNote').textContent = marks.length ? pad(marks.length, 2) + ' marks kept in this browser' + (old ? ', ' + pad(old, 2) + ' from an earlier visit.' : '.') : 'No marks kept.';
+  $('forgetBtn').textContent = 'Forget the marks'; forgetArmed = 0;
+  $('sheetClose').focus();
+}
+function closeSheet() { $('sheet').hidden = true; if (lastFocus && lastFocus.focus) lastFocus.focus(); }
+$('indexBtn').addEventListener('click', openSheet);
+$('reelBtn').addEventListener('click', function () { closeSheet(); goTo(0, 2.4); reel = { phase: 0, wait: 0 }; });
+$('sheetClose').addEventListener('click', closeSheet);
+$('sheet').addEventListener('click', function (e) { if (e.target === this) closeSheet(); });
+$('sheet').addEventListener('keydown', function (e) {
+  if (e.key !== 'Tab') return;
+  var f = this.querySelectorAll('button'), first = f[0], last = f[f.length - 1];
+  if (e.shiftKey && document.activeElement === first) { last.focus(); e.preventDefault(); }
+  else if (!e.shiftKey && document.activeElement === last) { first.focus(); e.preventDefault(); }
+});
+Array.prototype.forEach.call(document.querySelectorAll('.jump'), function (j) {
+  j.addEventListener('click', function () { var b = +j.getAttribute('data-jump'); reel = null; closeSheet(); goTo(b === 0 ? 0 : b + 0.5, 1.5); });
+});
+
+/* ---------- words ---------- */
+var beats = Array.prototype.slice.call(document.querySelectorAll('.beat[data-beat]'));
+var txt = {};
+function setText(id, s) { if (txt[id] !== s) { txt[id] = s; $(id).textContent = s; } }
+function showBeat(b) {
+  beats.forEach(function (el, i) { var on = i === b; el.classList.toggle('is-on', on); el.setAttribute('aria-hidden', on ? 'false' : 'true'); });
+}
+if (!COARSE) setText('hint0', 'Scroll or drag up to descend. The floor drops away.');
+var shownBeat = 0;
+/* each chapter has an address (#gap, #pupil): a link opens there, and the address follows the descent */
+var NAMES = ['', 'gap', 'vanishing-point', 'rest', 'pupil', 'trace'];
+function beatOfHash() { var i = NAMES.indexOf((location.hash || '').replace('#', '')); return i > 0 ? i : 0; }
+function nameBeat(b) {
+  if (b < 0 || NAMES[b] === (location.hash || '').replace('#', '')) return;
+  try { history.replaceState(null, '', b ? '#' + NAMES[b] : location.pathname + location.search); } catch (e) {}
+}
+(function () { var b = beatOfHash(); if (b) { S.d = S.dT = b + 0.5; } })();
+window.addEventListener('hashchange', function () { var b = beatOfHash(); if (b !== S.beat) { reel = null; goTo(b ? b + 0.5 : 0, 1.5); } });
+
+/* ---------- frame ---------- */
+var pal = {}; PKEYS.forEach(function (k) { pal[k] = LOOKS[0][k + 'V'].slice(); });
+var clock = 0, last = 0, acc = 0, frames = 0, fall = 0, raf = 0;
+var hv = new THREE.Vector3();
+function frame(ms) {
+  raf = requestAnimationFrame(frame);
+  var t = ms / 1000, dt = Math.min(0.05, Math.max(0.001, t - (last || t))); last = t; realNow += dt;
+
+  /* the reel: the whole fall by itself; it waits at the eye until the eye has looked */
+  if (reel && !S.travel) {
+    if (reel.phase === 0) { reel.phase = 1; S.travel = { to: 4.36, speed: 0.17 }; }
+    else if (reel.phase === 1) { reel.wait += dt; if (S.d < 4.3) reel = null; else if (eye.amount > 0.9 && reel.wait > 5.5) { reel.phase = 2; S.travel = { to: 5.6, speed: 0.2 }; } }
+    else reel = null;
+  }
+  /* depth */
+  if (S.travel) {
+    var step = S.travel.speed * dt, gap = S.travel.to - S.dT;
+    if (Math.abs(gap) <= step) { S.dT = S.travel.to; S.travel = null; } else S.dT += Math.sign(gap) * step;
+  }
+  var d0 = S.d;
+  S.d += (S.dT - S.d) * (1 - Math.exp(-dt * (RM ? 14 : 7)));
+  if (Math.abs(S.dT - S.d) < 0.0004) S.d = S.dT;
+  S.v = S.v * 0.8 + ((S.d - d0) / dt) * 0.2;
+  var d = S.d, beat = Math.max(0, Math.min(5, Math.floor(d + 0.02)));
+  if (d > 0.03 && !S.moved) { S.moved = true; root.classList.add('moved'); }
+  S.beat = beat;
+
+  /* time */
+  var tsT = S.hold ? 0 : S.tsSlider;
+  S.ts += (tsT - S.ts) * (1 - Math.exp(-dt * 9)); if (Math.abs(tsT - S.ts) < 0.002) S.ts = tsT;
+  var amb = RM ? 0 : S.ts;
+  clock += dt * amb; fall += dt * amb * 21;
+
+  /* look */
+  var look = currentLook(), tl = LOOKS[look], kk = 1 - Math.exp(-dt / 0.5);
+  PKEYS.forEach(function (k) { var a = pal[k], b = tl[k + 'V']; a[0] += (b[0] - a[0]) * kk; a[1] += (b[1] - a[1]) * kk; a[2] += (b[2] - a[2]) * kk; });
+  if (S.look !== look) { S.look = look; root.style.setProperty('--art-accent', tl.rim); }
+
+  /* pointer */
+  var P = S.ptr, px0 = P.x, py0 = P.y, pk = 1 - Math.pow(1 - 0.16, dt * 60);
+  P.x += (P.tx - P.x) * pk; P.y += (P.ty - P.y) * pk;
+  P.speed = P.speed * 0.85 + (Math.hypot(P.x - px0, P.y - py0) / dt) * 0.15;
+  if (COARSE && !drag && realNow - (P.lastMove || 0) > 1.4) P.live = 0;
+  P.part = (P.part || 0) + ((P.live ? 1 : 0) - (P.part || 0)) * (1 - Math.exp(-dt * 5));
+
+  /* camera: nearer things move more with the pointer (depth-follow 0.05) */
+  var T = tanAt(d), fk = 1 - Math.pow(1 - 0.05, dt * 60);
+  camera.fov = Math.atan(T) * 360 / Math.PI; camera.aspect = aspect; camera.updateProjectionMatrix();
+  camera.projectionMatrix.elements[8] = -CX; camera.projectionMatrix.elements[9] = -CY;
+  camera.projectionMatrixInverse.copy(camera.projectionMatrix).invert();
+  var swx = RM ? 0 : P.x * 0.55 * P.part, swy = RM ? 0 : P.y * 0.4 * P.part;
+  camera.position.x += (swx - camera.position.x) * fk; camera.position.y += (swy - camera.position.y) * fk;
+  camera.position.z = camZ(d);
+  camera.updateMatrixWorld(); camera.matrixWorldInverse.copy(camera.matrixWorld).invert();
+  shaft.rotation.z = S.x * Math.PI;
+  var scalePx = RH / (2 * T);
+
+  /* the floor, the shaft */
+  bgU.uSink.value = ss(0, 0.7, d); bgU.uPitch.value = ss(0.36, 1.0, d);
+  bgU.uShaft.value = ss(0.55, 1.05, d) * (1 - 0.86 * ss(4.9, 5.0, d));
+  bgU.uPtr.value.set(RM ? 0 : P.x * P.part, P.y); bgU.uTime.value = clock; bgU.uX.value = S.x; bgU.uD.value = d;
+  bgU.uSkyTop.value.fromArray(pal.skyTop); bgU.uSkyLow.value.fromArray(pal.skyLow); bgU.uSun.value.fromArray(pal.sun);
+  bgU.uR1.value.fromArray(pal.r1); bgU.uR2.value.fromArray(pal.r2); bgU.uR3.value.fromArray(pal.r3); bgU.uRim.value.fromArray(pal.rim);
+
+  /* zeros: focus goes where the pointer goes (far at the middle, near at the edges) */
+  var offC = Math.hypot((P.x - CX) * aspect, P.y - CY);
+  var focusT = P.part > 0.3 ? 34 - 26 * ss(0.05, 0.85, offC) : 13;
+  glyphU.uFocus.value += (focusT - glyphU.uFocus.value) * (1 - Math.exp(-dt * 3));
+  glyphU.uTime.value = clock; glyphU.uPtr.value.set(P.x, P.y); glyphU.uPartS.value = 0.85 * P.part;
+  glyphU.uFade.value = ss(0.45, 1.0, d) * (1 - ss(2.4, 2.9, d)); glyphU.uRim.value.fromArray(pal.rim);
+  lineU.uFade.value = ss(0.9, 1.9, d) * (1 - ss(4.2, 4.6, d)) * (0.35 + 0.65 * ss(1.7, 2.2, d)); lineU.uColor.value.fromArray(pal.rim);
+  var rainOn = ss(2.72, 3.1, d) * (1 - ss(4.45, 4.95, d));
+  rainU.uFade.value = rainOn; rainU.uCamZ.value = camera.position.z; rainU.uFall.value = fall;
+  rainU.uLen.value = 2.2 * Math.abs(S.ts) * (S.ts < 0 ? -1 : 1); rainU.uScale.value = scalePx; rainU.uColor.value.fromArray(pal.rim);
+  moteU.uFade.value = ss(0.5, 1.1, d); moteU.uCamZ.value = camera.position.z; moteU.uFall.value = clock * 0.5; moteU.uScale.value = scalePx;
+
+  /* marks and the trace */
+  var mu = shaftMarks.userData.u; mu.uNow.value = realNow; mu.uScale.value = scalePx; mu.uMem.value = S.mem; mu.uFade.value = 1 - ss(4.95, 5.02, d);
+  var inTrace = d > 5.03;
+  if (inTrace && traceDirty) fillTrace();
+  var tu = trace.userData.u; tu.uNow.value = realNow; tu.uScale.value = scalePx; tu.uMem.value = S.mem; tu.uFade.value = ss(5.06, 5.3, d);
+  var nMarks = Math.min(marks.length, MAXM);
+  /* the trace plays back: the thread reaches each mark in the order it was made, and the mark rings again */
+  if (!inTrace && traceWeave > 0) traceDirty = true;
+  var w0 = Math.floor(traceWeave);
+  traceWeave = inTrace ? Math.min(nMarks, traceWeave + dt * (RM ? 400 : Math.max(3.5, nMarks / 8))) : 0;
+  var w1 = Math.floor(traceWeave);
+  if (inTrace && w1 > w0) {
+    var tb = trace.geometry.attributes.aBorn, shown = marks.slice(-MAXM);
+    for (var wi = w0; wi < w1; wi++) tb.array[wi] = RM ? -100 : realNow;
+    tb.needsUpdate = true;
+    if (!RM && shown[w1 - 1]) bell(shown[w1 - 1].u + CX);
+  }
+  threadGeo.setDrawRange(0, Math.floor(Math.min(traceWeave, nMarks * S.mem + 0.999)));
+  threadU.uFade.value = ss(5.06, 5.3, d) * 0.5; threadU.uColor.value.fromArray(pal.rim);
+  trace.position.x = thread.position.x = RM ? 0 : S.x * 2.2;
+
+  /* the hole, the eye */
+  hv.set(0, 0, ZH).project(camera);
+  var dist = Math.max(0.05, camera.position.z - ZH), rs = holeR / (dist * T);
+  hole.x = hv.x; hole.y = hv.y; hole.rs = rs;
+  var holeOn = d < 5.0 ? ss(0.5, 0.95, d) : 0;
+  postU.uHole.value.set(hv.x, hv.y, Math.min(rs, 40)); postU.uHoleOn.value = holeOn;
+  postU.uRing.value = ss(0.62, 1.1, d) * (1 - 0.7 * eye.amount);
+  postU.uLens.value = ss(1.0, 2.0, d);
+  var zone = d > 4.1 && d < 4.93;
+  if (zone) {
+    var still = P.speed < 0.25 && Math.abs(S.v) < 0.04;
+    eye.stare = still ? eye.stare + dt : Math.max(0, eye.stare - dt * 2);
+    if (!eye.open && (eye.stare > 1.3 || RM)) { eye.open = true; eye.nextBlink = 2.6; thump(); haptic(8); }
+  } else if (d < 4.0 || d > 5.0) { eye.open = false; eye.stare = 0; }
+  eye.amount += ((eye.open ? 1 : 0) - eye.amount) * (1 - Math.exp(-dt * (eye.open ? 3.5 : 6)));
+  if (eye.open && !RM) { eye.nextBlink -= dt * Math.max(0.2, Math.abs(S.ts)); if (eye.nextBlink <= 0) { eye.blink = 0.16; eye.nextBlink = 2.6 + Math.random() * 2.4; } }
+  eye.blink = Math.max(0, eye.blink - dt);
+  var lidT = eye.open && eye.amount > 0.75 && eye.blink <= 0 ? 1 : 0;
+  eye.lid += (lidT - eye.lid) * (1 - Math.exp(-dt * (lidT ? (eye.lid < 0.05 && realNow - eye.poked > 1 ? 2.2 : 13) : 30)));
+  var gx = Math.max(-1, Math.min(1, (P.x - hv.x) * aspect * 1.6)), gy = Math.max(-1, Math.min(1, (P.y - hv.y) * 1.6));
+  if (!P.live) { gx = 0; gy = -0.25; }                                      /* with no pointer it looks at the words */
+  var gk = 1 - Math.exp(-dt * 5); eye.gx += (gx - eye.gx) * gk; eye.gy += (gy - eye.gy) * gk;
+  var pupT = 1.0 - 0.3 * Math.min(1, P.speed * 0.9);
+  eye.pupil += (pupT - eye.pupil) * (1 - Math.exp(-dt * 2.5));
+  postU.uEye.value = eye.amount; postU.uLid.value = eye.lid; postU.uPupil.value = eye.pupil;
+  postU.uGaze.value.set(eye.gx, eye.gy); postU.uYou.value.set(eye.gx, eye.gy);
+  postU.uAccent.value.fromArray(pal.rim); postU.uLidCol.value.fromArray(pal.r1);
+  postU.uFlat.value = ss(4.9, 4.97, d) * (1 - ss(5.03, 5.1, d));
+  postU.uTime.value = RM ? 0 : realNow;
+
+  /* words */
+  var lo = d - beat, want = (beat === 0 ? lo < 0.82 : (lo > 0.1 && lo < 0.9) || beat === 5 && lo > 0.1) ? beat : -1;
+  if (want !== shownBeat) { shownBeat = want; showBeat(want); nameBeat(want); }
+  if (shownBeat === 1) {
+    var cz = camera.position.z, near = 0;
+    for (var i = 0; i < rings.length; i++) if (rings[i].z < cz - 1.5) { near = i; break; } else near = i;
+    setText('ringOut', 'Ring ' + pad(near + 1, 2) + ' of ' + pad(rings.length, 2) + ' · ' + rings[near].name + ' ' + rings[near].ch);
+    setText('hint1', (COARSE ? 'Swipe' : 'Drag') + ' sideways to turn the field. ' + (COARSE ? 'Tap' : 'Click') + ' to leave a mark. ' + pad(marks.length, 2) + ' kept.');
+  } else if (shownBeat === 2) {
+    setText('fallOut', 'Fallen ' + pad(-camera.position.z, 4) + ' · the point ' + (rs / rs2).toFixed(2) + '×');
+  } else if (shownBeat === 3) {
+    setText('timeOut', 'Clock ' + (S.ts < -0.005 ? '−' : '×') + Math.abs(S.ts).toFixed(2) + (Math.abs(S.ts) < 0.01 ? ' · rest' : S.ts < 0 ? ' · the rain rises' : ''));
+  } else if (shownBeat === 4) {
+    setText('hint4', eye.amount < 0.5 ? 'Hold still. It takes a moment.' : (realNow - eye.poked < 3.5 && eye.poked ? 'It blinks when touched. So would you.' : 'It looks back. The small light in it is you.'));
+    setText('eyeOut', eye.amount < 0.5 ? 'The eye is drawn. It follows the pointer and nothing else.' : 'pupilla, Latin: little doll, the reflection in an eye. The hole took its name.');
+  } else if (shownBeat === 5) {
+    var n = marks.length, old = 0; for (var j = 0; j < n; j++) if (marks[j].old) old++;
+    setText('hint5', n === 0 ? 'You left nothing, so nothing is here. ' + (COARSE ? 'Tap' : 'Click') + ' to leave a mark.'
+      : 'What is here is what you left: ' + pad(n, 2) + (n === 1 ? ' mark' : ' marks, in the order you made them') + (old ? ', ' + pad(old, 2) + ' from an earlier visit.' : '.'));
+  }
+  strip.update(BEAT_AXIS[beat]);
+  soundFrame();
+
+  renderer.setRenderTarget(rt); renderer.render(scene, camera);
+  renderer.setRenderTarget(null); renderer.render(postScene, postCam);
+
+  /* hold the frame rate before the resolution */
+  acc += dt; frames++;
+  if (frames >= 50 && !D5.pinQuality) { var avg = acc / frames; acc = 0; frames = 0; if (avg > 1 / 36 && quality > 0.5) { quality = Math.max(0.5, quality * 0.8); resize(); } }
+}
+window.addEventListener('resize', resize);
+if (window.ResizeObserver) new ResizeObserver(resize).observe(canvas);
+document.addEventListener('visibilitychange', function () {
+  cancelAnimationFrame(raf); last = 0; S.hold = false;
+  if (snd.ctx && snd.ctx.suspend) { try { if (document.hidden) snd.ctx.suspend(); else if (snd.on) snd.ctx.resume(); } catch (e) {} }
+  if (!document.hidden) raf = requestAnimationFrame(frame);
+});
+canvas.addEventListener('webglcontextlost', function (e) { e.preventDefault(); cancelAnimationFrame(raf); });
+canvas.addEventListener('webglcontextrestored', function () { last = 0; raf = requestAnimationFrame(frame); });
+D5.frame = frame; D5.sound = { start: soundStart, frame: soundFrame, bell: bell, thump: thump, state: snd };
+resize();
+raf = requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
