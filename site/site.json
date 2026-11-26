@@ -160,15 +160,79 @@
   "preview": "project/components/Cover/preview.html"
  },
  "groups": [
+  "World",
   "Actions",
   "Narrative",
   "Content",
-  "World",
   "Inputs",
   "Overlays",
   "HUD"
  ],
  "components": [
+  {
+   "name": "Axes",
+   "group": "World",
+   "height": 300,
+   "preview": "project/components/Axes/preview.html",
+   "readme": "project/components/Axes/README.md",
+   "summary": "The five-axis strip: x, depth, time, look and memory on one line, each with a slider and a readout."
+  },
+  {
+   "name": "Cloth",
+   "group": "World",
+   "height": 470,
+   "preview": "project/components/Cloth/preview.html",
+   "readme": "project/components/Cloth/README.md",
+   "summary": "A woven cloth on a canvas: warp threads you can pluck, a weft you can pull, hung on a loom (`hang`) or laid down as land under the weather (`lay`)."
+  },
+  {
+   "name": "Lamp",
+   "group": "World",
+   "height": 300,
+   "preview": "project/components/Lamp/preview.html",
+   "readme": "project/components/Lamp/README.md",
+   "summary": "One warm light that follows the hand, and a room light that dims everything reflective while cues that make their own light stay bright."
+  },
+  {
+   "name": "Pen",
+   "group": "World",
+   "height": 700,
+   "preview": "project/components/Pen/preview.html",
+   "readme": "project/components/Pen/README.md",
+   "summary": "A look's inks and its world for canvas: `Depthfield.pen(look)` resolves the look's colours to RGB and draws the sky, the sun, the stars and the three ridges, so a game drawn on canvas stands in the same world as the page around it."
+  },
+  {
+   "name": "Pets",
+   "group": "World",
+   "height": 580,
+   "preview": "project/components/Pets/preview.html",
+   "readme": "project/components/Pets/README.md",
+   "summary": "The five night pets as data and as drawings: `Depthfield.pets` lists them, keeps the family's shared record of who found what, and draws each one on canvas, lit like the art and dancing to a beat with a swing."
+  },
+  {
+   "name": "Plate",
+   "group": "World",
+   "height": 300,
+   "preview": "project/components/Plate/preview.html",
+   "readme": "project/components/Plate/README.md",
+   "summary": "One drawing, made in a night material."
+  },
+  {
+   "name": "Weather",
+   "group": "World",
+   "height": 200,
+   "preview": "project/components/Weather/preview.html",
+   "readme": "project/components/Weather/README.md",
+   "summary": "Four weathers that follow the music, or the scroll: peach fall, red rain, mint clearing, night garden."
+  },
+  {
+   "name": "WorldCanvas",
+   "group": "World",
+   "height": 360,
+   "preview": "project/components/WorldCanvas/preview.html",
+   "readme": "project/components/WorldCanvas/README.md",
+   "summary": "The world behind the words: one full-bleed canvas of sky, a pointer-led sun, light shafts, three ridges with haze, particles that part around you, ripples where you press, and a vignette."
+  },
   {
    "name": "Button",
    "group": "Actions",
@@ -360,62 +424,6 @@
    "preview": "project/components/WorldCard/preview.html",
    "readme": "project/components/WorldCard/README.md",
    "summary": "A list row that opens a world: a 64px tile (art or an icon on `surface`), the world's name in italic display, one line under it."
-  },
-  {
-   "name": "Cloth",
-   "group": "World",
-   "height": 470,
-   "preview": "project/components/Cloth/preview.html",
-   "readme": "project/components/Cloth/README.md",
-   "summary": "A woven cloth on a canvas: warp threads you can pluck, a weft you can pull, hung on a loom (`hang`) or laid down as land under the weather (`lay`)."
-  },
-  {
-   "name": "Lamp",
-   "group": "World",
-   "height": 300,
-   "preview": "project/components/Lamp/preview.html",
-   "readme": "project/components/Lamp/README.md",
-   "summary": "One warm light that follows the hand, and a room light that dims everything reflective while cues that make their own light stay bright."
-  },
-  {
-   "name": "Pen",
-   "group": "World",
-   "height": 700,
-   "preview": "project/components/Pen/preview.html",
-   "readme": "project/components/Pen/README.md",
-   "summary": "A look's inks and its world for canvas: `Depthfield.pen(look)` resolves the look's colours to RGB and draws the sky, the sun, the stars and the three ridges, so a game drawn on canvas stands in the same world as the page around it."
-  },
-  {
-   "name": "Pets",
-   "group": "World",
-   "height": 580,
-   "preview": "project/components/Pets/preview.html",
-   "readme": "project/components/Pets/README.md",
-   "summary": "The five night pets as data and as drawings: `Depthfield.pets` lists them, keeps the family's shared record of who found what, and draws each one on canvas, lit like the art and dancing to a beat with a swing."
-  },
-  {
-   "name": "Plate",
-   "group": "World",
-   "height": 300,
-   "preview": "project/components/Plate/preview.html",
-   "readme": "project/components/Plate/README.md",
-   "summary": "One drawing, made in a night material."
-  },
-  {
-   "name": "Weather",
-   "group": "World",
-   "height": 200,
-   "preview": "project/components/Weather/preview.html",
-   "readme": "project/components/Weather/README.md",
-   "summary": "Four weathers that follow the music, or the scroll: peach fall, red rain, mint clearing, night garden."
-  },
-  {
-   "name": "WorldCanvas",
-   "group": "World",
-   "height": 360,
-   "preview": "project/components/WorldCanvas/preview.html",
-   "readme": "project/components/WorldCanvas/README.md",
-   "summary": "The world behind the words: one full-bleed canvas of sky, a pointer-led sun, light shafts, three ridges with haze, particles that part around you, ripples where you press, and a vignette."
   },
   {
    "name": "CursorRing",

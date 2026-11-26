@@ -13,7 +13,7 @@ Owner: Bleve. Last updated 25 Nov 2026 by Claude (session 013Z7RfDQ7jddLT6yzpjZp
 | ID | Task | Acceptance check | Size | Who | Status |
 | --- | --- | --- | --- | --- | --- |
 | D1 | Showcase chapters for 2.1 and 2.2: PopUp opening a chapter, Lamp following the hand, Stretch type bound to the scroll, Stack as an exploded diagram of the world's planes, Sense in the HUD | Each appears in the scroll story doing its job, in its theme, with reduced motion handled | M | Sae(lion) | doing: additive Missing Page chapter on sae/D1-missing-page |
-| D2 | Five-axis strip component (x, depth, time, look, memory) for Reignfawn 0.11.0 and AND SO's lattice | `Depthfield.axes(el, state)` with README and preview; Reignfawn can mount it | M | open | open |
+| D2 | Five-axis strip component (x, depth, time, look, memory) for Reignfawn 0.11.0 and AND SO's lattice | `Depthfield.axes(el, state)` with README and preview; Reignfawn can mount it | M | Claude | done as an add-on on `claude/D2-five-axes-the-void`: `components/axes.js` (0.2.0), the Axes page and preview, typings in `components/axes.d.ts`. First used by The Void (`family/void/`). Not yet in a `v/` build: the next versioned build adds `axes.js` to `tools/release.py` and folds `axes.d.ts` into `index.d.ts`. Reignfawn has not mounted it yet |
 | D3 | A changelog page in the docs, one entry per version, read from `project/` | `docs.html#/changes` lists 2.0, 2.1 and 2.2 | S | open | open |
 | D4 | Night pets reach the 2.2 companions: a found pet can become the page's Guardian | Picking a pet in the list sets the Guardian | S | open | open |
 | D5 | The showcase's reel gains a shot for each new chapter added by D1 | Reel runs end to end; any touch still hands it back | S | open | open |
