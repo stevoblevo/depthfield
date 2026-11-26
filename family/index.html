@@ -154,7 +154,7 @@ main .fam-band { scroll-margin-top: 150px; }
 
 <section class="fam-band fam-dusk" id="dusk" data-band="dusk" aria-labelledby="h-dusk">
   <div class="fam-in">
-    <div class="fam-kit"><h2 id="h-dusk">Hypermetapunk</h2><span class="fam-tag">DUSK · 0.5.0 · THREE THEMES</span></div>
+    <div class="fam-kit"><h2 id="h-dusk">Hypermetapunk</h2><span class="fam-tag">DUSK · 0.5.2 · THREE THEMES</span></div>
     <p class="fam-say">Printed in a hurry and lit by neon. A dot screen in Dusk, a photocopy with one red in Zine, a solid cut in High contrast. The accent is always the sound word.</p>
     <ul class="fam-grid" id="g-hmp"></ul>
   </div>
@@ -178,7 +178,7 @@ main .fam-band { scroll-margin-top: 150px; }
     <h2 id="h-ledger">What each kit hands a game</h2>
     <div class="fam-scroll">
       <table class="fam-table">
-        <thead><tr><th scope="col">THE SAME FOUR THINGS</th><th scope="col">STOREYBROOK 1.5.0</th><th scope="col">HYPERMETAPUNK 0.5.0</th><th scope="col">DEPTHFIELD 2.5.0</th></tr></thead>
+        <thead><tr><th scope="col">THE SAME FOUR THINGS</th><th scope="col">STOREYBROOK 1.5.0</th><th scope="col">HYPERMETAPUNK 0.5.2</th><th scope="col">DEPTHFIELD 2.5.0</th></tr></thead>
         <tbody>
           <tr><th scope="row">Looks, as data</th><td>Six, each with a mood<br><code>Storeybrook.looks</code></td><td>Three, each with a mood<br><code>Hypermetapunk.looks</code></td><td>Seven, each with a mood<br><code>Depthfield.looks</code></td></tr>
           <tr><th scope="row">A pen</th><td>Inks, paper stocks, folds, a sun<br><code>paper.js</code></td><td>The horizon, chrome type, stickers<br><code>pen.js</code></td><td>Sky, ridges, four weathers, a rim light<br><code>pen.js</code></td></tr>
@@ -192,7 +192,7 @@ main .fam-band { scroll-margin-top: 150px; }
       <li class="fam-card"><h3>Hypermetapunk</h3><p>Gig boards, zines and game hubs after dark.</p><div class="fam-links"><a class="fam-link" href="https://stevoblevo.github.io/hypermetapunk/">Showcase</a><a class="fam-link" href="https://stevoblevo.github.io/hypermetapunk/docs.html">Docs</a><a class="fam-link" href="https://github.com/stevoblevo/hypermetapunk">Source</a></div></li>
       <li class="fam-card"><h3>Depthfield</h3><p>Scroll stories with a world behind the words.</p><div class="fam-links"><a class="fam-link" href="https://stevoblevo.github.io/depthfield/">Showcase</a><a class="fam-link" href="https://stevoblevo.github.io/depthfield/docs.html">Docs</a><a class="fam-link" href="https://github.com/stevoblevo/depthfield">Source</a></div></li>
     </ul>
-    <p class="fam-note">Every plate on this page is made in your browser by the kits themselves, pinned by version: Storeybrook 1.5.0, Hypermetapunk 0.5.0 and Depthfield 2.5.0. The pets share one save across the three sites, seventeen in all. The family's contracts and open tasks are in <a class="fam-link" href="https://github.com/stevoblevo/depthfield/blob/main/docs/family.md">the family plan</a>.</p>
+    <p class="fam-note">Every plate on this page is made in your browser by the kits themselves, pinned by version: Storeybrook 1.5.0, Hypermetapunk 0.5.2 and Depthfield 2.5.0. The pets share one save across the three sites, seventeen in all. The family's contracts and open tasks are in <a class="fam-link" href="https://github.com/stevoblevo/depthfield/blob/main/docs/family.md">the family plan</a>.</p>
   </div>
 </section>
 </main>
@@ -212,8 +212,8 @@ main .fam-band { scroll-margin-top: 150px; }
 <script src="/storeybrook/v/1.5.0/paper.js"></script>
 <script src="/storeybrook/v/1.5.0/plate.js"></script>
 <script src="/depthfield/v/2.5.0/bundle.js"></script>
-<script src="/hypermetapunk/v/0.5.0/pen.js"></script>
-<script src="/hypermetapunk/v/0.5.0/plate.js"></script>
+<script src="/hypermetapunk/v/0.5.2/pen.js"></script>
+<script src="/hypermetapunk/v/0.5.2/plate.js"></script>
 <script>
 (function () {
   'use strict';
@@ -268,7 +268,7 @@ main .fam-band { scroll-margin-top: 150px; }
       medium: function (l) { return SB.plate.media[l.id]; },
       make: function (l, src) { return SB.plate(l.id, src, { word: state.word ? state.word + '!' : '' }); },
       call: function (l) { return "Storeybrook.plate('" + l.id + "', source)"; } },
-    { key: 'hmp', name: 'Hypermetapunk', version: '0.5.0', host: '#g-hmp', ok: !!(HMP && HMP.plate && HMP.looks), looks: function () { return HMP.looks; },
+    { key: 'hmp', name: 'Hypermetapunk', version: '0.5.2', host: '#g-hmp', ok: !!(HMP && HMP.plate && HMP.looks), looks: function () { return HMP.looks; },
       medium: function (l) { return HMP.plate.media[l.id]; },
       make: function (l, src) { return HMP.plate(l.id, src, { word: state.word }); },
       call: function (l) { return "Hypermetapunk.plate('" + l.id + "', source)"; } },
